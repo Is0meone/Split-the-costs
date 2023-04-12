@@ -24,7 +24,7 @@ public class ExpenseSplitter {
 	 * @param users
 	 */
 
-	void split(BigDecimal amount, User... users) {
+	void split(Double amount, User... users) {
 
 	}
 
@@ -33,7 +33,7 @@ public class ExpenseSplitter {
 	 * @param amount
 	 * @param users
 	 */
-	void split(BigDecimal amount, List<User> users) {
+	void split(Double amount, List<User> users) {
 
 	}
 
@@ -41,7 +41,7 @@ public class ExpenseSplitter {
 	 * Splits the expense by the given amounts.
 	 * @param users a map with users as keys and the amounts they should pay as values
 	 */
-	void split(Map<User, BigDecimal> users) {
+	void split(Map<User, Double> users) {
 
 	}
 

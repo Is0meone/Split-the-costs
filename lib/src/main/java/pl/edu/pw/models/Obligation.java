@@ -21,7 +21,7 @@ public class Obligation {
 	private User creditor;
 	@StartNode
 	private User debtor;
-	private BigDecimal amount;
+	private Double amount;
 
 	private Status status;
 
@@ -32,7 +32,7 @@ public class Obligation {
 	}
 
 	public Obligation(
-			User creditor, User debtor, BigDecimal amount, Status status, String description, LocalDateTime timestamp
+			User creditor, User debtor, Double amount, Status status, String description, LocalDateTime timestamp
 	) {
 		this.creditor = creditor;
 		this.debtor = debtor;
@@ -42,14 +42,14 @@ public class Obligation {
 		this.timestamp = timestamp;
 	}
 
-	public Obligation(User creditor, User debtor, BigDecimal amount, Status status) {
+	public Obligation(User creditor, User debtor, Double amount, Status status) {
 		this.creditor = creditor;
 		this.debtor = debtor;
 		this.amount = amount;
 		this.status = status;
 	}
 
-	public Obligation(User creditor, User debtor, BigDecimal amount) {
+	public Obligation(User creditor, User debtor, Double amount) {
 		this.creditor = creditor;
 		this.debtor = debtor;
 		this.amount = amount;
@@ -83,11 +83,11 @@ public class Obligation {
 		this.debtor = debtor;
 	}
 
-	public BigDecimal getAmount() {
+	public Double getAmount() {
 		return amount;
 	}
 
-	public void setAmount(BigDecimal amount) {
+	public void setAmount(Double amount) {
 		this.amount = amount;
 	}
 

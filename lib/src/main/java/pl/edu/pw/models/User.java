@@ -6,7 +6,6 @@ import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -115,7 +114,7 @@ public class User {
 	 * @param timestamp when the obligation was requested
 	 */
 
-	public void requestObligationFrom(User user, BigDecimal amount, String description, LocalDateTime timestamp) {
+	public void requestObligationFrom(User user, Double amount, String description, LocalDateTime timestamp) {
 
 	}
 
