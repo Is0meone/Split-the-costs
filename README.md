@@ -8,16 +8,8 @@ Application for splitting expenses between multiple people.
 
 ```mermaid
 classDiagram
-direction BT
+direction RL
 class AddExpenseController
-class AgentJar {
-  - String RESOURCE
-  - safeClose(Closeable) void
-  + extractToTempLocation() File
-  + extractTo(File) void
-   InputStream resourceAsStream
-   URL RESOURCE
-}
 class ApiApplication {
   + securityFilterChain(HttpSecurity) SecurityFilterChain
   + main(String[]) void
