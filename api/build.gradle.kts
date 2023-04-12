@@ -19,6 +19,8 @@ repositories {
 
 dependencies {
 	implementation(project(":lib"))
+	implementation("org.neo4j:neo4j-ogm-core:4.0.5")
+	implementation("org.neo4j:neo4j-ogm-bolt-driver:4.0.5")
 	implementation("org.springframework.boot:spring-boot-starter-data-neo4j")
 	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.springframework.boot:spring-boot-starter-web")
