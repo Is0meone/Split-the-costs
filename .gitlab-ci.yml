@@ -16,7 +16,7 @@ before_script:
 
 build:
   stage: build
-  script: gradle --configuration-cache --parallel --build-cache assemble
+  script: gradle --parallel --build-cache assemble
 
   cache:
     key: "$CI_COMMIT_REF_NAME"
