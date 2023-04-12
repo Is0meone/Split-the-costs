@@ -4,9 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="85eaaff0-ab20-4e98-a8a8-2c4848c67b11" name="Changes" comment="feat: initial class diagram">
+    <list default="true" id="85eaaff0-ab20-4e98-a8a8-2c4848c67b11" name="Changes" comment="fix: source compatibility">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/api/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/build.gradle.kts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -111,14 +113,14 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
-    "jdk.selected.JAVA_MODULE": "17 (2)",
+    "jdk.selected.JAVA_MODULE": "19",
     "last_opened_file_path": "C:/Users/jakub/IdeaProjects/expense_splitter",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Modules",
+    "project.structure.last.edited": "Libraries",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.19885057",
     "settings.editor.selected.configurable": "project.propVCSSupport.DirectoryMappings",
@@ -283,7 +285,7 @@
       <workItem from="1681238476747" duration="6078000" />
       <workItem from="1681252263702" duration="1222000" />
       <workItem from="1681289285038" duration="7007000" />
-      <workItem from="1681302673088" duration="4747000" />
+      <workItem from="1681302673088" duration="5168000" />
     </task>
     <task id="LOCAL-00001" summary="feat: migrate back to double">
       <created>1681304343199</created>
@@ -306,7 +308,14 @@
       <option name="project" value="LOCAL" />
       <updated>1681307326707</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="feat: change director of class diagram">
+      <created>1681307486920</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1681307486920</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -345,6 +354,8 @@
     <MESSAGE value="feat: migrate back to double" />
     <MESSAGE value="ci: add autoamted testing" />
     <MESSAGE value="feat: initial class diagram" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: initial class diagram" />
+    <MESSAGE value="feat: change director of class diagram" />
+    <MESSAGE value="fix: source compatibility" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix: source compatibility" />
   </component>
 </project>
