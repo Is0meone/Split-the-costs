@@ -4,21 +4,26 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="85eaaff0-ab20-4e98-a8a8-2c4848c67b11" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="85eaaff0-ab20-4e98-a8a8-2c4848c67b11" name="Changes" comment="feat: most library and api classes and methods">
       <change afterPath="$PROJECT_DIR$/api/.gitignore" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/api/build.gradle.kts" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/api/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/api/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/api/gradlew" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/api/gradlew.bat" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/api/settings.gradle.kts" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/api/src/main/java/pl/edu/pw/api/ApiApplication.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/api/src/main/java/pl/edu/pw/api/auth/AuthController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/api/src/main/java/pl/edu/pw/api/auth/dto/LoginDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/api/src/main/java/pl/edu/pw/api/auth/dto/RegisterDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/api/src/main/java/pl/edu/pw/api/auth/dto/UserTokenDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/api/src/main/java/pl/edu/pw/api/friendship/FriendshipController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/api/src/main/java/pl/edu/pw/api/friendship/dto/FriendshipDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/api/src/main/java/pl/edu/pw/api/obligations/ObligationController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/api/src/main/java/pl/edu/pw/api/obligations/dto/ObligationDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/api/src/main/java/pl/edu/pw/api/obligations/dto/ObligationWithIdDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/api/src/main/java/pl/edu/pw/api/obligations/dto/ObligationsToDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/api/src/main/java/pl/edu/pw/api/users/UserController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/api/src/main/java/pl/edu/pw/api/users/dto/UserDTO.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/api/src/main/resources/application.properties" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/api/src/test/java/pl/edu/pw/api/ApiApplicationTests.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/app/.gitignore" afterDir="false" />
@@ -27,20 +32,22 @@
       <change afterPath="$PROJECT_DIR$/app/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/app/gradlew" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/app/gradlew.bat" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/settings.gradle" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/app/src/main/java/module-info.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/pl/edu/pw/app/HelloApplication.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/pl/edu/pw/app/HelloController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/resources/pl/edu/pw/app/hello-view.fxml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradlew" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradlew.bat" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/src/main/java/pl/edu/pw/ExpenseSplitter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/src/main/java/pl/edu/pw/models/Friendship.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/src/main/java/pl/edu/pw/models/Obligation.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/src/main/java/pl/edu/pw/models/User.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/settings.gradle.kts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/pl/edu/pw/app/AddExpenseController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/pl/edu/pw/app/ExpenseSplitterApplication.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/pl/edu/pw/app/RxpenseSpliitterController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/pl/edu/pw/app/UsersListController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/resources/pl/edu/pw/app/add-expense-view.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/resources/pl/edu/pw/app/login-view.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/resources/pl/edu/pw/app/users-list-view.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/src/main/java/pl/edu/pw/ExpenseSplitter.java" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/main/java/pl/edu/pw/ExpenseSplitter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/src/main/java/pl/edu/pw/models/Friendship.java" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/main/java/pl/edu/pw/models/Friendship.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/src/main/java/pl/edu/pw/models/Obligation.java" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/main/java/pl/edu/pw/models/Obligation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/src/main/java/pl/edu/pw/models/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/main/java/pl/edu/pw/models/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle.kts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,6 +68,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Interface" />
+        <option value="FxmlFile" />
         <option value="Class" />
       </list>
     </option>
@@ -84,18 +93,36 @@
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
     "jdk.selected.JAVA_MODULE": "17 (2)",
+    "last_opened_file_path": "C:/Users/jakub/IdeaProjects/expense_splitter/lib",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.19885057",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "spring.configuration.checksum": "938f36a70a484134d6c8097148de8419",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\jakub\IdeaProjects\expense_splitter\lib" />
+    </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="pl.edu.pw" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Spring Boot.ApiApplication">
+    <configuration name="ApiApplication (1)" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="expense_splitter.api.main" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="pl.edu.pw.api.ApiApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="ApiApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <module name="api.main" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="pl.edu.pw.api.ApiApplication" />
@@ -112,11 +139,18 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1681238475641</updated>
-      <workItem from="1681238476747" duration="1437000" />
+      <workItem from="1681238476747" duration="6078000" />
+      <workItem from="1681252263702" duration="1222000" />
+      <workItem from="1681289285038" duration="6579000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="feat: start work on library" />
+    <MESSAGE value="feat: most library and api classes and methods" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: most library and api classes and methods" />
   </component>
 </project>
