@@ -240,33 +240,4 @@ An IntelliJ UML variant is also included as [`diagram.uml`](./diagram.uml).
 
 ### Use case diagram
 
-```plantuml
-@startuml
-left to right direction
-
-actor A as a
-actor B as b
-actor C as c
-(Pay for a friend) as (Oblige)
-(a) --> (Oblige)
-(Split expenses with multiple friends) as (Split)
-(a) --> (Split)
-
-(Pay back) as (Pay)
-(b) --> (Pay)
-(c) --> (Pay)
-(Oblige) <|-- (Pay)
-(Split) <|-- (Pay)
-
-(Find friends) as (Find)
-(a) --> (Find)
-(b) --> (Find)
-(c) --> (Find)
-
-(Get obligation moved along the chain) as (Move)
-(c) .> (b) : second obligation
-(b) --> (Move)
-(c) <|-- (Move)
-
-@enduml
-```
+![usecase diagram](./usecases.svg)
