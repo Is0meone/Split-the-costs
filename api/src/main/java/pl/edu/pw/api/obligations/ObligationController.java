@@ -1,10 +1,7 @@
 package pl.edu.pw.api.obligations;
 
 import org.springframework.web.bind.annotation.*;
-import pl.edu.pw.api.obligations.dto.ObligationDTO;
-import pl.edu.pw.api.obligations.dto.ObligationTotalDTO;
-import pl.edu.pw.api.obligations.dto.ObligationWithIdDTO;
-import pl.edu.pw.api.obligations.dto.ObligationsToDTO;
+import pl.edu.pw.api.obligations.dto.*;
 
 import java.util.List;
 
@@ -42,5 +39,14 @@ public class ObligationController {
 	@GetMapping("/{id}")
 	public ObligationWithIdDTO getObligation(@PathVariable Long id) {
 		return null;
+	}
+
+	@PutMapping("/split")
+	public void splitObligationEqually(@RequestBody SplitObligationDTO obligationDTO) {
+
+	}
+	@PutMapping("/split/manual")
+	public void splitObligationManually(@RequestBody SplitObligationManualDTO obligationManualDTO) {
+
 	}
 }

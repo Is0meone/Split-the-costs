@@ -8,6 +8,7 @@ import org.neo4j.ogm.annotation.Relationship;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @NodeEntity
@@ -135,5 +136,21 @@ public class User {
 	public void payObligationTo(User user, Long id) {
 
 	}
+	/**
+	 * Follow the graph to find the end users who owe you money
+	 * (that is, following who owes money to people who owe you money)
+	 * @return a map with users as keys and the amounts they need to pay you as values
+	 */
+	public Map<User,Double> findFinalDebtors() {
+		return null;
+	}
 
+	/**
+	 * Follow the graph to find the end users who you owe money
+	 * (that is, following who people you owe money to owe money to)
+	 * @return a map with users as keys and the amounts you need to pay them as values
+	 */
+	public Map<User,Double> findFinalCreditors() {
+		return null;
+	}
 }

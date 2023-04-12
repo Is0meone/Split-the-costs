@@ -32,7 +32,8 @@ The frontend in JavaFX and should use the API to get and send all data.
 
 Ideally it'd be an android app, but that's a bit beyond this course :)
 
-You can find a basic UI wireframe [here](https://www.tldraw.com/v/Akd_c_7v9MfgASwS_PhWTqUIPz?viewport=0%2C0%2C1920%2C947&page=page%3Ab7IZwZtfoCV7BiOXsUiDb), in the [`wireframe.tldraw`](./wireframe.tldraw) file or as an image under [`wireframe.png`](./wireframe.png).
+You can find a basic UI wireframe [here](https://www.tldraw.com/v/Akd_c_7v9MfgASwS_PhWTqUIPz?viewport=0%2C0%2C1920%2C947&page=page%3Ab7IZwZtfoCV7BiOXsUiDb), in the [`dics-assets/wireframe.tldraw`](docs-assets/wireframe.tldraw) file or as an svg image under [`docs-assets/wireframe.svg`](docs-assets/wireframe.svg):
+![basic wireframe](docs-assets/wireframe.svg)
 
 ### class diagram
 
@@ -40,28 +41,24 @@ You can find a basic UI wireframe [here](https://www.tldraw.com/v/Akd_c_7v9MfgAS
 
 ```mermaid
 classDiagram
-direction LR
-class AddExpenseController
+direction BT
 class ApiApplication {
-  + securityFilterChain(HttpSecurity) SecurityFilterChain
   + main(String[]) void
+  + securityFilterChain(HttpSecurity) SecurityFilterChain
 }
 class ApiApplicationTests {
   ~ contextLoads() void
 }
 class AuthController {
+  + login(LoginDTO) UserDTO
   + logout() void
   + register(RegisterDTO) UserDTO
-  + login(LoginDTO) UserDTO
-}
-class Build_gradle {
-  + main(String[]) Unit
 }
 class ExpenseSplitter {
   - User actor
   ~ split(Double, List~User~) void
-  ~ split(Map~User, Double~) void
   ~ split(Double, User[]) void
+  ~ split(Map~User, Double~) void
    User actor
 }
 class ExpenseSplitterApplication {
@@ -71,11 +68,11 @@ class ExpenseSplitterApplication {
 class Friendship {
   - Long id
   - User user2
-  - Status status
   - User user1
+  - Status status
   + equals(Object) boolean
-  + toString() String
   + hashCode() int
+  + toString() String
    Long id
    User user1
    Status status
@@ -96,19 +93,19 @@ class LoginDTO {
    String password
 }
 class Obligation {
-  - String description
-  - Double amount
-  - Long id
-  - User creditor
   - Status status
-  - User debtor
+  - String description
+  - User creditor
+  - Long id
   - LocalDateTime timestamp
+  - Double amount
+  - User debtor
   + pay() void
+  + equals(Object) boolean
   + accept() void
   + decline() void
-  + toString() String
   + hashCode() int
-  + equals(Object) boolean
+  + toString() String
    String description
    User creditor
    LocalDateTime timestamp
@@ -118,21 +115,21 @@ class Obligation {
    Status status
 }
 class ObligationController {
+  + getObligationsTo(Long) ObligationsToDTO
   + acceptObligation(Long) void
+  + getObligationsFor(Long) List~ObligationWithIdDTO~
   + getObligation(Long) ObligationWithIdDTO
   + requestObligationFrom(Long, ObligationDTO) void
-  + getObligationsFor(Long) List~ObligationWithIdDTO~
-  + getObligationsTo(Long) ObligationsToDTO
    List~ObligationTotalDTO~ obligationTotals
    List~ObligationWithIdDTO~ pendingObligations
 }
 class ObligationDTO {
-  - String debtorId
-  - String timestamp
-  - Status status
-  - Double amount
-  - String description
   - String creditorId
+  - Status status
+  - String description
+  - String timestamp
+  - String debtorId
+  - Double amount
    String description
    String debtorId
    String creditorId
@@ -151,25 +148,39 @@ class ObligationWithIdDTO {
    Long id
 }
 class ObligationsToDTO {
-  - Double total
   - List~ObligationWithIdDTO~ obligations
+  - Double total
    Double total
    List~ObligationWithIdDTO~ obligations
 }
 class RegisterDTO {
-  - String password
   - String name
+  - String password
    String name
    String password
 }
-class RxpenseSpliitterController
-class Settings_gradle {
-  + main(String[]) Unit
+class SplitObligationDTO {
+  - Double amount
+  - String timestamp
+  - String description
+  - List~Long~ users
+   String description
+   List~Long~ users
+   Double amount
+   String timestamp
+}
+class SplitObligationManualDTO {
+  - String timestamp
+  - String description
+  - Map~Long, Double~ users
+   String description
+   Map~Long, Double~ users
+   String timestamp
 }
 class Status {
 <<enumeration>>
-  + values() Status[]
   + valueOf(String) Status
+  + values() Status[]
 }
 class Status {
 <<enumeration>>
@@ -178,17 +189,17 @@ class Status {
 }
 class User {
   - String passwordHash
-  - List~Friendship~ friendsWith
+  - List~Obligation~ isOwed
   - String name
   - Long id
   - List~Obligation~ owes
-  - List~Obligation~ isOwed
-  + acceptObligationTo(User, Long) void
-  + toString() String
-  + payObligationTo(User, Long) void
-  + equals(Object) boolean
-  + hashCode() int
+  - List~Friendship~ friendsWith
   + requestObligationFrom(User, Double, String, LocalDateTime) void
+  + toString() String
+  + equals(Object) boolean
+  + payObligationTo(User, Long) void
+  + acceptObligationTo(User, Long) void
+  + hashCode() int
    String name
    String passwordHash
    Long id
@@ -208,15 +219,6 @@ class UserDTO {
    Long id
 }
 class UserTokenDTO
-class UsersListController
-class build {
-  + run() Object
-  + main(String[]) void
-  + getProperty(String) Object
-  + invokeMethod(String, Object) Object
-  + setProperty(String, Object) void
-   MetaClass metaClass
-}
 
 ExpenseSplitter "1" *--> "actor 1" User 
 Friendship "1" *--> "status 1" Status 
@@ -236,8 +238,8 @@ User "1" *--> "owes *" Obligation
 ```
 </div>
 
-An IntelliJ UML variant is also included as [`diagram.uml`](./diagram.uml).
+An IntelliJ UML version from which this mermaid code was generated is also included as [`class_diagram.uml`](docs-assets/class_diagram.uml).
 
 ### Use case diagram
 
-![usecase diagram](./usecases.svg)
+![usecase diagram](docs-assets/usecases.svg)

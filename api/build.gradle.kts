@@ -30,6 +30,8 @@ dependencies {
 	annotationProcessor("org.projectlombok:lombok")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.security:spring-security-test")
+	// https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0")
 }
 
 tasks.withType<Test> {

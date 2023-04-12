@@ -8,7 +8,7 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="pl.edu.pw.app.UsersListController"
+            fx:controller="pl.edu.pw.app.SplitExpenseController"
             prefHeight="400.0" prefWidth="600.0">
 
 </AnchorPane>

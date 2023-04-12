@@ -7,16 +7,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import pl.edu.pw.api.auth.dto.LoginDTO;
 import pl.edu.pw.api.auth.dto.RegisterDTO;
-import pl.edu.pw.api.users.dto.UserDTO;
+import pl.edu.pw.api.auth.dto.UserTokenDTO;
 
 @RestController("/auth")
 public class AuthController {
 	@PostMapping("/register")
-	public UserDTO register(@RequestBody @Validated RegisterDTO registerDTO) {
+	public UserTokenDTO register(@RequestBody @Validated RegisterDTO registerDTO) {
 		return null;
 	}
 	@PostMapping("/login")
-	public UserDTO login(@RequestBody @Validated LoginDTO loginDTO) {
+	public UserTokenDTO login(@RequestBody @Validated LoginDTO loginDTO) {
 		return null;
 	}
 
