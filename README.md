@@ -41,7 +41,7 @@ You can find a basic UI wireframe [here](https://www.tldraw.com/v/Akd_c_7v9MfgAS
 
 ```mermaid
 classDiagram
-direction BT
+direction LR
 class ApiApplication {
   + main(String[]) void
   + securityFilterChain(HttpSecurity) SecurityFilterChain
