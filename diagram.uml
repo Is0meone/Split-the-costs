@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>C:/Users/jakub/IdeaProjects/expense_splitter</OriginalElement>
+  <nodes>
+    <node x="354.55405405405406" y="1242.0">pl.edu.pw.api.obligations.dto.ObligationTotalDTO</node>
+    <node x="1274.0" y="1667.0">pl.edu.pw.app.RxpenseSpliitterController</node>
+    <node x="293.14864864864865" y="125.0">pl.edu.pw.models.Obligation</node>
+    <node x="483.0" y="1437.0">pl.edu.pw.api.auth.dto.LoginDTO</node>
+    <node x="873.0" y="1437.0">pl.edu.pw.api.users.dto.UserDTO</node>
+    <node x="455.64864864864865" y="-14.0">pl.edu.pw.models.Obligation.Status</node>
+    <node x="578.5540540540541" y="1242.0">pl.edu.pw.api.obligations.dto.ObligationsToDTO</node>
+    <node x="-129.0" y="1667.0">pl.edu.pw.api.ApiApplication</node>
+    <node x="1331.5540540540542" y="-14.0">org.jacoco.agent.AgentJar</node>
+    <node x="597.0" y="1667.0">pl.edu.pw.api.ApiApplicationTests</node>
+    <node x="93.55405405405406" y="1229.0">pl.edu.pw.ExpenseSplitter</node>
+    <node x="79.14864864864865" y="233.0">pl.edu.pw.models.Friendship</node>
+    <node x="-129.0" y="1799.0">pl.edu.pw.app.UsersListController</node>
+    <node x="-129.0" y="1296.5">pl.edu.pw.api.friendship.dto.FriendshipDTO</node>
+    <node x="912.5540540540542" y="-14.0">pl.edu.pw.api.obligations.ObligationController</node>
+    <node x="116.0" y="1799.0">pl.edu.pw.api.auth.dto.UserTokenDTO</node>
+    <node x="640.5540540540541" y="222.0">pl.edu.pw.api.obligations.dto.ObligationDTO</node>
+    <node x="131.0" y="1437.0">pl.edu.pw.api.friendship.FriendshipController</node>
+    <node x="849.0" y="1667.0">Settings_gradle</node>
+    <node x="1370.0" y="1437.0">pl.edu.pw.api.auth.AuthController</node>
+    <node x="616.0540540540541" y="895.0">pl.edu.pw.api.obligations.dto.ObligationWithIdDTO</node>
+    <node x="9.0" y="702.0">pl.edu.pw.models.User</node>
+    <node x="1065.0" y="1667.0">Build_gradle</node>
+    <node x="678.0" y="1437.0">pl.edu.pw.api.auth.dto.RegisterDTO</node>
+    <node x="1571.0" y="1667.0">pl.edu.pw.app.AddExpenseController</node>
+    <node x="1041.0" y="1437.0">pl.edu.pw.api.users.UserController</node>
+    <node x="292.0" y="1667.0">pl.edu.pw.app.ExpenseSplitterApplication</node>
+    <node x="-129.0" y="1437.0">build</node>
+    <node x="-61.5" y="-14.0">pl.edu.pw.models.Friendship.Status</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="pl.edu.pw.ExpenseSplitter" target="pl.edu.pw.models.User" relationship="TO_ONE">
+      <point x="-5.405405406122554E-5" y="-81.5" />
+      <point x="214.054" y="1203.0" />
+      <point x="238.0" y="1203.0" />
+      <point x="0.0" y="237.5" />
+    </edge>
+    <edge source="pl.edu.pw.api.obligations.dto.ObligationsToDTO" target="pl.edu.pw.api.obligations.dto.ObligationWithIdDTO" relationship="TO_MANY">
+      <point x="0.0" y="-68.5" />
+      <point x="0.0" y="44.5" />
+    </edge>
+    <edge source="pl.edu.pw.models.Friendship.Status" target="pl.edu.pw.models.Friendship" relationship="INNER_CLASS">
+      <point x="46.75" y="43.5" />
+      <point x="78.75" y="94.0" />
+      <point x="224.64864864864865" y="94.0" />
+      <point x="48.5" y="-153.5" />
+    </edge>
+    <edge source="pl.edu.pw.models.Obligation" target="pl.edu.pw.models.Obligation.Status" relationship="TO_ONE">
+      <point x="104.00035135135136" y="-199.0" />
+      <point x="676.5" y="187.5" />
+      <point x="676.5" y="159.0" />
+      <point x="549.149" y="159.0" />
+      <point x="3.5135135135533346E-4" y="43.5" />
+    </edge>
+    <edge source="pl.edu.pw.models.User" target="pl.edu.pw.models.Obligation" relationship="TO_MANY">
+      <point x="159.14864864864865" y="-237.5" />
+      <point x="0.0" y="261.5" />
+    </edge>
+    <edge source="pl.edu.pw.models.Obligation" target="pl.edu.pw.models.User" relationship="TO_ONE">
+      <point x="87.35135135135135" y="261.5" />
+      <point x="484.5" y="1203.0" />
+      <point x="238.0" y="1203.0" />
+      <point x="0.0" y="237.5" />
+    </edge>
+    <edge source="pl.edu.pw.models.Friendship" target="pl.edu.pw.models.User" relationship="TO_ONE">
+      <point x="-96.99964864864864" y="0.0" />
+      <point x="-79.0" y="386.5" />
+      <point x="-79.0" y="1203.0" />
+      <point x="238.0" y="1203.0" />
+      <point x="0.0" y="237.5" />
+    </edge>
+    <edge source="pl.edu.pw.api.obligations.dto.ObligationTotalDTO" target="pl.edu.pw.models.User" relationship="TO_ONE">
+      <point x="-5.405405408964725E-5" y="-68.5" />
+      <point x="456.554" y="1203.0" />
+      <point x="238.0" y="1203.0" />
+      <point x="0.0" y="237.5" />
+    </edge>
+    <edge source="pl.edu.pw.models.Obligation.Status" target="pl.edu.pw.models.Obligation" relationship="INNER_CLASS">
+      <point x="-46.75" y="43.5" />
+      <point x="502.39864864864865" y="94.0" />
+      <point x="345.14864864864865" y="94.0" />
+      <point x="-52.0" y="-261.5" />
+    </edge>
+    <edge source="pl.edu.pw.models.Friendship" target="pl.edu.pw.models.Friendship.Status" relationship="TO_ONE">
+      <point x="-96.99964864864864" y="-15.0" />
+      <point x="-18.0" y="371.5" />
+      <point x="-18.0" y="94.0" />
+      <point x="32.0" y="94.0" />
+      <point x="0.0" y="43.5" />
+    </edge>
+    <edge source="pl.edu.pw.models.User" target="pl.edu.pw.models.Friendship" relationship="TO_MANY">
+      <point x="-61.851351351351354" y="-237.5" />
+      <point x="0.0" y="153.5" />
+    </edge>
+    <edge source="pl.edu.pw.api.obligations.dto.ObligationWithIdDTO" target="pl.edu.pw.api.obligations.dto.ObligationDTO" relationship="GENERALIZATION">
+      <point x="0.0" y="-44.5" />
+      <point x="0.0" y="164.5" />
+    </edge>
+    <edge source="pl.edu.pw.api.friendship.dto.FriendshipDTO" target="pl.edu.pw.models.Friendship.Status" relationship="TO_ONE">
+      <point x="62.5" y="-14.0" />
+      <point x="16.5" y="1236.5" />
+      <point x="-18.0" y="1236.5" />
+      <point x="-18.0" y="94.0" />
+      <point x="32.0" y="94.0" />
+      <point x="0.0" y="43.5" />
+    </edge>
+    <edge source="pl.edu.pw.api.obligations.dto.ObligationDTO" target="pl.edu.pw.models.Obligation.Status" relationship="TO_ONE">
+      <point x="-5.405405408964725E-5" y="-164.5" />
+      <point x="723.054" y="159.0" />
+      <point x="549.149" y="159.0" />
+      <point x="3.5135135135533346E-4" y="43.5" />
+    </edge>
+    <edge source="pl.edu.pw.api.friendship.dto.FriendshipDTO" target="pl.edu.pw.models.User" relationship="TO_ONE">
+      <point x="0.0" y="-14.0" />
+      <point x="-46.0" y="1203.0" />
+      <point x="238.0" y="1203.0" />
+      <point x="0.0" y="237.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic" zoom="0.4559040838259001" showDependencies="true" x="951.3386372007365" y="1491.4872191528543" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Inner Classes</Category>
+    <Category>Methods</Category>
+    <Category>Properties</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
