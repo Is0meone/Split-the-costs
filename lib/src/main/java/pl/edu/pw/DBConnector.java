@@ -85,7 +85,7 @@ public class DBConnector {
     public User findUserById(Long id) {
         Session session = sessionFactory.openSession();
         try{
-            return session.queryForObject(User.class, "MATCH (u:User) WHERE u.id = $id RETURN u", Map.of("id", id));
+            return session.queryForObject(User.class, "MATCH (u:User) WHERE ID(u) = $id RETURN u", Map.of("id", id));
         }
         catch(Error e){
             System.out.println("no user with id " + id);
@@ -93,8 +93,8 @@ public class DBConnector {
         return null;
     }
 
-//    public static void main(String[] args){
-//        DBConnector dbc = new DBConnector();
+    public static void main(String[] args){
+        DBConnector dbc = new DBConnector();
 //  //    dbc.addUser(new User("gejusz", "lol"));
 //  //     List<User> list = dbc.getAllUsers();
 //
@@ -103,11 +103,11 @@ public class DBConnector {
 ////        dbc.addUser(new User((long)1, "janusz", "lol", null, null, null));
 // //     dbc.addObligation(new Obligation());
 //       System.out.println(dbc.findUserByName("dzbanusz"));
-////        System.out.println(dbc.findUserById((long)1));
+        System.out.println(dbc.findUserById(1L));
 //    }
 
 
 
 
 
-}
+}}
