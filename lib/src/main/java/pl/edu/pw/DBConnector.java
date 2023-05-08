@@ -1,18 +1,10 @@
-package pl.edu.pw.models;
+package pl.edu.pw;
 
-import org.neo4j.driver.AuthTokens;
-import org.neo4j.driver.Config;
-import org.neo4j.driver.Driver;
-import org.neo4j.driver.GraphDatabase;
-import org.neo4j.driver.Query;
-import org.neo4j.driver.SessionConfig;
-import org.neo4j.driver.exceptions.Neo4jException;
 import org.neo4j.ogm.config.Configuration;
 import org.neo4j.ogm.session.Session;
 import org.neo4j.ogm.session.SessionFactory;
+import pl.edu.pw.models.User;
 
-import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DBConnector implements AutoCloseable {
@@ -38,9 +30,16 @@ public class DBConnector implements AutoCloseable {
         session.save(user);
     }
 
+    public void addObligation(User user){
+        Session session = sessionFactory.openSession();
+        session.save(user);
+    }
+
+
+
     public static void main(String[] args){
         DBConnector dbc = new DBConnector();
-        dbc.addUser(new User((long)0, "kanusz", "lol", null, null,
+        dbc.addUser(new User((long)1, "kanusz", "lol", null, null,
                 null));
     }
 
