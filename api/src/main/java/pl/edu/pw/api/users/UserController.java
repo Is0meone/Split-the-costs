@@ -6,6 +6,7 @@ import pl.edu.pw.api.users.dto.UserDTO;
 import pl.edu.pw.models.User;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/users")
@@ -38,11 +39,15 @@ public class UserController {
 	@GetMapping("/find")
 	public List<UserDTO> findUsers(@RequestParam String name) {
 		DBConnector dbc = new DBConnector();
-		User user = dbc.findUserByName(name);
-		UserDTO u = new UserDTO();
-		u.setName(user.getName());
-		u.setId(user.getId());
-		return (List<UserDTO>) u;
+		List<User> users = dbc.findUsersByPrefix(name);
+		return users.stream()
+				.map(user -> {
+					UserDTO userDTO = new UserDTO();
+					userDTO.setId(user.getId());
+					userDTO.setName(user.getName());
+					return userDTO;
+				})
+				.collect(Collectors.toList());
 	}
 
 	@GetMapping("/findtest")
