@@ -116,7 +116,9 @@ public class User{
 	 */
 
 	public void requestObligationFrom(User user, Double amount, String description, LocalDateTime timestamp) {
-		new Obligation(this, user, amount, Obligation.Status.PENDING, description, timestamp);
+		Obligation obligation = new Obligation(this, user, amount, Obligation.Status.PENDING, description, timestamp);
+		DBConnector dbc = new DBConnector();
+		dbc.addObligation(obligation);
 	}
 
 	/**
@@ -125,7 +127,10 @@ public class User{
 	 * @param id id of the obligation
 	 */
 	public void acceptObligationTo(User user, Long id) {
-
+		for (Obligation obligation: this.owes
+		) {
+			if(obligation.getCreditor().equals(user)) obligation.accept();
+		}
 	}
 
 	/**
@@ -134,6 +139,10 @@ public class User{
 	 * @param id
 	 */
 	public void payObligationTo(User user, Long id) {
+		for (Obligation obligation: this.owes
+			 ) {
+			if(obligation.getCreditor().equals(user)) obligation.pay();
+		}
 
 	}
 	/**

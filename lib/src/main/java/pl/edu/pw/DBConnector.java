@@ -1,7 +1,6 @@
 package pl.edu.pw;
 
 import org.neo4j.ogm.config.Configuration;
-import org.neo4j.ogm.model.Result;
 import org.neo4j.ogm.session.Session;
 import org.neo4j.ogm.session.SessionFactory;
 import org.neo4j.ogm.transaction.Transaction;
@@ -10,6 +9,7 @@ import pl.edu.pw.models.Obligation;
 import pl.edu.pw.models.User;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +38,7 @@ public class DBConnector {
         }
     }
 
-    public void addObligation(Obligation obligation) {
+    public void addObligation(Obligation obligation){
         Session session = sessionFactory.openSession();
         session.save(obligation);
     }
@@ -49,7 +49,6 @@ public class DBConnector {
         return StreamSupport.stream(users.spliterator(), false)
                 .collect(Collectors.toList());
     }
-
     public List<Obligation> getAllObligations() {
         Session session = sessionFactory.openSession();
         Iterable<Obligation> obligations = session.loadAll(Obligation.class);
@@ -57,22 +56,38 @@ public class DBConnector {
                 .collect(Collectors.toList());
     }
 
-    User findUserByName(String name) {
+    public User findUserByName(String name) {
         Session session = sessionFactory.openSession();
-        try {
+        try{
             return session.queryForObject(User.class, "MATCH (u:User) WHERE u.name = $name RETURN u", Map.of("name", name));
-        } catch (Error e) {
+        }
+        catch(Error e){
             System.out.println("no user with name " + name);
         }
         return null;
     }
 
-
-    User findUserById(Long id) {
+    public List<User> findUsersByPrefix(String name) {
         Session session = sessionFactory.openSession();
         try {
-            return session.queryForObject(User.class, "MATCH (u:User) WHERE u.id = $id RETURN u", Map.of("id", id));
+            Result result = session.query("MATCH (u:User) WHERE u.name STARTS WITH $name RETURN u",
+                    Collections.singletonMap("name", name));
+
+            return StreamSupport.stream(result.spliterator(), false)
+                    .map(m -> (User) m.get("u"))
+                    .collect(Collectors.toList());
         } catch (Error e) {
+            System.out.println("No users with name prefix: " + name);
+        }
+        return Collections.emptyList();
+    }
+
+    public User findUserById(Long id) {
+        Session session = sessionFactory.openSession();
+        try{
+            return session.queryForObject(User.class, "MATCH (u:User) WHERE ID(u) = $id RETURN u", Map.of("id", id));
+        }
+        catch(Error e){
             System.out.println("no user with id " + id);
         }
         return null;
@@ -122,3 +137,4 @@ public class DBConnector {
 
 
 
+}
