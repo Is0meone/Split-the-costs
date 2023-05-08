@@ -33,8 +33,6 @@ public class User{
 	public User(String name, String passwordHash) {
 		this.name = name;
 		this.passwordHash = passwordHash;
-		DBConnector dbc = new DBConnector();
-		dbc.addUser(this);
 	}
 
 	public Long getId() {

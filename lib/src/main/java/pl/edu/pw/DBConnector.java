@@ -8,7 +8,6 @@ import pl.edu.pw.models.Friendship;
 import pl.edu.pw.models.Obligation;
 import pl.edu.pw.models.User;
 
-import javax.naming.Name;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
