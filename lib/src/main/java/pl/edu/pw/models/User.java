@@ -1,6 +1,7 @@
 package pl.edu.pw.models;
 
 
+import jdk.jfr.Name;
 import org.neo4j.ogm.annotation.GeneratedValue;
 import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
@@ -15,6 +16,7 @@ import java.util.Objects;
 public class User{
 	@Id	@GeneratedValue
 	private Long id;
+
 	private String name;
 	private String passwordHash;
 	@Relationship(type = "OWES", direction = Relationship.Direction.OUTGOING)
@@ -28,7 +30,7 @@ public class User{
 	}
 
 	public User(
-			Long id, String name, String passwordHash, List<Obligation> owes, List<Obligation> isOwed,
+			String name, String passwordHash, List<Obligation> owes, List<Obligation> isOwed,
 			List<Friendship> friendsWith
 	) {
 		this.id = id;
