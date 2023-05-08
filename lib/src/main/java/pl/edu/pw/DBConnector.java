@@ -8,6 +8,7 @@ import pl.edu.pw.models.Friendship;
 import pl.edu.pw.models.Obligation;
 import pl.edu.pw.models.User;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -46,27 +47,27 @@ public class DBConnector {
         return StreamSupport.stream(users.spliterator(), false)
                 .collect(Collectors.toList());
     }
-    User findUserById(Long id) {
+    User findUserByName(String name) {
         Session session = sessionFactory.openSession();
         try{
-            return session.queryForObject(User.class, "MATCH (u:User {id:$id}) return u", Map.of("id", id));
+            return session.queryForObject(User.class, "MATCH (u:User) WHERE u.name = $name RETURN u", Map.of("name", name));
         }
         catch(Error e){
-            System.out.println("no user with id " + id);
+            System.out.println("no user named " + name);
         }
         return null;
     }
 
     public static void main(String[] args){
         DBConnector dbc = new DBConnector();
-      dbc.addUser(new User("gejusz", "lol", null, null, null));
-       List<User> list = dbc.getAllUsers();
+  //    dbc.addUser(new User("gejusz", "lol", null, null, null));
+  //     List<User> list = dbc.getAllUsers();
 
-        System.out.println(list);
+   //     System.out.println(list);
 
 //        dbc.addUser(new User((long)1, "janusz", "lol", null, null, null));
-//      dbc.addObligation(new Obligation());
-//        System.out.println(dbc.findUserById((long)0));
+ //     dbc.addObligation(new Obligation());
+       System.out.println(dbc.findUserByName("dzbanusz"));
 //        System.out.println(dbc.findUserById((long)1));
     }
 
