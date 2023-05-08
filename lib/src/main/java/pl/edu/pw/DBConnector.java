@@ -54,7 +54,7 @@ public class DBConnector {
                 .collect(Collectors.toList());
     }
 
-    User findUserByName(String name) {
+    public User findUserByName(String name) {
         Session session = sessionFactory.openSession();
         try{
             return session.queryForObject(User.class, "MATCH (u:User) WHERE u.name = $name RETURN u", Map.of("name", name));
@@ -66,7 +66,7 @@ public class DBConnector {
     }
 
 
-    User findUserById(Long id) {
+    public User findUserById(Long id) {
         Session session = sessionFactory.openSession();
         try{
             return session.queryForObject(User.class, "MATCH (u:User) WHERE u.id = $id RETURN u", Map.of("id", id));
