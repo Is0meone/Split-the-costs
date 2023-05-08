@@ -141,7 +141,6 @@ public class testyBZ implements AutoCloseable {
             app.createFriendship("Alice", "David");
 
             app.findPerson("Alice");
-
         }
 
     }

@@ -5,7 +5,10 @@ import org.neo4j.ogm.session.Session;
 import org.neo4j.ogm.session.SessionFactory;
 import pl.edu.pw.models.User;
 
+import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 public class DBConnector implements AutoCloseable {
 
@@ -35,12 +38,19 @@ public class DBConnector implements AutoCloseable {
         session.save(user);
     }
 
-
+    public List<User> getAllUsers() {
+        Session session = sessionFactory.openSession();
+        Iterable<User> users = session.loadAll(User.class);
+        return StreamSupport.stream(users.spliterator(), false)
+                .collect(Collectors.toList());
+    }
 
     public static void main(String[] args){
         DBConnector dbc = new DBConnector();
         dbc.addUser(new User((long)1, "kanusz", "lol", null, null,
                 null));
+        List<User> list = dbc.getAllUsers();
+        System.out.println(list);
     }
 
 
