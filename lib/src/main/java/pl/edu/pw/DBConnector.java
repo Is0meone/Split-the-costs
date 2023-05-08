@@ -56,7 +56,7 @@ public class DBConnector {
                 .collect(Collectors.toList());
     }
 
-    User findUserBySpecificName(String name) {
+    public User findUserByName(String name) {
         Session session = sessionFactory.openSession();
         try{
             return session.queryForObject(User.class, "MATCH (u:User) WHERE u.name = $name RETURN u", Map.of("name", name));
@@ -67,7 +67,7 @@ public class DBConnector {
         return null;
     }
 
-    List<User> findUsersByPrefix(String name) {
+    public List<User> findUsersByPrefix(String name) {
         Session session = sessionFactory.openSession();
         try {
             Result result = session.query("MATCH (u:User) WHERE u.name STARTS WITH $name RETURN u",
@@ -82,7 +82,7 @@ public class DBConnector {
         return Collections.emptyList();
     }
 
-    User findUserById(Long id) {
+    public User findUserById(Long id) {
         Session session = sessionFactory.openSession();
         try{
             return session.queryForObject(User.class, "MATCH (u:User) WHERE u.id = $id RETURN u", Map.of("id", id));
@@ -93,8 +93,8 @@ public class DBConnector {
         return null;
     }
 
-    public static void main(String[] args) {
-        DBConnector dbc = new DBConnector();
+//    public static void main(String[] args){
+//        DBConnector dbc = new DBConnector();
 //  //    dbc.addUser(new User("gejusz", "lol"));
 //  //     List<User> list = dbc.getAllUsers();
 //
@@ -102,11 +102,12 @@ public class DBConnector {
 //
 ////        dbc.addUser(new User((long)1, "janusz", "lol", null, null, null));
 // //     dbc.addObligation(new Obligation());
-        System.out.println(dbc.findUsersByPrefix("gej"));
+//       System.out.println(dbc.findUserByName("dzbanusz"));
 ////        System.out.println(dbc.findUserById((long)1));
 //    }
 
 
-    }
+
+
 
 }
