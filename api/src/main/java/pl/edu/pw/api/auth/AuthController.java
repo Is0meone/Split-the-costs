@@ -18,13 +18,29 @@ public class AuthController {
 		new User(registerDTO.getName(), registerDTO.getPassword());
 		return null;
 	}
+
 	@PostMapping("/login")
 	public UserTokenDTO login(@RequestBody @Validated LoginDTO loginDTO) {
-		return null;
+		UserTokenDTO u = new UserTokenDTO();
+		u.setId(123333334L);
+		u.setToken(loginDTO.getName());
+		return u;
 	}
 
 	@GetMapping("/logout")
 	public void logout() {
 	}
 
+	@GetMapping("/test1")
+	public LoginDTO test1() {
+		LoginDTO login = new LoginDTO();
+		login.setName("jan");
+		login.setPassword("PassWord");
+		return login;
+	}
+
+	@PostMapping("/test2")
+	public void test2(@RequestBody LoginDTO loginDTO) {
+		System.out.println(loginDTO);
+	}
 }
