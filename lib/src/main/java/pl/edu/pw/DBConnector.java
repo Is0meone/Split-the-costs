@@ -47,6 +47,12 @@ public class DBConnector {
         return StreamSupport.stream(users.spliterator(), false)
                 .collect(Collectors.toList());
     }
+    public List<Obligation> getAllObligations() {
+        Session session = sessionFactory.openSession();
+        Iterable<Obligation> obligations = session.loadAll(Obligation.class);
+        return StreamSupport.stream(obligations.spliterator(), false)
+                .collect(Collectors.toList());
+    }
     User findUserByName(String name) {
         Session session = sessionFactory.openSession();
         try{
