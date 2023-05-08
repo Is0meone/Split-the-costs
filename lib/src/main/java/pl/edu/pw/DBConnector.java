@@ -1,6 +1,7 @@
 package pl.edu.pw;
 
 import org.neo4j.ogm.config.Configuration;
+import org.neo4j.ogm.model.Result;
 import org.neo4j.ogm.session.Session;
 import org.neo4j.ogm.session.SessionFactory;
 import org.neo4j.ogm.transaction.Transaction;
@@ -8,6 +9,7 @@ import pl.edu.pw.models.Friendship;
 import pl.edu.pw.models.Obligation;
 import pl.edu.pw.models.User;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,7 +56,7 @@ public class DBConnector {
                 .collect(Collectors.toList());
     }
 
-    User findUserByName(String name) {
+    User findUserBySpecificName(String name) {
         Session session = sessionFactory.openSession();
         try{
             return session.queryForObject(User.class, "MATCH (u:User) WHERE u.name = $name RETURN u", Map.of("name", name));
@@ -65,6 +67,20 @@ public class DBConnector {
         return null;
     }
 
+    List<User> findUsersByPrefix(String name) {
+        Session session = sessionFactory.openSession();
+        try {
+            Result result = session.query("MATCH (u:User) WHERE u.name STARTS WITH $name RETURN u",
+                    Collections.singletonMap("name", name));
+
+            return StreamSupport.stream(result.spliterator(), false)
+                    .map(m -> (User) m.get("u"))
+                    .collect(Collectors.toList());
+        } catch (Error e) {
+            System.out.println("No users with name prefix: " + name);
+        }
+        return Collections.emptyList();
+    }
 
     User findUserById(Long id) {
         Session session = sessionFactory.openSession();
@@ -77,8 +93,8 @@ public class DBConnector {
         return null;
     }
 
-//    public static void main(String[] args){
-//        DBConnector dbc = new DBConnector();
+    public static void main(String[] args) {
+        DBConnector dbc = new DBConnector();
 //  //    dbc.addUser(new User("gejusz", "lol"));
 //  //     List<User> list = dbc.getAllUsers();
 //
@@ -86,12 +102,11 @@ public class DBConnector {
 //
 ////        dbc.addUser(new User((long)1, "janusz", "lol", null, null, null));
 // //     dbc.addObligation(new Obligation());
-//       System.out.println(dbc.findUserByName("dzbanusz"));
+        System.out.println(dbc.findUsersByPrefix("gej"));
 ////        System.out.println(dbc.findUserById((long)1));
 //    }
 
 
-
-
+    }
 
 }
