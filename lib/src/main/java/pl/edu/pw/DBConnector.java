@@ -47,7 +47,16 @@ public class DBConnector {
         return StreamSupport.stream(users.spliterator(), false)
                 .collect(Collectors.toList());
     }
-    User findUserByName(Long id) {
+    public List<Obligation> getAllObligations() {
+        Session session = sessionFactory.openSession();
+        Iterable<Obligation> obligations = session.loadAll(Obligation.class);
+        return StreamSupport.stream(obligations.spliterator(), false)
+                .collect(Collectors.toList());
+    }
+
+
+
+    User findUserById(Long id) {
         Session session = sessionFactory.openSession();
         try{
             return session.queryForObject(User.class, "MATCH (u:User) WHERE u.id = $id RETURN u", Map.of("id", id));
@@ -65,9 +74,9 @@ public class DBConnector {
 
    //     System.out.println(list);
 
-//        dbc.addUser(new User("janusz", "lol"));
+//        dbc.addUser(new User((long)1, "janusz", "lol", null, null, null));
  //     dbc.addObligation(new Obligation());
-       System.out.println(dbc.findUserByName(0L));
+       System.out.println(dbc.findUserByName("dzbanusz"));
 //        System.out.println(dbc.findUserById((long)1));
     }
 
