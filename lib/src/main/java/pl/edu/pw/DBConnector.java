@@ -46,6 +46,16 @@ public class DBConnector {
         return StreamSupport.stream(users.spliterator(), false)
                 .collect(Collectors.toList());
     }
+    public List<Obligation> getAllObligations() {
+        Session session = sessionFactory.openSession();
+        Iterable<Obligation> obligations = session.loadAll(Obligation.class);
+        return StreamSupport.stream(obligations.spliterator(), false)
+                .collect(Collectors.toList());
+    }
+    public User getUserById(Long id) {
+        Session session = sessionFactory.openSession();
+        return session.load(User.class, id);
+    }
     User findUserById(Long id) {
         Session session = sessionFactory.openSession();
         try{
@@ -56,13 +66,18 @@ public class DBConnector {
         }
         return null;
     }
-
+    public User nodeBuilder(Long id){
+        return null;
+    }
     public static void main(String[] args){
         DBConnector dbc = new DBConnector();
-      dbc.addUser(new User("gejusz", "lol", null, null, null));
+    //  dbc.addUser(new User("gejusz", "lol", null, null, null));
        List<User> list = dbc.getAllUsers();
+       dbc.addObligation(new Obligation(dbc.getUserById((long)3),dbc.getUserById((long)1),(double) 50));
 
         System.out.println(list);
+        User user = dbc.getUserById(1L);
+        System.out.println(user.getOwes().size());
 
 //        dbc.addUser(new User((long)1, "janusz", "lol", null, null, null));
 //      dbc.addObligation(new Obligation());
