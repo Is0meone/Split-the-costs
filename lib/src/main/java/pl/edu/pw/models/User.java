@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @NodeEntity
-public class User {
+public class User{
 	@Id	@GeneratedValue
 	private Long id;
 	private String name;
@@ -116,7 +116,7 @@ public class User {
 	 */
 
 	public void requestObligationFrom(User user, Double amount, String description, LocalDateTime timestamp) {
-
+		new Obligation(this, user, amount, Obligation.Status.PENDING, description, timestamp);
 	}
 
 	/**
