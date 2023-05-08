@@ -6,6 +6,7 @@ import org.neo4j.ogm.annotation.GeneratedValue;
 import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
+import pl.edu.pw.DBConnector;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,16 +30,11 @@ public class User{
 	public User() {
 	}
 
-	public User(
-			String name, String passwordHash, List<Obligation> owes, List<Obligation> isOwed,
-			List<Friendship> friendsWith
-	) {
-		this.id = id;
+	public User(String name, String passwordHash) {
 		this.name = name;
 		this.passwordHash = passwordHash;
-		this.owes = owes;
-		this.isOwed = isOwed;
-		this.friendsWith = friendsWith;
+		DBConnector dbc = new DBConnector();
+		dbc.addUser(this);
 	}
 
 	public Long getId() {
