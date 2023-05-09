@@ -10,11 +10,7 @@ import pl.edu.pw.models.Friendship;
 import pl.edu.pw.models.Obligation;
 import pl.edu.pw.models.User;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -146,17 +142,14 @@ public class DBConnector {
 
     public static void main(String[] args) {
         DBConnector dbc = new DBConnector();
- //       List<User> users = dbc.findShortestPath(dbc.findUserByName("dzbanusz"),dbc.findUserByName("nowyuserek"));
-   //     System.out.println(users);
-
-//        DBConnector dbc = new DBConnector();
-//        dbc.addUser(new User("hujusz", "lol"));
+ //       dbc.addUser(new User("WLADCATYCHNAP", "lol"));
 //  //     List<User> list = dbc.getAllUsers();
-            dbc.addUser(new User("hujusz", "bajojao"));
+ //           dbc.addUser(new User("pugalak", "bajojao"));
 //   //     System.out.println(list);
 //
 //    dbc.addUser(new User("pejusz", "gimp"));
-      dbc.addObligation(new Obligation(dbc.findUserById(0L), dbc.findUserById(2L), 420D));
+        ExpenseSplitter es = new ExpenseSplitter(dbc.findUserByName("WLADCATYCHNAP"));
+        es.split(2137420D, dbc.findUsersByPrefix("pu"));
 //       System.out.println(dbc.findUserByName("dzbanusz"));
 ///      System.out.println(dbc.findUserById((long)1));
  //     dbc.findUserById(4L).payObligationTo(dbc.findUserById(2L));

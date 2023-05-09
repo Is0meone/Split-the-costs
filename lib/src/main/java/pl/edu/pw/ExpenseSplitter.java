@@ -26,10 +26,11 @@ public class ExpenseSplitter {
 	 */
 
 	void split(Double amount, User... users) {
+		DBConnector dbc = new DBConnector();
 		Double splittedAmount;
 		splittedAmount = amount/users.length;
 		for (User user: users) {
-			new Obligation(actor, user, splittedAmount, Obligation.Status.PENDING);
+			dbc.addObligation(new Obligation(actor, user, splittedAmount, Obligation.Status.PENDING));
 		}
 	}
 
@@ -39,10 +40,11 @@ public class ExpenseSplitter {
 	 * @param users
 	 */
 	void split(Double amount, List<User> users) {
+		DBConnector dbc = new DBConnector();
 		Double splittedAmount;
 		splittedAmount = amount/users.size();
 		for (User user: users) {
-			new Obligation(actor, user, splittedAmount, Obligation.Status.PENDING);
+			dbc.addObligation(new Obligation(actor, user, splittedAmount, Obligation.Status.PENDING));
 		}
 	}
 
@@ -51,8 +53,9 @@ public class ExpenseSplitter {
 	 * @param users a map with users as keys and the amounts they should pay as values
 	 */
 	void split(Map<User, Double> users) {
+		DBConnector dbc = new DBConnector();
 		for (Map.Entry<User, Double> entry : users.entrySet()) {
-			new Obligation(actor, entry.getKey(), entry.getValue(), Obligation.Status.PENDING);
+			dbc.addObligation(new Obligation(actor, entry.getKey(), entry.getValue(), Obligation.Status.PENDING));
 		}
 	}
 
