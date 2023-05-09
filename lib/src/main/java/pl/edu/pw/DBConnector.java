@@ -1,6 +1,8 @@
 package pl.edu.pw;
 
+import org.neo4j.driver.Values;
 import org.neo4j.ogm.config.Configuration;
+import org.neo4j.ogm.model.Result;
 import org.neo4j.ogm.session.Session;
 import org.neo4j.ogm.session.SessionFactory;
 import org.neo4j.ogm.transaction.Transaction;
@@ -23,7 +25,7 @@ public class DBConnector {
             .uri("neo4j+s://2be25d7b.databases.neo4j.io")
             .credentials("neo4j", "Ob45K7a1DfSQUFb6qI_WFh8edC_epUaAbGxkA7tb26Y")
             .build();
-    private SessionFactory sessionFactory;
+    private static SessionFactory sessionFactory;
 
 
     public DBConnector() {
@@ -41,6 +43,8 @@ public class DBConnector {
     public void addObligation(Obligation obligation){
         Session session = sessionFactory.openSession();
         session.save(obligation);
+        session.save(obligation.getCreditor());
+        session.save(obligation.getDebtor());
     }
 
     public List<User> getAllUsers() {
@@ -94,8 +98,8 @@ public class DBConnector {
     }
 
      public List<User> findShortestPath(User user1, User user2) {
-         String user1Name = user1.getName();
-         String user2Name = user2.getName();
+        String user1Name = user1.getName();
+        String user2Name = user2.getName();
         Session session = sessionFactory.openSession();
         String q = "MATCH (u1:User {name: $user1Name}), (u2:User {name: $user2Name}), " +
                 "p = shortestPath((u1)-[*]-(u2)) " +
@@ -114,27 +118,33 @@ public class DBConnector {
         }
         return users;
     }
+
+
+
+
+
+
+
     public static void main(String[] args) {
         DBConnector dbc = new DBConnector();
-        List<User> users = dbc.findShortestPath(dbc.findUserByName("dzbanusz"),dbc.findUserByName("nowyuserek"));
-        System.out.println(users);
-    }
-}
-//    public static void main(String[] args){
+ //       List<User> users = dbc.findShortestPath(dbc.findUserByName("dzbanusz"),dbc.findUserByName("nowyuserek"));
+   //     System.out.println(users);
+
 //        DBConnector dbc = new DBConnector();
-//  //    dbc.addUser(new User("gejusz", "lol"));
+//        dbc.addUser(new User("hujusz", "lol"));
 //  //     List<User> list = dbc.getAllUsers();
 //
 //   //     System.out.println(list);
 //
-////        dbc.addUser(new User((long)1, "janusz", "lol", null, null, null));
-// //     dbc.addObligation(new Obligation());
+       dbc.addUser(new User("tanusz", "gimp"));
+        dbc.addObligation(new Obligation(dbc.findUserById(4L), dbc.findUserById(2L), 42000D));
 //       System.out.println(dbc.findUserByName("dzbanusz"));
-////        System.out.println(dbc.findUserById((long)1));
-//    }
+///      System.out.println(dbc.findUserById((long)1));
+      dbc.findUserById(4L).payObligationTo(dbc.findUserById(2L));
+       System.out.println(dbc.findUserByName("tanusz"));
+    }}
 
 
 
 
 
-}

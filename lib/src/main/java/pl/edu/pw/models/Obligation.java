@@ -47,6 +47,8 @@ public class Obligation {
 		this.debtor = debtor;
 		this.amount = amount;
 		this.status = status;
+		creditor.addOwed(this);
+		debtor.addOwes(this);
 	}
 
 	public Obligation(User creditor, User debtor, Double amount) {

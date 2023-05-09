@@ -136,9 +136,8 @@ public class User{
 	/**
 	 *
 	 * @param user
-	 * @param id
 	 */
-	public void payObligationTo(User user, Long id) {
+	public void payObligationTo(User user) {
 		for (Obligation obligation: this.owes
 			 ) {
 			if(obligation.getCreditor().equals(user)) obligation.pay();
@@ -161,5 +160,12 @@ public class User{
 	 */
 	public Map<User,Double> findFinalCreditors() {
 		return null;
+	}
+
+	public void addOwed(Obligation obligation){
+		this.isOwed.add(obligation);
+	}
+	public void addOwes(Obligation obligation){
+		this.owes.add(obligation);
 	}
 }
