@@ -128,20 +128,14 @@ public class DBConnector {
     }
 
     public Obligation findObligationBetweenUsers(User user1, User user2) {
-        String user1Id = user1.getId().toString();
-        String user2Id = user2.getId().toString();
-        Session session = sessionFactory.openSession();
-        String q = "MATCH (u1:User {id: $user1Id})-[:OWES]->(o:Obligation)<-[:OWED]-(u2:User {id: $user2Id}) RETURN u1, u2, o";
-        Map<String, String> map = new HashMap<>();
-        map.put("user1Id", user1Id);
-        map.put("user2Id", user2Id);
-        Obligation o = (Obligation) session.query(q, map);
-        if (o!=null) {
-            return o;
-        } else {
-            System.out.println("No obligation found between users " + user1.getName() + " and " + user2.getName());
-            return null;
+       Session session = sessionFactory.openSession();
+       List<Obligation> list = getAllObligations();
+        for (Obligation o : list ) {
+            if(o.getCreditor().equals(user1) && o.getDebtor().equals(user2)){
+                return o;
+            }
         }
+        return null;
     }
 
 

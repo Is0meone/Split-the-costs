@@ -102,8 +102,6 @@ public class User{
 				"id=" + id +
 				", name='" + name + '\'' +
 				", passwordHash='" + passwordHash + '\'' +
-				", owes=" + owes +
-				", isOwed=" + isOwed +
 				", friendsWith=" + friendsWith +
 				'}';
 	}
