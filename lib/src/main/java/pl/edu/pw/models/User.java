@@ -6,6 +6,7 @@ import org.neo4j.ogm.annotation.GeneratedValue;
 import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
+import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import pl.edu.pw.DBConnector;
 
 import java.time.LocalDateTime;
@@ -33,7 +34,12 @@ public class User{
 
 	public User(String name, String passwordHash) {
 		this.name = name;
-		this.passwordHash = passwordHash;
+		Argon2PasswordEncoder encoder = new Argon2PasswordEncoder(32,64,1,15*1024,2);
+		this.passwordHash = encoder.encode(passwordHash); // Password Hashing
+
+		// Decode password like this
+//		var validPassword = encoder.matches(myPassword, encodedPassword);
+
 		this.owes = new ArrayList<>();
 		this.isOwed = new ArrayList<>();
 		this.friendsWith = new ArrayList<>();
