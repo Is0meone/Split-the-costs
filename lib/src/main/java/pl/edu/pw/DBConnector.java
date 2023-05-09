@@ -3,6 +3,7 @@ package pl.edu.pw;
 import org.neo4j.driver.Values;
 import org.neo4j.ogm.config.Configuration;
 import org.neo4j.ogm.model.Result;
+import org.neo4j.ogm.session.LoadStrategy;
 import org.neo4j.ogm.session.Session;
 import org.neo4j.ogm.session.SessionFactory;
 import org.neo4j.ogm.transaction.Transaction;
@@ -10,11 +11,7 @@ import pl.edu.pw.models.Friendship;
 import pl.edu.pw.models.Obligation;
 import pl.edu.pw.models.User;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -28,23 +25,23 @@ public class DBConnector {
     private static SessionFactory sessionFactory;
 
 
+
     public DBConnector() {
         this.sessionFactory = new SessionFactory(configuration, "pl.edu.pw.models");
+        sessionFactory.setLoadStrategy(LoadStrategy.PATH_LOAD_STRATEGY);
     }
 
     public void addUser(User user) {
         Session session = sessionFactory.openSession();
         try (Transaction tx = session.beginTransaction()) {
-            session.save(user);
+            session.save(user,100);
             tx.commit();
         }
     }
 
     public void addObligation(Obligation obligation){
         Session session = sessionFactory.openSession();
-        session.save(obligation);
-        session.save(obligation.getCreditor());
-        session.save(obligation.getDebtor());
+        session.save(obligation.getCreditor(),10);
     }
 
     public List<User> getAllUsers() {
@@ -89,7 +86,9 @@ public class DBConnector {
     public User findUserById(Long id) {
         Session session = sessionFactory.openSession();
         try{
-            return session.queryForObject(User.class, "MATCH (u:User) WHERE ID(u) = $id RETURN u", Map.of("id", id));
+            User user = session.load(User.class,id);
+            if(user!=null) return user;
+            else throw new NoSuchElementException();
         }
         catch(Error e){
             System.out.println("no user with id " + id);
@@ -119,29 +118,21 @@ public class DBConnector {
         return users;
     }
 
-
-
-
-
-
-
     public static void main(String[] args) {
         DBConnector dbc = new DBConnector();
  //       List<User> users = dbc.findShortestPath(dbc.findUserByName("dzbanusz"),dbc.findUserByName("nowyuserek"));
    //     System.out.println(users);
 
-//        DBConnector dbc = new DBConnector();
-//        dbc.addUser(new User("hujusz", "lol"));
 //  //     List<User> list = dbc.getAllUsers();
-//
+            dbc.addUser(new User("hujusz", "bajojao"));
 //   //     System.out.println(list);
 //
-       dbc.addUser(new User("tanusz", "gimp"));
-        dbc.addObligation(new Obligation(dbc.findUserById(4L), dbc.findUserById(2L), 42000D));
+//    dbc.addUser(new User("pejusz", "gimp"));
+      dbc.addObligation(new Obligation(dbc.findUserById(0L), dbc.findUserById(2L), 420D));
 //       System.out.println(dbc.findUserByName("dzbanusz"));
 ///      System.out.println(dbc.findUserById((long)1));
-      dbc.findUserById(4L).payObligationTo(dbc.findUserById(2L));
-       System.out.println(dbc.findUserByName("tanusz"));
+ //     dbc.findUserById(4L).payObligationTo(dbc.findUserById(2L));
+ //      System.out.println(dbc.findUserById(4L));
     }}
 
 

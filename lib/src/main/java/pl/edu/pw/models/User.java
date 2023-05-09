@@ -9,6 +9,7 @@ import org.neo4j.ogm.annotation.Relationship;
 import pl.edu.pw.DBConnector;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -33,6 +34,9 @@ public class User{
 	public User(String name, String passwordHash) {
 		this.name = name;
 		this.passwordHash = passwordHash;
+		this.owes = new ArrayList<>();
+		this.isOwed = new ArrayList<>();
+		this.friendsWith = new ArrayList<>();
 	}
 
 	public Long getId() {
@@ -101,9 +105,6 @@ public class User{
 				"id=" + id +
 				", name='" + name + '\'' +
 				", passwordHash='" + passwordHash + '\'' +
-				", owes=" + owes +
-				", isOwed=" + isOwed +
-				", friendsWith=" + friendsWith +
 				'}';
 	}
 
@@ -163,9 +164,11 @@ public class User{
 	}
 
 	public void addOwed(Obligation obligation){
+		if (this.isOwed == null) this.isOwed = new ArrayList<>();
 		this.isOwed.add(obligation);
 	}
 	public void addOwes(Obligation obligation){
+		if (this.owes == null) this.owes = new ArrayList<>();
 		this.owes.add(obligation);
 	}
 }

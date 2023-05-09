@@ -40,6 +40,8 @@ public class Obligation {
 		this.status = status;
 		this.description = description;
 		this.timestamp = timestamp;
+		creditor.addOwed(this);
+		debtor.addOwes(this);
 	}
 
 	public Obligation(User creditor, User debtor, Double amount, Status status) {
@@ -55,6 +57,8 @@ public class Obligation {
 		this.creditor = creditor;
 		this.debtor = debtor;
 		this.amount = amount;
+		creditor.addOwed(this);
+		debtor.addOwes(this);
 	}
 
 	public Obligation(Long id) {
