@@ -105,6 +105,7 @@ public class User{
 				"id=" + id +
 				", name='" + name + '\'' +
 				", passwordHash='" + passwordHash + '\'' +
+				", friendsWith=" + friendsWith +
 				'}';
 	}
 
@@ -164,11 +165,9 @@ public class User{
 	}
 
 	public void addOwed(Obligation obligation){
-		if (this.isOwed == null) this.isOwed = new ArrayList<>();
 		this.isOwed.add(obligation);
 	}
 	public void addOwes(Obligation obligation){
-		if (this.owes == null) this.owes = new ArrayList<>();
 		this.owes.add(obligation);
 	}
 }
