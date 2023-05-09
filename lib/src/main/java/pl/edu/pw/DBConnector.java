@@ -44,6 +44,10 @@ public class DBConnector {
     }
     public void addObligation(Obligation obligation){
         Session session = sessionFactory.openSession();
+
+        obligation.getDebtor().addOwes(obligation);
+        obligation.getCreditor().addOwed(obligation);
+
         session.save(obligation.getCreditor(),10);
     }
 
@@ -63,7 +67,10 @@ public class DBConnector {
     public User findUserByName(String name) {
         Session session = sessionFactory.openSession();
         try{
-            return session.queryForObject(User.class, "MATCH (u:User) WHERE u.name = $name RETURN u", Map.of("name", name));
+            User user = session.queryForObject(User.class, "MATCH (u:User) WHERE u.name = $name RETURN u", Map.of("name", name));
+            user = session.load(User.class, user.getId());
+            unNullifier(user);
+            return user;
         }
         catch(Error e){
             System.out.println("no user with name " + name);
@@ -71,28 +78,39 @@ public class DBConnector {
         return null;
     }
 
+
     public List<User> findUsersByPrefix(String name) {
         Session session = sessionFactory.openSession();
         try {
             Result result = session.query("MATCH (u:User) WHERE u.name STARTS WITH $name RETURN u",
                     Collections.singletonMap("name", name));
 
-            return StreamSupport.stream(result.spliterator(), false)
-                    .map(m -> (User) m.get("u"))
-                    .collect(Collectors.toList());
-        } catch (Error e) {
+            List<User> users = new ArrayList<>();
+            for (Map<String, Object> row : result) {
+                User user = (User) row.get("u");
+                Long id = user.getId();
+                User loadedUser = session.load(User.class, id);
+                unNullifier(loadedUser);
+                users.add(loadedUser);
+            }
+            return users;
+        } catch (Exception e) {
             System.out.println("No users with name prefix: " + name);
+            e.printStackTrace();
         }
+
         return Collections.emptyList();
     }
-
-
 
     public User findUserById(Long id) {
         Session session = sessionFactory.openSession();
         try{
             User user = session.load(User.class,id);
-            if(user!=null) return user;
+
+            if(user!=null) {
+                unNullifier(user);
+                return user;
+            }
             else throw new NoSuchElementException();
         }
         catch(Error e){
@@ -134,8 +152,11 @@ public class DBConnector {
         return null;
     }
 
-
-
+    public void unNullifier(User user){
+        if(user.getIsOwed() == null) user.setIsOwed(new ArrayList<>());
+        if(user.getOwes() == null) user.setOwes(new ArrayList<>());
+        if(user.getFriendsWith() == null) user.setFriendsWith(new ArrayList<>());
+    }
 
 
 
@@ -150,6 +171,7 @@ public class DBConnector {
 //    dbc.addUser(new User("pejusz", "gimp"));
         ExpenseSplitter es = new ExpenseSplitter(dbc.findUserByName("WLADCATYCHNAP"));
         es.split(2137420D, dbc.findUsersByPrefix("pu"));
+        System.out.println(dbc.findUserById(7L).getOwes());
 //       System.out.println(dbc.findUserByName("dzbanusz"));
 ///      System.out.println(dbc.findUserById((long)1));
  //     dbc.findUserById(4L).payObligationTo(dbc.findUserById(2L));
