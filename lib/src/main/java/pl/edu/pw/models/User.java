@@ -9,6 +9,7 @@ import org.neo4j.ogm.annotation.Relationship;
 import pl.edu.pw.DBConnector;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -115,6 +116,14 @@ public class User{
 	 * @param timestamp when the obligation was requested
 	 */
 
+	public void addObligation(Obligation o){
+		if(this.owes==null){
+			ArrayList<Obligation> newList = new ArrayList<Obligation>();
+			newList.add(o);
+			this.owes = newList;
+		}
+		this.owes.add(o);
+	}
 	public void requestObligationFrom(User user, Double amount, String description, LocalDateTime timestamp) {
 		Obligation obligation = new Obligation(this, user, amount, Obligation.Status.PENDING, description, timestamp);
 		DBConnector dbc = new DBConnector();

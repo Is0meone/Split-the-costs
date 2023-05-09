@@ -39,7 +39,13 @@ public class DBConnector {
             tx.commit();
         }
     }
-
+    public void updateUser(User user){
+        Session session = sessionFactory.openSession();
+        try (Transaction tx = session.beginTransaction()) {
+            session.save(user);
+            tx.commit();
+        }
+    }
     public void addObligation(Obligation obligation){
         Session session = sessionFactory.openSession();
         session.save(obligation);
@@ -86,6 +92,8 @@ public class DBConnector {
         return Collections.emptyList();
     }
 
+
+
     public User findUserById(Long id) {
         Session session = sessionFactory.openSession();
         try{
@@ -117,6 +125,23 @@ public class DBConnector {
             System.out.println("No path found between users " + user1Name + " and " + user2Name);
         }
         return users;
+    }
+
+    public Obligation findObligationBetweenUsers(User user1, User user2) {
+        String user1Id = user1.getId().toString();
+        String user2Id = user2.getId().toString();
+        Session session = sessionFactory.openSession();
+        String q = "MATCH (u1:User {id: $user1Id})-[:OWES]->(o:Obligation)<-[:OWED]-(u2:User {id: $user2Id}) RETURN u1, u2, o";
+        Map<String, String> map = new HashMap<>();
+        map.put("user1Id", user1Id);
+        map.put("user2Id", user2Id);
+        Obligation o = (Obligation) session.query(q, map);
+        if (o!=null) {
+            return o;
+        } else {
+            System.out.println("No obligation found between users " + user1.getName() + " and " + user2.getName());
+            return null;
+        }
     }
 
 

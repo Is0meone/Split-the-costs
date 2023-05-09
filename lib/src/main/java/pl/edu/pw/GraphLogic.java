@@ -1,5 +1,6 @@
 package pl.edu.pw;
 
+import pl.edu.pw.models.Obligation;
 import pl.edu.pw.models.User;
 
 import java.util.HashMap;
@@ -12,6 +13,14 @@ public class GraphLogic {
         List<User> users = dbc.findShortestPath(userOne,userTwo);
         return users;
     }
-
+    public static void main(String[] args){
+        DBConnector dbc = new DBConnector();
+        User user = new User("a","ttr");
+        User user2 = new User("b","dda");
+        Obligation obligation = new Obligation(user,user2,(double)1);
+        dbc.addUser(user);
+        dbc.addUser(user2);
+        dbc.addObligation(obligation);
+    }
 
 }
