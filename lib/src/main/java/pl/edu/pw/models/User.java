@@ -32,10 +32,10 @@ public class User{
 	public User() {
 	}
 
-	public User(String name, String passwordHash) {
+	public User(String name, String password) {
 		this.name = name;
-	//	Argon2PasswordEncoder encoder = new Argon2PasswordEncoder(32,64,1,15*1024,2);
-	//	this.passwordHash = encoder.encode(passwordHash); // Password Hashing
+		//Argon2PasswordEncoder encoder = new Argon2PasswordEncoder(32,64,1,15*1024,2);
+		//this.passwordHash = encoder.encode(password); // Password Hashing
 
 		// Decode password like this
 //		var validPassword = encoder.matches(myPassword, encodedPassword);

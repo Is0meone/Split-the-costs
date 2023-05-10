@@ -171,22 +171,32 @@ public class DBConnector {
 
     public static void main(String[] args) {
         DBConnector dbc = new DBConnector();
- //       dbc.addUser(new User("WLADCATYCHNAP", "lol"));
+      dbc.addObligation(new Obligation(dbc.findUserByName("pugalak"), dbc.findUserByName("janusz"), 50D));
 //  //     List<User> list = dbc.getAllUsers();
  //           dbc.addUser(new User("pugalak", "bajojao"));
 //   //     System.out.println(list);
-//
+//            User user = dbc.findUserByName("pudlak");
+//            user.payObligationTo(dbc.findUserByName("WLADCATYCHNAP"));
+//            System.out.println(user.getOwes());
 //    dbc.addUser(new User("pejusz", "gimp"));
-        ExpenseSplitter es = new ExpenseSplitter(dbc.findUserByName("WLADCATYCHNAP"));
-        es.split(2137420D, dbc.findUsersByPrefix("pu"));
-        System.out.println(dbc.findUserById(7L).getOwes());
+   //     ExpenseSplitter es = new ExpenseSplitter(dbc.findUserByName("WLADCATYCHNAP"));
+   //     es.split(2137420D, dbc.findUsersByPrefix("pu"));
+    //    System.out.println(dbc.findUserById(7L).getOwes());
 //       System.out.println(dbc.findUserByName("dzbanusz"));
 ///      System.out.println(dbc.findUserById((long)1));
  //     dbc.findUserById(4L).payObligationTo(dbc.findUserById(2L));
  //      System.out.println(dbc.findUserById(4L));
     }}
-
-
-
+/*
+TODO:
+-friendship
+    -wyslij zapro / zaakceptuj gdy z drugiej strony jest juz wyslane
+    -odrzuc zapro
+    -zrobic autoaccept -> akceptuj automatycznie wszystkie obligacje
+-logika
+    -wszyscy posredni dluznicy (najdluzsza sciezka w grafie)
+    -wszyscy posredni kredytodawcy (najdluzsza sciezka w grafie)
+-
+ */
 
 
