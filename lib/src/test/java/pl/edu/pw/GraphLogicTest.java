@@ -1,5 +1,7 @@
 package pl.edu.pw;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import pl.edu.pw.models.Obligation;
 import pl.edu.pw.models.User;
@@ -9,6 +11,18 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class GraphLogicTest {
+    private DBConnector dbc;
+
+    @BeforeEach
+    void setUp() {
+        dbc = new DBConnector();
+        dbc.dropDatabase();
+    }
+
+    @AfterEach
+    void tearDown() {
+        dbc.dropDatabase();
+    }
 
     @Test
     void getActiveCreditors() {

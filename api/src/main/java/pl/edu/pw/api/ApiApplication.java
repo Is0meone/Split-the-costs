@@ -9,30 +9,33 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
+//@SpringBootApplication
 public class ApiApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ApiApplication.class, args);
 	}
+
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		http
-				.authorizeHttpRequests(
-						customizer -> customizer
-								.requestMatchers("/auth/**").permitAll()
-								.anyRequest().authenticated()
-				)
-				.exceptionHandling(
-						customizer -> customizer
-								.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
-				)
-				// TODO: add persistence mechanism (tokens?)
-				.build();
-		return http.build();
+		return http.csrf().disable()
+				.authorizeHttpRequests()
+				.requestMatchers("/users","/auth").permitAll()
+				.and()
+				.authorizeHttpRequests().requestMatchers("/users/**")
+				.authenticated().and().formLogin().and().build();
 	}
-
-
-
-
-
-
-
+//	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+//		http
+//				.authorizeHttpRequests(
+//						customizer -> customizer
+//								.requestMatchers("/auth/**").permitAll()
+//								.anyRequest().authenticated()
+//				)
+//				.exceptionHandling(
+//						customizer -> customizer
+//								.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
+//				)
+//				// TODO: add persistence mechanism (tokens?)
+//				.build();
+//		return http.build();
+//	}
 }

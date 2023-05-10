@@ -24,6 +24,10 @@ dependencies {
     implementation("org.springframework.security:spring-security-crypto:5.1.4.RELEASE")
     implementation("org.apache.commons:commons-lang3:3.0")
     implementation("org.bouncycastle:bcprov-jdk15on:1.64")
+    implementation("com.nimbusds:nimbus-jose-jwt:9.25.6")
+    implementation("org.springframework:spring-context:4.0.6.RELEASE")
+
+
 }
 
 tasks.getByName<Test>("test") {

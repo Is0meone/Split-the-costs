@@ -2,6 +2,7 @@ package pl.edu.pw;
 
 import org.neo4j.driver.Values;
 import org.neo4j.ogm.config.Configuration;
+import org.neo4j.ogm.cypher.query.CypherQuery;
 import org.neo4j.ogm.model.Result;
 import org.neo4j.ogm.session.Session;
 import org.neo4j.ogm.session.SessionFactory;
@@ -176,7 +177,13 @@ public class DBConnector {
             session.save(obligation);
             tx.commit();
         }
-
+    }
+    public void dropDatabase() { //nie dotykac
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        String query = "MATCH (n) DETACH DELETE n";
+        session.query(query, Collections.emptyMap());
+        transaction.commit();
     }
 
 
