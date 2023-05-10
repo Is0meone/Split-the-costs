@@ -159,5 +159,6 @@ public class Obligation {
 	 */
 	public void pay() {
 		this.status = Status.PAID;
+		this.amount = -1D;
 	}
 }
