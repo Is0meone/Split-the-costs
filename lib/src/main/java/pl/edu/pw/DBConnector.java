@@ -157,7 +157,15 @@ public class DBConnector {
         if(user.getOwes() == null) user.setOwes(new ArrayList<>());
         if(user.getFriendsWith() == null) user.setFriendsWith(new ArrayList<>());
     }
+    public void payObligation(Obligation obligation) {
+        Session session = sessionFactory.openSession();
+        obligation.pay();
+        try (Transaction tx = session.beginTransaction()) {
+            session.save(obligation);
+            tx.commit();
+        }
 
+    }
 
 
 
