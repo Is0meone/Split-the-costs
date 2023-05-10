@@ -10,10 +10,8 @@ import org.neo4j.ogm.annotation.Relationship;
 import pl.edu.pw.DBConnector;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @NodeEntity
 public class User{
@@ -123,10 +121,28 @@ public class User{
 	 * @param timestamp when the obligation was requested
 	 */
 
-	public void requestObligationFrom(User user, Double amount, String description, LocalDateTime timestamp) {
-		Obligation obligation = new Obligation(this, user, amount, Obligation.Status.PENDING, description, timestamp);
-		DBConnector dbc = new DBConnector();
-		dbc.addObligation(obligation);
+	public Optional<Obligation> requestObligationFrom(User user, Double amount, String description, LocalDateTime timestamp) {
+		Optional<Friendship> f = this.friendsWith.stream()
+				.filter(friendship -> friendship.getSender().equals(user))
+				.filter(friendship -> friendship.getReceiver().equals(user))
+				.findFirst();
+		try {
+			if (f.isPresent()) {
+				switch (f.get().getStatus()) {
+					case ACCEPTED:
+						return Optional.of(new Obligation(this, user, amount, Obligation.Status.PENDING, description, timestamp));
+					case AUTO_APPROVE:
+						return Optional.of(new Obligation(this, user, amount, Obligation.Status.ACCEPTED, description, timestamp));
+					case PENDING:
+					case DECLINED: {
+						throw new IllegalArgumentException();        //NotInAFriendshipException
+					}
+				}
+			} else throw new IllegalArgumentException();
+		} catch (IllegalArgumentException e) {
+			System.out.println("Not in a friendship with " + user + " !");
+		}
+		return Optional.empty();
 	}
 
 	/**
@@ -175,5 +191,61 @@ public class User{
 	}
 	public void addOwes(Obligation obligation){
 		this.owes.add(obligation);
+	}
+
+	public Optional<Friendship> sendOrAcceptFriendship(User user){
+		try {
+			Optional<Friendship> f = this.friendsWith.stream()
+					.filter(friendship -> friendship.getSender().equals(user))
+					.findFirst();
+			if (f.isPresent()) {
+				switch (f.get().getStatus()) {
+					case ACCEPTED:
+					case AUTO_APPROVE:
+						throw new IllegalStateException();		//AlreadyAcceptedException
+					case PENDING:
+						f.get().setStatus(Friendship.Status.ACCEPTED);
+					case DECLINED:
+						throw new IllegalAccessException();		//DeclinedByReceiverException
+				}
+			}
+			else {
+				Optional<Friendship> onlF = this.friendsWith.stream()
+						.filter(friendship -> friendship.getSender().equals(this))
+						.filter(friendship -> friendship.getReceiver().equals(user))
+						.findFirst();
+				if(onlF.isEmpty()) return Optional.of(new Friendship(this, user, Friendship.Status.PENDING));
+				else throw new IllegalCallerException();		//RequestAlreadySentException
+			}
+		}
+		catch(IllegalStateException e) {
+			System.out.println("Already friends with " + user + "!");
+		}
+		catch(IllegalAccessException e) {
+			System.out.println("Request has been already declined by " + user + "!");
+		}
+		catch(IllegalCallerException e) {
+			System.out.println("You already sent the request to " + user + "!");
+		}
+		return Optional.empty();
+	}
+
+	public void declineFriendship(User user){
+		try {
+			Optional<Friendship> f = this.friendsWith.stream()
+					.filter(friendship -> friendship.getSender().equals(user))
+					.findFirst();
+			if (f.isPresent()) f.get().setStatus(Friendship.Status.DECLINED);
+			else throw new NoSuchElementException();
+		}
+		catch(Exception e){
+			System.out.println("Friendship request from " + user + "does not exists!");
+		}
+	}
+
+	public List<Friendship> getAllFriendshipRequests(){
+		return this.friendsWith.stream()
+				.filter(friendship -> friendship.getStatus() == Friendship.Status.PENDING)
+				.collect(Collectors.toList());
 	}
 }
