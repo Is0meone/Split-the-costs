@@ -13,7 +13,16 @@ import java.util.stream.Collectors;
 public class UserController {
 	@GetMapping
 	public List<UserDTO> getUsers() {
-		return null;
+		DBConnector dbc = new DBConnector();
+		List<User> users = dbc.getAllUsers();
+		return users.stream()
+				.map(user -> {
+					UserDTO userDTO = new UserDTO();
+					userDTO.setId(user.getId());
+					userDTO.setName(user.getName());
+					return userDTO;
+				})
+				.collect(Collectors.toList());
 	}
 
 	@GetMapping("/{id}")
@@ -48,16 +57,5 @@ public class UserController {
 					return userDTO;
 				})
 				.collect(Collectors.toList());
-	}
-
-	@GetMapping("/findtest")
-	public UserDTO findUsersTest(@RequestParam String name) {
-		System.out.println(name);
-		DBConnector dbc = new DBConnector();
-		User user = dbc.findUserByName(name);
-		UserDTO u = new UserDTO();
-		u.setName(user.getName());
-		u.setId(790L);
-		return null;
 	}
 }
