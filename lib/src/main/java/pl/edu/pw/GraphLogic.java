@@ -15,12 +15,44 @@ public class GraphLogic {
         List<User> users = dbc.findShortestPath(userOne,userTwo);
         return users;
     }
-    public List<Obligation> getActiveCreditors(Obligation obligation) {
+    public List<Obligation> getActiveCreditorOwes(Obligation obligation) {//to dziala tylko na cykle
+       if(obligation.getCreditor().getOwes() != null){
         return obligation.getCreditor().getOwes()
                 .stream()
                 .filter(o -> o.getStatus() != Obligation.Status.PAID)
                 .collect(Collectors.toList());
     }
+    else return null;
+    }
+
+    public List<Obligation> getActiveDebtorOwes(Obligation obligation) {
+        if(obligation.getCreditor().getOwes() != null){
+        return obligation.getDebtor().getOwes()
+                .stream()
+                .filter(o -> o.getStatus() != Obligation.Status.PAID)
+                .collect(Collectors.toList());
+        }
+        else return null;
+    }
+    public List<Obligation> getActiveCreditorisOwned(Obligation obligation){
+        if(obligation.getCreditor().getIsOwed() != null){
+        return obligation.getCreditor().getIsOwed()
+                .stream()
+                .filter(o -> o.getStatus() != Obligation.Status.PAID)
+                .collect(Collectors.toList());
+        }
+        else return null;
+    }
+    public List<Obligation> getActiveDebtorisOwned(Obligation obligation){
+        if(obligation.getCreditor().getIsOwed() != null){
+        return obligation.getDebtor().getIsOwed()
+                .stream()
+                .filter(o -> o.getStatus() != Obligation.Status.PAID)
+                .collect(Collectors.toList());
+        }
+        else return null;
+    }
+
     /*
     *This func should be used after every accepted obligation to keep the graph as simpe as possible
     * Trzeba dodać:
@@ -29,47 +61,66 @@ public class GraphLogic {
      */
     public void debtTransfer(User creditor, User debtor, Obligation obligation){
         DBConnector dbc = new DBConnector();
-        List<Obligation> CredList = getActiveCreditors(obligation); //lista komu wisi
+
+        if(transferLogic(obligation,getActiveCreditorOwes(obligation))==true) return;
+        if(transferLogic(obligation,getActiveDebtorOwes(obligation))==true) return;
+        if(transferLogic(obligation,getActiveCreditorisOwned(obligation))==true) return;
+        if(transferLogic(obligation,getActiveDebtorisOwned(obligation))==true) return;
+
+    }
+    public boolean transferLogic(Obligation obligation,List<Obligation> ListToCheck){
+        DBConnector dbc = new DBConnector();
         int i =0;
-        while (obligation.getAmount()>0&&i<CredList.size()){
-            double DebtToPay = CredList.get(i).getAmount();
+        if(ListToCheck == null) return false;
+        while (i<ListToCheck.size()&&!ListToCheck.get(i).equals(obligation)){//kurczaki trzeba dodac zeby sie zatrzymywalo jak dlug zejdzie caly
+            double DebtToPay = ListToCheck.get(i).getAmount();
             double margin = DebtToPay - obligation.getAmount();
             if(margin>=0){ //wszystko splaci w jednym
-                CredList.get(i).setAmount(DebtToPay-obligation.getAmount());
-                Obligation transferedDebt = new Obligation(CredList.get(i).getCreditor(),obligation.getDebtor(),obligation.getAmount());
+                ListToCheck.get(i).setAmount(DebtToPay-obligation.getAmount());
                 obligation.pay();
-                dbc.addObligation(CredList.get(i));
+                dbc.addObligation(ListToCheck.get(i));
                 dbc.addObligation(obligation);
-                dbc.addObligation(transferedDebt);
+
+                if(!ListToCheck.get(i).getCreditor().equals(obligation.getDebtor())){
+                    Obligation transferedDebt = new Obligation(ListToCheck.get(i).getCreditor(),obligation.getDebtor(),obligation.getAmount());
+                    dbc.addObligation(transferedDebt);
+                }
+                return true;
             }
             else{
-                CredList.get(i).pay();
+                ListToCheck.get(i).pay();
                 obligation.setAmount(obligation.getAmount()-DebtToPay);
-                Obligation transferedDebt = new Obligation(CredList.get(i).getCreditor(),obligation.getDebtor(),DebtToPay);
-                dbc.addObligation(CredList.get(i));
+                dbc.addObligation(ListToCheck.get(i));
                 dbc.addObligation(obligation);
-                dbc.addObligation(transferedDebt);
+                if(!ListToCheck.get(i).getCreditor().equals(obligation.getDebtor())) {
+                    Obligation transferedDebt = new Obligation(ListToCheck.get(i).getCreditor(),obligation.getDebtor(),DebtToPay);
+                    dbc.addObligation(transferedDebt);
+                }
             }
             i++;
         }
+        return false;
+    }
+    public static void getCleanObl(List<Obligation> obligationsList){
+        for (Obligation o: obligationsList) {
+            if(o.getStatus()==null){
+                System.out.println("Obligacja nr: "+o.getId() +" " +o.getCreditor().getName()+" <- "+ o.getDebtor().getName()+" value "+o.getAmount());
+            }
+        }
     }
     public static void main(String[] args){
-       DBConnector dbc = new DBConnector();
-        /*User user = new User("wewe","ttr");
-        User user2 = new User("gcb","dda");
-        Obligation obligation = new Obligation(user,user2,(double)3);
-        dbc.addUser(user);
-        dbc.addUser(user2);
-        dbc.addObligation(obligation);
+        DBConnector dbc = new DBConnector();
+        GraphLogic logic = new GraphLogic();
 
-        User one = dbc.findUserById(17L);
-        User two = dbc.findUserById(16L);
-        System.out.println(dbc.getAllObligations());
-        //System.out.println(dbc.findShortestPath(one,two));
-        Obligation obligation = dbc.findObligationBetweenUsers(two,one);
-        System.out.println(obligation);
+        logic.debtTransfer(null,null,dbc.findObligationById(4L));
 
+        logic.getCleanObl(dbc.getAllObligations());
+    }
 
+}
+/*
+              DBConnector dbc = new DBConnector();
+        GraphLogic logic = new GraphLogic();
         User user = new User("a","daje");
         User user2 = new User("b","wisi/daje");
         User user3 = new User("c","wisi");
@@ -80,25 +131,24 @@ public class GraphLogic {
         dbc.addUser(user3);
         dbc.addObligation(obligation);
         dbc.addObligation(obligation2);
-        */
+        logic.debtTransfer(null,null,obligation2);
 
-/*
-        Obligation ott = dbc.findObligationById(1L);
-        GraphLogic logic = new GraphLogic();
-        logic.debtTransfer(null,null,ott);
-        List<Obligation> list = dbc.getAllObligations();
-        System.out.println(list);
- */
-        User user3 = new User("d","kolejny");
-        User user2 = dbc.findUserById(2L);
-        Obligation obligation3 = new Obligation(user2,user3,(double)25);
-        dbc.addUser(user3);
+        User user4 = new User("d","daje");
+        User user5 = new User("e","wisi/daje");
+        dbc.addUser(user4);
+        dbc.addUser(user5);
+
+        Obligation obligation3  = new Obligation(user4,user5,(double)30);
         dbc.addObligation(obligation3);
-        GraphLogic logic = new GraphLogic();
-        logic.debtTransfer(null,null,obligation3);
-        List<Obligation> list = dbc.getAllObligations();
-        System.out.println(list);
+        Obligation obligation4 = new Obligation(user,user4,(double)25);
+        dbc.addObligation(obligation4);
 
-    }
+        logic.getCleanObl(dbc.getAllObligations());
+ */
 
-}
+/*        dbc.deleteObligation(4L);
+        dbc.deleteObligation(5L);
+
+         Obligation obligation4 = new Obligation(dbc.findUserByName("a"),dbc.findUserByName("d"),(double)25);
+
+        */

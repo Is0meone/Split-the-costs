@@ -75,6 +75,15 @@ public class DBConnector {
                 .collect(Collectors.toList());
     }
 
+    public void deleteObligation(Long id) { //this func is just for having a better view of large data base
+        Session session = sessionFactory.openSession();
+        try (Transaction tx = session.beginTransaction()) {
+            Obligation obligation = session.load(Obligation.class, id);
+            session.delete(obligation);
+            tx.commit();
+        }
+    }
+
     public Obligation findObligationById(Long id){
         Session session = sessionFactory.openSession();
         try{
