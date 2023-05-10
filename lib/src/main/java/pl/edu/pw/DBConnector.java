@@ -18,14 +18,24 @@ import java.util.stream.StreamSupport;
 
 public class DBConnector {
 
-    Configuration configuration = new Configuration.Builder()
-            .uri("neo4j+s://2be25d7b.databases.neo4j.io")
-            .credentials("neo4j", "Ob45K7a1DfSQUFb6qI_WFh8edC_epUaAbGxkA7tb26Y")
-            .build();
+
     private static SessionFactory sessionFactory;
 
 
     public DBConnector() {
+        Configuration configuration = new Configuration.Builder()
+                .uri("neo4j+s://2be25d7b.databases.neo4j.io")
+                .credentials("neo4j", "Ob45K7a1DfSQUFb6qI_WFh8edC_epUaAbGxkA7tb26Y")
+                .build();
+
+        this.sessionFactory = new SessionFactory(configuration, "pl.edu.pw.models");
+    }
+    public DBConnector(String test) {
+        Configuration configuration = new Configuration.Builder()
+                .uri("neo4j+s://ea165f78.databases.neo4j.io")
+                .credentials("neo4j", "KrSTu_-Wz_9HKTAhbdLuqvEHOhjXqTwB7I7_JVAQvuw")
+                .build();
+
         this.sessionFactory = new SessionFactory(configuration, "pl.edu.pw.models");
     }
 
@@ -111,7 +121,6 @@ public class DBConnector {
             System.out.println("No users with name prefix: " + name);
             e.printStackTrace();
         }
-
         return Collections.emptyList();
     }
 

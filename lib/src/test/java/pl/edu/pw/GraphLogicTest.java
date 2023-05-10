@@ -30,7 +30,7 @@ class GraphLogicTest {
 
     @Test
     void debtTransfer() {
-        DBConnector dbc = new DBConnector();
+        DBConnector dbc = new DBConnector("test");
         User user = new User("aTestowe","daje");
         User user2 = new User("bTestowe","wisi/daje");
         User user3 = new User("cTestowe","wisi");
