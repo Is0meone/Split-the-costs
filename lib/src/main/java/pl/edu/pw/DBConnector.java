@@ -55,7 +55,8 @@ public class DBConnector {
     }
     public void addObligation(Obligation obligation){
         Session session = sessionFactory.openSession();
-
+        unNullifier(obligation.getDebtor());
+        unNullifier(obligation.getCreditor());
         obligation.getDebtor().addOwes(obligation);
         obligation.getCreditor().addOwed(obligation);
 
