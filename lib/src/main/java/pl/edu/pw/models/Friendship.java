@@ -1,5 +1,6 @@
 package pl.edu.pw.models;
 
+import ch.qos.logback.classic.joran.sanity.IfNestedWithinSecondPhaseElementSC;
 import org.neo4j.ogm.annotation.*;
 
 import java.util.Objects;
@@ -18,10 +19,16 @@ public class Friendship {
 	@Id @GeneratedValue
 	private Long id;
 	@StartNode
-	private User user1;
+	private User sender;
 	@EndNode
-	private User user2;
+	private User receiver;
 	private Status status;
+
+	public Friendship(User sender, User receiver, Status status){
+		this.sender=sender;
+		this.receiver=receiver;
+		this.status=status;
+	}
 
 	public Long getId() {
 		return id;
@@ -31,20 +38,20 @@ public class Friendship {
 		this.id = id;
 	}
 
-	public User getUser1() {
-		return user1;
+	public User getSender() {
+		return sender;
 	}
 
-	public void setUser1(User user1) {
-		this.user1 = user1;
+	public void setSender(User sender) {
+		this.sender = sender;
 	}
 
-	public User getUser2() {
-		return user2;
+	public User getReceiver() {
+		return receiver;
 	}
 
-	public void setUser2(User user2) {
-		this.user2 = user2;
+	public void setUser2(User receiver) {
+		this.receiver = Friendship.this.receiver;
 	}
 
 	public Status getStatus() {
@@ -60,20 +67,20 @@ public class Friendship {
 		if (this == o) return true;
 		if (!(o instanceof Friendship that)) return false;
 		return Objects.equals(id, that.id) && Objects.equals(
-				user1, that.user1) && Objects.equals(user2, that.user2) && status == that.status;
+				sender, that.sender) && Objects.equals(receiver, that.receiver) && status == that.status;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, user1, user2, status);
+		return Objects.hash(id, sender, receiver, status);
 	}
 
 	@Override
 	public String toString() {
 		return "Friendship{" +
 				"id=" + id +
-				", user1=" + user1 +
-				", user2=" + user2 +
+				", sender=" + sender +
+				", receiver=" + receiver +
 				", status=" + status +
 				'}';
 	}
