@@ -64,6 +64,18 @@ public class DBConnector {
                 .collect(Collectors.toList());
     }
 
+    public Obligation findObligationById(Long id){
+        Session session = sessionFactory.openSession();
+        try{
+            Obligation obligation = session.load(Obligation.class,id);
+            return obligation;
+        }
+        catch(Error e){
+            System.out.println("no user with id " + id);
+        }
+        return null;
+    }
+
     public User findUserByName(String name) {
         Session session = sessionFactory.openSession();
         try{

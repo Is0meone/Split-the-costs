@@ -3,15 +3,23 @@ package pl.edu.pw;
 import pl.edu.pw.models.Obligation;
 import pl.edu.pw.models.User;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class GraphLogic {
     public List<User> findShortest(User userOne,User userTwo){
         DBConnector dbc = new DBConnector();
         List<User> users = dbc.findShortestPath(userOne,userTwo);
         return users;
+    }
+    public List<Obligation> getActiveCreditors(Obligation obligation) {
+        return obligation.getCreditor().getOwes()
+                .stream()
+                .filter(o -> o.getStatus() != Obligation.Status.PAID)
+                .collect(Collectors.toList());
     }
     /*
     *This func should be used after every accepted obligation to keep the graph as simpe as possible
@@ -21,7 +29,7 @@ public class GraphLogic {
      */
     public void debtTransfer(User creditor, User debtor, Obligation obligation){
         DBConnector dbc = new DBConnector();
-        List<Obligation> CredList = obligation.getCreditor().getOwes(); //lista komu wisi
+        List<Obligation> CredList = getActiveCreditors(obligation); //lista komu wisi
         int i =0;
         while (obligation.getAmount()>0&&i<CredList.size()){
             double DebtToPay = CredList.get(i).getAmount();
@@ -61,10 +69,10 @@ public class GraphLogic {
         Obligation obligation = dbc.findObligationBetweenUsers(two,one);
         System.out.println(obligation);
 
-         *
-        User user = new User("A","daje");
-        User user2 = new User("B","wisi/daje");
-        User user3 = new User("C","wisi");
+
+        User user = new User("a","daje");
+        User user2 = new User("b","wisi/daje");
+        User user3 = new User("c","wisi");
         Obligation obligation = new Obligation(user,user2,(double)100);
         Obligation obligation2 = new Obligation(user2,user3,(double)50);
         dbc.addUser(user);
@@ -72,13 +80,25 @@ public class GraphLogic {
         dbc.addUser(user3);
         dbc.addObligation(obligation);
         dbc.addObligation(obligation2);
-        *
-        Obligation ott = dbc.getAllObligations().get(1);
+        */
+
+/*
+        Obligation ott = dbc.findObligationById(1L);
         GraphLogic logic = new GraphLogic();
         logic.debtTransfer(null,null,ott);
-*/
         List<Obligation> list = dbc.getAllObligations();
         System.out.println(list);
+ */
+        User user3 = new User("d","kolejny");
+        User user2 = dbc.findUserById(2L);
+        Obligation obligation3 = new Obligation(user2,user3,(double)25);
+        dbc.addUser(user3);
+        dbc.addObligation(obligation3);
+        GraphLogic logic = new GraphLogic();
+        logic.debtTransfer(null,null,obligation3);
+        List<Obligation> list = dbc.getAllObligations();
+        System.out.println(list);
+
     }
 
 }
