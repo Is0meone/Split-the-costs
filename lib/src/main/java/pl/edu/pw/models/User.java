@@ -1,15 +1,11 @@
 package pl.edu.pw.models;
 
 
-import jdk.jfr.Name;
 import org.neo4j.ogm.annotation.GeneratedValue;
 import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
-//import org.springframework.security.crypto.argon2.Argon2PasswordEncoder; Przepraszam ale mi wyrzuca bład
-import pl.edu.pw.DBConnector;
 
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -117,11 +113,9 @@ public class User{
 	 * request another user to pay you back specified amount
 	 * @param user user to request obligation from
 	 * @param amount amount to request
-	 * @param description short note about the obligation
-	 * @param timestamp when the obligation was requested
 	 */
 
-	public Optional<Obligation> requestObligationFrom(User user, Double amount, String description, LocalDateTime timestamp) {
+	public Optional<Obligation> requestObligationFrom(User user, Double amount) {
 		Optional<Friendship> f = this.friendsWith.stream()
 				.filter(friendship -> friendship.getSender().equals(user))
 				.filter(friendship -> friendship.getReceiver().equals(user))
@@ -130,9 +124,9 @@ public class User{
 			if (f.isPresent()) {
 				switch (f.get().getStatus()) {
 					case ACCEPTED:
-						return Optional.of(new Obligation(this, user, amount, Obligation.Status.PENDING, description, timestamp));
+						return Optional.of(new Obligation(this, user, amount, Obligation.Status.PENDING));
 					case AUTO_APPROVE:
-						return Optional.of(new Obligation(this, user, amount, Obligation.Status.ACCEPTED, description, timestamp));
+						return Optional.of(new Obligation(this, user, amount, Obligation.Status.ACCEPTED));
 					case PENDING:
 					case DECLINED: {
 						throw new IllegalArgumentException();        //NotInAFriendshipException
@@ -153,7 +147,7 @@ public class User{
 	public void acceptObligationTo(User user, Long id) {
 		for (Obligation obligation: this.owes
 		) {
-			if(obligation.getCreditor().equals(user)) obligation.accept();
+			if(obligation.getCreditor().equals(user) && obligation.getId()==id) obligation.accept();
 		}
 	}
 
@@ -166,7 +160,6 @@ public class User{
 			 ) {
 			if(obligation.getCreditor().equals(user)) obligation.pay();
 		}
-
 	}
 	/**
 	 * Follow the graph to find the end users who owe you money
