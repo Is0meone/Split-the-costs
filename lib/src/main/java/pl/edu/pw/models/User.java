@@ -241,4 +241,10 @@ public class User{
 				.filter(friendship -> friendship.getStatus() == Friendship.Status.PENDING)
 				.collect(Collectors.toList());
 	}
+	public boolean isFriend(User user){
+		for (Friendship f : this.friendsWith) {
+			if(f.getSender().equals(user)&&f.getReceiver().equals(user)) return true;
+		}
+		return false;
+	}
 }

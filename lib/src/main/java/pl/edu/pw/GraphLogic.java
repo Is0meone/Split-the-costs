@@ -15,24 +15,42 @@ public class GraphLogic {
         List<User> users = dbc.findShortestPath(userOne,userTwo);
         return users;
     }
-    public List<Obligation> getActiveCreditorOwes(Obligation obligation) {//to dziala tylko na cykle
-       if(obligation.getCreditor().getOwes() != null){
-        return obligation.getCreditor().getOwes()
+    public List<Obligation> getActiveCreditorOwes(Obligation obligation) {
+        if(obligation.getCreditor().getOwes() != null){
+            /*
+            //TODO jeśli chcemy uwzględniać Friendship to odkomentować i zmienić liste podawaną do strumienia
+            List<Obligation> list = obligation.getCreditor().getOwes();
+            List<Obligation> justFriends = new ArrayList<>();
+            for (Obligation obl: list) {
+                if(obl.getCreditor().isFriend(obligation.getDebtor())){
+                    justFriends.add(obl);
+                }
+            }*/
+            return obligation.getCreditor().getOwes()
                 .stream()
-                .filter(o -> o.getStatus() != Obligation.Status.PAID)
+                .filter(o -> o.getStatus() != Obligation.Status.PAID&&o.getStatus() != Obligation.Status.AUTOPAID)
                 .collect(Collectors.toList());
     }
     else return null;
     }
     public List<Obligation> getActiveDebtorisOwned(Obligation obligation){
+         /*   List<Obligation> list = obligation.getDebtor().getIsOwed();
+            List<Obligation> justFriends = new ArrayList<>();
+            for (Obligation obl: list) {
+                if(obl.getDebtor().isFriend(obligation.getCreditor())){
+                    justFriends.add(obl);
+                }
+            }
+          */
         if(obligation.getDebtor().getIsOwed() != null){
         return obligation.getDebtor().getIsOwed()
                 .stream()
-                .filter(o -> o.getStatus() != Obligation.Status.PAID)
+                .filter(o -> o.getStatus() != Obligation.Status.PAID&&o.getStatus() != Obligation.Status.AUTOPAID)
                 .collect(Collectors.toList());
         }
         else return null;
     }
+
 
     /*
     *This func should be used after every accepted obligation to keep the graph as simpe as possible
@@ -132,7 +150,17 @@ public class GraphLogic {
         DBConnector dbc = new DBConnector();
         GraphLogic logic = new GraphLogic();
 
-        logic.debtTransfer(null,null,dbc.findObligationById(4L));
+        User user = new User("a","daje");
+        User user2 = new User("b","wisi/daje");
+        User user3 = new User("c","wisi");
+        Obligation obligation = new Obligation(user,user2,(double)100);
+        Obligation obligation2 = new Obligation(user2,user3,(double)50);
+        dbc.addUser(user);
+        dbc.addUser(user2);
+        dbc.addUser(user3);
+        dbc.addObligation(obligation);
+        dbc.addObligation(obligation2);
+        logic.debtTransfer(null,null,obligation2);
 
 
         dbc.getAllObligations();
