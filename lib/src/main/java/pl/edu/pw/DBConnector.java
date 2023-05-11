@@ -60,7 +60,7 @@ public class DBConnector {
         obligation.getDebtor().addOwes(obligation);
         obligation.getCreditor().addOwed(obligation);
 
-        session.save(obligation.getCreditor(),10);
+        session.save(obligation.getCreditor(),1);
     }
 
     public List<User> getAllUsers() {
