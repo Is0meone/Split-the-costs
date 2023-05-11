@@ -40,12 +40,12 @@ public class GraphLogic {
     * rozważanie statusu obligacji/ znajomych/ "archiwizowanie" obligacji(Latwe)
     * sprawdzenie dzialania dla dużych struktur i ogarnięcie splitu
      */
-    public void debtTransfer(User creditor, User debtor, Obligation obligation){
+    public boolean debtTransfer(User creditor, User debtor, Obligation obligation){
         DBConnector dbc = new DBConnector();
 
-        if(transferLogicCreditor(obligation,getActiveCreditorOwes(obligation))==true) return;
-        if(transferLogicDebtor(obligation,getActiveDebtorisOwned(obligation))==true) return;
-
+        if(transferLogicCreditor(obligation,getActiveCreditorOwes(obligation))==true) return true;
+        if(transferLogicDebtor(obligation,getActiveDebtorisOwned(obligation))==true) return true;
+    return false;
     }
     public boolean transferLogicCreditor(Obligation obligation,List<Obligation> ListToCheck){
         DBConnector dbc = new DBConnector();
@@ -91,13 +91,13 @@ public class GraphLogic {
             double margin = DebtToPay - obligation.getAmount();
             if(margin>=0){ //wszystko splaci w jednym
                 ListToCheck.get(i).setAmount(DebtToPay-obligation.getAmount());
-                if(!ListToCheck.get(i).getDebtor().equals(obligation.getCreditor())){
-                    Obligation transferedDebt = new Obligation(ListToCheck.get(i).getDebtor(),obligation.getCreditor(),obligation.getAmount());
-                    dbc.addObligation(transferedDebt);
-                }
                 obligation.pay();  //niezmienia statusu platnosci ????
                 //obligation.setStatus(Obligation.Status.PAID);
 
+                if(!ListToCheck.get(i).getDebtor().equals(obligation.getCreditor())){
+                    Obligation transferedDebt = new Obligation(obligation.getCreditor(),ListToCheck.get(i).getDebtor(),obligation.getAmount());
+                    dbc.addObligation(transferedDebt);
+                }
                 dbc.addObligation(ListToCheck.get(i));
                 dbc.addObligation(obligation);
 
@@ -161,15 +161,18 @@ public class GraphLogic {
 
         logic.debtTransfer(null,null,dbc.findObligationById(4L));
         list = logic.getCleanObl(dbc.getAllObligations());
-        dbc.addObligation(obligation5);
-        logic.debtTransfer(null,null,obligation5);
-        logic.getCleanObl(dbc.getAllObligations());
+        //dbc.addObligation(obligation5);
+        //logic.debtTransfer(null,null,obligation5);
+        list = logic.getCleanObl(dbc.getAllObligations());
+        System.out.println(dbc.getAllObligations());
     }
 
-}
+}//TODO nie dziala placenia i dzielenie wiekszej liczby transakcji znowu nie tworzy się mała obligacja 5 (bo może jej nie zlecilem? no ta nie powinna sie tworzyc)
 /*
-              DBConnector dbc = new DBConnector();
+        DBConnector dbc = new DBConnector();
         GraphLogic logic = new GraphLogic();
+
+       // dbc.dropDatabase();
         User user = new User("a","daje");
         User user2 = new User("b","wisi/daje");
         User user3 = new User("c","wisi");
@@ -181,17 +184,25 @@ public class GraphLogic {
         dbc.addObligation(obligation);
         dbc.addObligation(obligation2);
         logic.debtTransfer(null,null,obligation2);
-
+        List<Obligation> list = logic.getCleanObl(dbc.getAllObligations());
         User user4 = new User("d","daje");
         User user5 = new User("e","wisi/daje");
+        User user6 = new User("f","f");
         dbc.addUser(user4);
         dbc.addUser(user5);
+        dbc.addUser(user6);
 
         Obligation obligation3  = new Obligation(user4,user5,(double)30);
         dbc.addObligation(obligation3);
-        Obligation obligation4 = new Obligation(user,user4,(double)25);
+        Obligation obligation4 = new Obligation(user4,user,(double)25);
         dbc.addObligation(obligation4);
+        Obligation obligation5 = new Obligation(user6,user4,(double)130);
 
+
+        logic.debtTransfer(null,null,dbc.findObligationById(4L));
+        list = logic.getCleanObl(dbc.getAllObligations());
+        dbc.addObligation(obligation5);
+        logic.debtTransfer(null,null,obligation5);
         logic.getCleanObl(dbc.getAllObligations());
  */
 
