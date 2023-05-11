@@ -280,4 +280,10 @@ public class User{
 		pendingOwes.addAll(pendingOwed);
 		return pendingOwes;
 	}
+	public boolean isFriend(User user){
+		for (Friendship f : this.friendsWith) {
+			if(f.getSender().equals(user)&&f.getReceiver().equals(user)) return true;
+		}
+		return false;
+	}
 }
