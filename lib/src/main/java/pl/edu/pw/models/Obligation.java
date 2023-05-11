@@ -12,7 +12,9 @@ public class Obligation {
 		PAID,
 		ACCEPTED,
 		DECLINED,
-		PENDING
+		PENDING,
+		AUTOGEN,
+		AUTOPAID
 	}
 	@Id
 	@GeneratedValue
@@ -159,5 +161,8 @@ public class Obligation {
 	 */
 	public void pay() {
 		this.status = Status.PAID;
+	}
+	public void autopay(){
+		this.status = Status.AUTOPAID;
 	}
 }
