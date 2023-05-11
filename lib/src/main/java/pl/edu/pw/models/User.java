@@ -5,6 +5,7 @@ import org.neo4j.ogm.annotation.GeneratedValue;
 import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
+import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -28,8 +29,8 @@ public class User{
 
 	public User(String name, String password) {
 		this.name = name;
-		//Argon2PasswordEncoder encoder = new Argon2PasswordEncoder(32,64,1,15*1024,2);
-		//this.passwordHash = encoder.encode(password); // Password Hashing
+		Argon2PasswordEncoder encoder = new Argon2PasswordEncoder(32,64,1,15*1024,2);
+		this.passwordHash = encoder.encode(password); // Password Hashing
 
 		// Decode password like this
 //		var validPassword = encoder.matches(myPassword, encodedPassword);
