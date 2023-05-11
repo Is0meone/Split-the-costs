@@ -4,9 +4,7 @@ import pl.edu.pw.models.Obligation;
 import pl.edu.pw.models.User;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class GraphLogic {
@@ -58,14 +56,13 @@ public class GraphLogic {
     * rozważanie statusu obligacji/ znajomych/ "archiwizowanie" obligacji(Latwe)
     * sprawdzenie dzialania dla dużych struktur i ogarnięcie splitu
      */
-    public boolean debtTransfer(User creditor, User debtor, Obligation obligation){
+    public boolean debtTransfer(Obligation obligation){
         DBConnector dbc = new DBConnector();
-
         if(transferLogicCreditor(obligation,getActiveCreditorOwes(obligation))==true) return true;
         if(transferLogicDebtor(obligation,getActiveDebtorisOwned(obligation))==true) return true;
     return false;
     }
-    public boolean transferLogicCreditor(Obligation obligation,List<Obligation> ListToCheck){
+    private boolean transferLogicCreditor(Obligation obligation,List<Obligation> ListToCheck){
         DBConnector dbc = new DBConnector();
         double restToPay = obligation.getAmount();
         int i =0;
@@ -100,7 +97,7 @@ public class GraphLogic {
         }
         return false;
     }
-    public boolean transferLogicDebtor(Obligation obligation,List<Obligation> ListToCheck){
+    private boolean transferLogicDebtor(Obligation obligation,List<Obligation> ListToCheck){
         DBConnector dbc = new DBConnector();
         int i =0;
         if(ListToCheck == null) return false;
