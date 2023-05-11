@@ -129,7 +129,7 @@ public class GraphLogic {
         DBConnector dbc = new DBConnector();
         GraphLogic logic = new GraphLogic();
 
-        logic.debtTransfer(null,null,dbc.findObligationById(4L));
+        //logic.debtTransfer(null,null,dbc.findObligationById(4L));
 
 
         dbc.getAllObligations();
