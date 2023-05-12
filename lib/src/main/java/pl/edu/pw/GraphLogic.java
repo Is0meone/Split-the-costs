@@ -8,8 +8,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class GraphLogic {
+    private DBConnector dbc;
+    public GraphLogic(DBConnector dbc){
+        this.dbc=dbc;
+    }
+
     public List<User> findShortest(User userOne,User userTwo){
-        DBConnector dbc = new DBConnector();
         List<User> users = dbc.findShortestPath(userOne,userTwo);
         return users;
     }
@@ -55,13 +59,11 @@ public class GraphLogic {
     * sprawdzenie dzialania dla dużych struktur i ogarnięcie splitu
      */
     public boolean debtTransfer(Obligation obligation){
-        DBConnector dbc = new DBConnector();
         if(transferLogicCreditor(obligation,getActiveCreditorOwes(obligation))==true) return true;
         if(transferLogicDebtor(obligation,getActiveDebtorisOwned(obligation))==true) return true;
     return false;
     }
     private boolean transferLogicCreditor(Obligation obligation,List<Obligation> ListToCheck){
-        DBConnector dbc = new DBConnector();
         double restToPay = obligation.getAmount();
         int i =0;
         if(ListToCheck == null) return false;
@@ -96,7 +98,6 @@ public class GraphLogic {
         return false;
     }
     private boolean transferLogicDebtor(Obligation obligation,List<Obligation> ListToCheck){
-        DBConnector dbc = new DBConnector();
         int i =0;
         if(ListToCheck == null) return false;
         while (i<ListToCheck.size()&&!ListToCheck.get(i).equals(obligation)){//kurczaki trzeba dodac zeby sie zatrzymywalo jak dlug zejdzie caly
@@ -141,8 +142,8 @@ public class GraphLogic {
         return cleanList;
     }
     public static void main(String[] args){
-        DBConnector dbc = new DBConnector();
-        GraphLogic logic = new GraphLogic();
+        DBConnector dbc = new DBConnector("test");
+        GraphLogic logic = new GraphLogic(dbc);
 
         User user = new User("a","daje");
         User user2 = new User("b","wisi/daje");

@@ -30,14 +30,14 @@ class GraphLogicTest {
         dbc.addUser(user3);
         dbc.addObligation(obligation);
         dbc.addObligation(obligation2);
-        GraphLogic logic = new GraphLogic();
+        GraphLogic logic = new GraphLogic(dbc);
         logic.debtTransfer(obligation2);
         List<Obligation> list = dbc.getAllObligations();
     }
 
     @Test
     void debtTransfer2() {      //test cyklu
-        GraphLogic gl = new GraphLogic();
+        GraphLogic gl = new GraphLogic(dbc);
 
         User user = dbc.findUserByName("adam");
         User user2 = dbc.findUserByName("bartek");

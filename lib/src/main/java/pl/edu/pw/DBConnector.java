@@ -1,18 +1,14 @@
 package pl.edu.pw;
 
-import org.neo4j.driver.Values;
 import org.neo4j.ogm.config.Configuration;
-import org.neo4j.ogm.cypher.query.CypherQuery;
 import org.neo4j.ogm.model.Result;
 import org.neo4j.ogm.session.Session;
 import org.neo4j.ogm.session.SessionFactory;
 import org.neo4j.ogm.transaction.Transaction;
-import pl.edu.pw.models.Friendship;
 import pl.edu.pw.models.Obligation;
 import pl.edu.pw.models.User;
 
 import java.util.*;
-
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -227,16 +223,6 @@ public class DBConnector {
  //     dbc.findUserById(4L).payObligationTo(dbc.findUserById(2L));
  //      System.out.println(dbc.findUserById(4L));
     }}
-/*
-TODO:
--friendship
-    -wyslij zapro / zaakceptuj gdy z drugiej strony jest juz wyslane
-    -odrzuc zapro
-    -zrobic autoaccept -> akceptuj automatycznie wszystkie obligacje
--logika
-    -wszyscy posredni dluznicy (najdluzsza sciezka w grafie)
-    -wszyscy posredni kredytodawcy (najdluzsza sciezka w grafie)
--
- */
+
 
 
