@@ -1,13 +1,14 @@
-package pl.edu.pw.api.jwtService;
+package pl.edu.pw.api.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Component;
-import pl.edu.pw.api.auth.AuthController;
-import pl.edu.pw.api.auth.dto.LoginDTO;
+import pl.edu.pw.DBConnector;
+import pl.edu.pw.models.User;
 
 import java.security.Key;
 import java.util.Date;
@@ -70,6 +71,33 @@ public class JwtService {
     public Boolean validateToken(String token, String name) {
         final String username = extractUsername(token);
         return (username.equals(name) && !isTokenExpired(token));
+    }
+
+    public boolean checkUserToken(Long id, HttpServletRequest request){
+        final String authHeader = request.getHeader("Authorization");
+        final String jwt;
+        final String username;
+        if(authHeader==null ||! authHeader.startsWith("Bearer")) {
+            return false;
+        }
+        jwt = authHeader.substring(7);
+        username = extractUsername(jwt);
+        DBConnector dbc = new DBConnector();
+        User user = dbc.findUserById(id);
+        if(username != null && validateToken(jwt, user.getName())) {
+            return true;
+        }
+        return false;
+    }
+    public String getUsernameFromToken(Long id, HttpServletRequest request) {
+        final String authHeader = request.getHeader("Authorization");
+        final String jwt;
+        final String username;
+        if(authHeader==null ||! authHeader.startsWith("Bearer")) {
+            return null;
+        }
+        jwt = authHeader.substring(7);
+        return extractUsername(jwt);
     }
     public static void main(String[] args) {
         JwtService j = new JwtService();

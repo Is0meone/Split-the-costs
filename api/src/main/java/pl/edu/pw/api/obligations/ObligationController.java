@@ -1,12 +1,19 @@
 package pl.edu.pw.api.obligations;
 
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import pl.edu.pw.DBConnector;
 import pl.edu.pw.api.obligations.dto.*;
+import pl.edu.pw.api.security.JwtService;
+import pl.edu.pw.models.User;
 
 import java.util.List;
 
 @RestController("/obligations")
 public class ObligationController {
+	@Autowired
+	private JwtService jwtService;
 	@GetMapping("/user/{id}")
 	public List<ObligationWithIdDTO> getObligationsFor(@PathVariable Long id) {
 		return null;

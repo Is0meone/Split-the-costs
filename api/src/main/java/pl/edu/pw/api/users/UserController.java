@@ -1,7 +1,10 @@
 package pl.edu.pw.api.users;
 
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pl.edu.pw.DBConnector;
+import pl.edu.pw.api.security.JwtService;
 import pl.edu.pw.api.users.dto.UserDTO;
 import pl.edu.pw.models.User;
 
@@ -11,6 +14,8 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/users")
 public class UserController {
+	@Autowired
+	private JwtService jwtService;
 	@GetMapping
 	public List<UserDTO> getUsers() {
 		DBConnector dbc = new DBConnector();

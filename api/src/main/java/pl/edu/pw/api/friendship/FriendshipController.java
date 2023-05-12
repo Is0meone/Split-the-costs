@@ -1,13 +1,20 @@
 package pl.edu.pw.api.friendship;
 
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import pl.edu.pw.DBConnector;
 import pl.edu.pw.api.friendship.dto.FriendshipDTO;
+import pl.edu.pw.api.security.JwtService;
 import pl.edu.pw.api.users.dto.UserDTO;
+import pl.edu.pw.models.User;
 
 import java.util.List;
 
 @RestController("/friends")
 public class FriendshipController {
+	@Autowired
+	private JwtService jwtService;
 	/**
 	 * Sends a friendship request to the user with the given id (or accepts the friendship if the other side requested it)
 	 * @param id id of the second user
