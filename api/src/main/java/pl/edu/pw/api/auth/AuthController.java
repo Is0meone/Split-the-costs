@@ -1,9 +1,7 @@
 package pl.edu.pw.api.auth;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pl.edu.pw.DBConnector;
@@ -18,11 +16,17 @@ import pl.edu.pw.models.User;
 public class AuthController {
 	@Autowired
 	private JwtService jwtService;
+	private DBConnector dbc = new DBConnector();
 
 	@PostMapping("/register")
 	public UserTokenDTO register(@RequestBody @Validated RegisterDTO registerDTO) {
-		DBConnector dbc = new DBConnector();
-		dbc.addUser(new User(registerDTO.getName(), registerDTO.getPassword()));
+		if(dbc.findUserByName(registerDTO.getUsername())==null) { //Check if username already exists
+			dbc.addUser(new User(registerDTO.getUsername(), registerDTO.getPassword()));
+			UserTokenDTO utdto = new UserTokenDTO();
+			utdto.setToken(jwtService.generateToken(registerDTO.getUsername()));
+			utdto.setUserId(dbc.findUserByName(registerDTO.getUsername()).getId());
+			return utdto;
+		}
 		return null;
 	}
 
@@ -33,9 +37,11 @@ public class AuthController {
 		return jwtService.generateToken(loginDTO.getUsername());
 	}
 
-	@GetMapping("/logout")
-	public void logout() {
-	}
+
+//	@GetMapping("/logout")
+//	public void logout() {
+		// TODO: On APP side --> Delete active token
+//	}
 
 	@GetMapping("/test")
 	public LoginDTO test1() {
@@ -52,5 +58,4 @@ public class AuthController {
 		}
 		return "wrong";
 	}
-
 }
