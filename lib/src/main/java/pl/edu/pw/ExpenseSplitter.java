@@ -3,16 +3,16 @@ package pl.edu.pw;
 import pl.edu.pw.models.Obligation;
 import pl.edu.pw.models.User;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.List;
 import java.util.Map;
 
 public class ExpenseSplitter {
 	private User actor;
+	private DBConnector dbc;
 
-	public ExpenseSplitter(User actor) {
+	public ExpenseSplitter(User actor, DBConnector dbc) {
 		this.actor = actor;
+		this.dbc = dbc;
 	}
 
 	public User getActor() {
@@ -26,7 +26,6 @@ public class ExpenseSplitter {
 	 */
 
 	void split(Double amount, User... users) {
-		DBConnector dbc = new DBConnector();
 		Double splittedAmount;
 		splittedAmount = amount/users.length;
 		for (User user: users) {
@@ -40,7 +39,6 @@ public class ExpenseSplitter {
 	 * @param users
 	 */
 	void split(Double amount, List<User> users) {
-		DBConnector dbc = new DBConnector();
 		Double splittedAmount;
 		splittedAmount = amount/users.size();
 		for (User user: users) {
@@ -53,10 +51,8 @@ public class ExpenseSplitter {
 	 * @param users a map with users as keys and the amounts they should pay as values
 	 */
 	void split(Map<User, Double> users) {
-		DBConnector dbc = new DBConnector();
 		for (Map.Entry<User, Double> entry : users.entrySet()) {
 			dbc.addObligation(new Obligation(actor, entry.getKey(), entry.getValue(), Obligation.Status.PENDING));
 		}
 	}
-
 }
