@@ -18,10 +18,12 @@ public class ObligationController {
 	public List<ObligationWithIdDTO> getObligationsFor(@PathVariable Long id) {
 		return null;
 	}
+
 	@GetMapping("/to/{id}")
 	public ObligationsToDTO getObligationsTo(@PathVariable Long id) {
 		return null;
 	}
+
 	@PutMapping("/user/{id}")
 	public void requestObligationFrom(@PathVariable Long id, @RequestBody ObligationDTO obligationDTO) {
 
@@ -39,10 +41,12 @@ public class ObligationController {
 	public List<ObligationTotalDTO> getObligationTotals() {
 		return null;
 	}
+
 	@GetMapping("/pending")
 	public List<ObligationWithIdDTO> getPendingObligations() {
 		return null;
 	}
+
 	@GetMapping("/{id}")
 	public ObligationWithIdDTO getObligation(@PathVariable Long id) {
 		return null;

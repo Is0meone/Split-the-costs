@@ -15,7 +15,6 @@ public class GraphLogic {
     }
     public List<Obligation> getActiveCreditorOwes(Obligation obligation) {
         if(obligation.getCreditor().getOwes() != null){
-            /*
             //TODO jeśli chcemy uwzględniać Friendship to odkomentować i zmienić liste podawaną do strumienia
             List<Obligation> list = obligation.getCreditor().getOwes();
             List<Obligation> justFriends = new ArrayList<>();
@@ -23,7 +22,7 @@ public class GraphLogic {
                 if(obl.getCreditor().isFriend(obligation.getDebtor())){
                     justFriends.add(obl);
                 }
-            }*/
+            }
             return obligation.getCreditor().getOwes()
                 .stream()
                 .filter(o -> o.getStatus() != Obligation.Status.PAID&&o.getStatus() != Obligation.Status.AUTOPAID)
@@ -32,14 +31,14 @@ public class GraphLogic {
     else return null;
     }
     public List<Obligation> getActiveDebtorisOwned(Obligation obligation){
-         /*   List<Obligation> list = obligation.getDebtor().getIsOwed();
-            List<Obligation> justFriends = new ArrayList<>();
-            for (Obligation obl: list) {
-                if(obl.getDebtor().isFriend(obligation.getCreditor())){
-                    justFriends.add(obl);
-                }
+        //TODO jeśli chcemy uwzględniać Friendship to odkomentować i zmienić liste podawaną do strumienia
+        List<Obligation> list = obligation.getDebtor().getIsOwed();
+        List<Obligation> justFriends = new ArrayList<>();
+        for (Obligation obl: list) {
+            if(obl.getDebtor().isFriend(obligation.getCreditor())){
+                justFriends.add(obl);
             }
-          */
+        }
         if(obligation.getDebtor().getIsOwed() != null){
         return obligation.getDebtor().getIsOwed()
                 .stream()
@@ -48,7 +47,6 @@ public class GraphLogic {
         }
         else return null;
     }
-
 
     /*
     *This func should be used after every accepted obligation to keep the graph as simpe as possible
@@ -106,8 +104,7 @@ public class GraphLogic {
             double margin = DebtToPay - obligation.getAmount();
             if(margin>=0){ //wszystko splaci w jednym
                 ListToCheck.get(i).setAmount(DebtToPay-obligation.getAmount());
-                obligation.pay();  //niezmienia statusu platnosci ????
-                //obligation.setStatus(Obligation.Status.PAID);
+                obligation.autopay();
 
                 if(!ListToCheck.get(i).getDebtor().equals(obligation.getCreditor())){
                     Obligation transferedDebt = new Obligation(obligation.getCreditor(),ListToCheck.get(i).getDebtor(),obligation.getAmount(),Obligation.Status.AUTOGEN);
@@ -120,7 +117,7 @@ public class GraphLogic {
                 return true;
             }
             else{
-                ListToCheck.get(i).pay();
+                ListToCheck.get(i).autopay();
                 obligation.setAmount(obligation.getAmount()-DebtToPay);
                 dbc.addObligation(ListToCheck.get(i));
                 dbc.addObligation(obligation);
@@ -157,7 +154,7 @@ public class GraphLogic {
         dbc.addUser(user3);
         dbc.addObligation(obligation);
         dbc.addObligation(obligation2);
-        logic.debtTransfer(null,null,obligation2);
+        logic.debtTransfer(obligation2);
 
 
         dbc.getAllObligations();
@@ -165,7 +162,7 @@ public class GraphLogic {
 
     }
 
-}//TODO nie dziala placenia i dzielenie wiekszej liczby transakcji znowu nie tworzy się mała obligacja 5 (bo może jej nie zlecilem? no ta nie powinna sie tworzyc)
+}//TODO
 /*
         DBConnector dbc = new DBConnector();
         GraphLogic logic = new GraphLogic();

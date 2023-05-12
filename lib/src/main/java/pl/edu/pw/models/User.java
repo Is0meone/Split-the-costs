@@ -242,6 +242,44 @@ public class User{
 				.filter(friendship -> friendship.getStatus() == Friendship.Status.PENDING)
 				.collect(Collectors.toList());
 	}
+	public void rejectFriendship(User user){
+		try{
+			Optional<Friendship>  friend = this.friendsWith.stream()
+					.filter(friendship -> friendship.getStatus() == Friendship.Status.PENDING)
+					.filter(friendship -> friendship.getSender().equals(user))
+					.findFirst();
+			if(friend.isPresent()){
+				friend.get().setStatus(Friendship.Status.DECLINED);
+			}
+			else throw new NoSuchElementException();		//NoPendingInvitationException
+		}
+		catch (NoSuchElementException e){
+			System.out.println("No pending friendship request from "+ user);
+		}
+	}
+	public void markAsAutoAccept(User user){
+		try {
+			for (Friendship friend : this.friendsWith) {
+				if (!friend.getStatus().equals(Friendship.Status.DECLINED) && friend.getSender().equals(user)) {
+					friend.setStatus(Friendship.Status.AUTO_APPROVE);
+				} else if (friend.getSender().equals(user) || friend.getReceiver().equals(user)) {
+					throw new Exception();
+				}
+			}
+		}catch (Exception e){
+			System.out.println("You cannot mark " + user + "as a friend!");
+		}
+	}
+	public List<Obligation> getPendingObligations(){
+		List<Obligation> pendingOwes = this.owes.stream()
+				.filter(obligation -> obligation.getStatus().equals(Friendship.Status.PENDING))
+				.collect(Collectors.toList());
+		List<Obligation> pendingOwed = this.isOwed.stream()
+				.filter(obligation -> obligation.getStatus().equals(Friendship.Status.PENDING))
+				.collect(Collectors.toList());
+		pendingOwes.addAll(pendingOwed);
+		return pendingOwes;
+	}
 	public boolean isFriend(User user){
 		for (Friendship f : this.friendsWith) {
 			if(f.getSender().equals(user)&&f.getReceiver().equals(user)) return true;
