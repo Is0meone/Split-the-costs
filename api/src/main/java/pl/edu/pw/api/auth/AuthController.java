@@ -32,9 +32,15 @@ public class AuthController {
 
 	@PostMapping("/login")
 	public String authenticateAndGetToken(@RequestBody LoginDTO loginDTO) {
-		//TODO: Check username and password in database,
-		// return true and generate token
-		return jwtService.generateToken(loginDTO.getUsername());
+		if(dbc.findUserByName(loginDTO.getUsername())!=null) {
+			User user = new User(loginDTO.getUsername(), loginDTO.getPassword());
+			if (user.passwordCompare(loginDTO.getPassword(),dbc.findUserByName(loginDTO.getUsername()).getPasswordHash())) {
+				return jwtService.generateToken(loginDTO.getUsername());
+			} else {
+				return null;
+			}
+		}
+		return null;
 	}
 
 
