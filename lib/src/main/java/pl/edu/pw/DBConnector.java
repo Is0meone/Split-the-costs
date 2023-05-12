@@ -88,7 +88,7 @@ public class DBConnector {
             Obligation obligation = session.load(Obligation.class,id);
             return obligation;
         }
-        catch(Error e){
+        catch(Exception e){
             System.out.println("no user with id " + id);
         }
         return null;
@@ -142,7 +142,7 @@ public class DBConnector {
             }
             else throw new NoSuchElementException();
         }
-        catch(Error e){
+        catch(Exception e){
             System.out.println("no user with id " + id);
         }
         return null;
@@ -208,7 +208,7 @@ public class DBConnector {
 
     public static void main(String[] args) {
         DBConnector dbc = new DBConnector();
-//      dbc.addObligation(new Obligation(dbc.findUserByName("pugalak"), dbc.findUserByName("janusz"), 50D));
+//        dbc.addObligation(new Obligation(dbc.findUserByName("pugalak"), dbc.findUserByName("janusz"), 50D));
 //  //     List<User> list = dbc.getAllUsers();
  //           dbc.addUser(new User("pugalak", "bajojao"));
 //   //     System.out.println(list);
