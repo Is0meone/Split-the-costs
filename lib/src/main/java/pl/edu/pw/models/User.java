@@ -12,7 +12,8 @@ import java.util.stream.Collectors;
 
 @NodeEntity
 public class User{
-	@Id	@GeneratedValue
+	@Id
+	@GeneratedValue
 	private Long id;
 
 	private String name;
@@ -31,13 +32,14 @@ public class User{
 		this.name = name;
 		Argon2PasswordEncoder encoder = new Argon2PasswordEncoder(32,64,1,15*1024,2);
 		this.passwordHash = encoder.encode(password); // Password Hashing
-
-		// Decode password like this
-//		var validPassword = encoder.matches(myPassword, encodedPassword);
-
 		this.owes = new ArrayList<>();
 		this.isOwed = new ArrayList<>();
 		this.friendsWith = new ArrayList<>();
+	}
+
+	public boolean passwordCompare(String pass1, String pass2) {
+		Argon2PasswordEncoder encoder = new Argon2PasswordEncoder(32,64,1,15*1024,2);
+		return encoder.matches(pass1, pass2);
 	}
 
 	public Long getId() {
@@ -158,10 +160,11 @@ public class User{
 	 */
 	public void payObligationTo(User user) {
 		for (Obligation obligation: this.owes
-			 ) {
+		) {
 			if(obligation.getCreditor().equals(user)) obligation.pay();
 		}
 	}
+
 	/**
 	 * Follow the graph to find the end users who owe you money
 	 * (that is, following who owes money to people who owe you money)
@@ -183,6 +186,7 @@ public class User{
 	public void addOwed(Obligation obligation){
 		this.isOwed.add(obligation);
 	}
+
 	public void addOwes(Obligation obligation){
 		this.owes.add(obligation);
 	}
@@ -196,29 +200,25 @@ public class User{
 				switch (f.get().getStatus()) {
 					case ACCEPTED:
 					case AUTO_APPROVE:
-						throw new IllegalStateException();		//AlreadyAcceptedException
+						throw new IllegalStateException();        //AlreadyAcceptedException
 					case PENDING:
 						f.get().setStatus(Friendship.Status.ACCEPTED);
 					case DECLINED:
-						throw new IllegalAccessException();		//DeclinedByReceiverException
+						throw new IllegalAccessException();        //DeclinedByReceiverException
 				}
-			}
-			else {
+			} else {
 				Optional<Friendship> onlF = this.friendsWith.stream()
 						.filter(friendship -> friendship.getSender().equals(this))
 						.filter(friendship -> friendship.getReceiver().equals(user))
 						.findFirst();
 				if(onlF.isEmpty()) return Optional.of(new Friendship(this, user, Friendship.Status.PENDING));
-				else throw new IllegalCallerException();		//RequestAlreadySentException
+				else throw new IllegalCallerException();        //RequestAlreadySentException
 			}
-		}
-		catch(IllegalStateException e) {
+		} catch(IllegalStateException e) {
 			System.out.println("Already friends with " + user + "!");
-		}
-		catch(IllegalAccessException e) {
+		} catch(IllegalAccessException e) {
 			System.out.println("Request has been already declined by " + user + "!");
-		}
-		catch(IllegalCallerException e) {
+		} catch(IllegalCallerException e) {
 			System.out.println("You already sent the request to " + user + "!");
 		}
 		return Optional.empty();
@@ -231,8 +231,7 @@ public class User{
 					.findFirst();
 			if (f.isPresent()) f.get().setStatus(Friendship.Status.DECLINED);
 			else throw new NoSuchElementException();
-		}
-		catch(Exception e){
+		} catch(Exception e){
 			System.out.println("Friendship request from " + user + "does not exists!");
 		}
 	}
@@ -242,6 +241,7 @@ public class User{
 				.filter(friendship -> friendship.getStatus() == Friendship.Status.PENDING)
 				.collect(Collectors.toList());
 	}
+
 	public void rejectFriendship(User user){
 		try{
 			Optional<Friendship>  friend = this.friendsWith.stream()
@@ -250,13 +250,12 @@ public class User{
 					.findFirst();
 			if(friend.isPresent()){
 				friend.get().setStatus(Friendship.Status.DECLINED);
-			}
-			else throw new NoSuchElementException();		//NoPendingInvitationException
-		}
-		catch (NoSuchElementException e){
+			} else throw new NoSuchElementException();        //NoPendingInvitationException
+		} catch (NoSuchElementException e){
 			System.out.println("No pending friendship request from "+ user);
 		}
 	}
+
 	public void markAsAutoAccept(User user){
 		try {
 			for (Friendship friend : this.friendsWith) {
@@ -270,6 +269,7 @@ public class User{
 			System.out.println("You cannot mark " + user + "as a friend!");
 		}
 	}
+
 	public List<Obligation> getPendingObligations(){
 		List<Obligation> pendingOwes = this.owes.stream()
 				.filter(obligation -> obligation.getStatus().equals(Friendship.Status.PENDING))
@@ -280,6 +280,7 @@ public class User{
 		pendingOwes.addAll(pendingOwed);
 		return pendingOwes;
 	}
+
 	public boolean isFriend(User user){
 		for (Friendship f : this.friendsWith) {
 			if(f.getSender().equals(user)&&f.getReceiver().equals(user)) return true;
