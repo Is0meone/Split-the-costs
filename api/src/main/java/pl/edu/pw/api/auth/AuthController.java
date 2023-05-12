@@ -1,16 +1,16 @@
 package pl.edu.pw.api.auth;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pl.edu.pw.DBConnector;
 import pl.edu.pw.api.auth.dto.LoginDTO;
 import pl.edu.pw.api.auth.dto.RegisterDTO;
 import pl.edu.pw.api.auth.dto.UserTokenDTO;
-import pl.edu.pw.api.jwtService.JwtService;
+import pl.edu.pw.api.security.JwtService;
 import pl.edu.pw.models.User;
 
 
@@ -18,9 +18,6 @@ import pl.edu.pw.models.User;
 public class AuthController {
 	@Autowired
 	private JwtService jwtService;
-
-//	@Autowired
-//	private AuthenticationManager authenticationManager;
 
 	@PostMapping("/register")
 	public UserTokenDTO register(@RequestBody @Validated RegisterDTO registerDTO) {
@@ -46,6 +43,14 @@ public class AuthController {
 		login.setUsername("jan");
 		login.setPassword("PassWord");
 		return login;
+	}
+	@GetMapping("/test/{id}")
+	public @ResponseBody String generateReport(@PathVariable("id") Long id, HttpServletRequest request) {
+
+		if(jwtService.checkUserToken(id, request)){
+			return "correct " + jwtService.getUsernameFromToken(id,request);
+		}
+		return "wrong";
 	}
 
 }
