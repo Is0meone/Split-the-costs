@@ -11,14 +11,13 @@ import pl.edu.pw.models.User;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RestController
-@RequestMapping("/users")
+@RestController("/users")
 public class UserController {
 	@Autowired
 	private JwtService jwtService;
-	@GetMapping
+	private DBConnector dbc = new DBConnector();
+	@GetMapping("/allusers")
 	public List<UserDTO> getUsers() {
-		DBConnector dbc = new DBConnector();
 		List<User> users = dbc.getAllUsers();
 		return users.stream()
 				.map(user -> {
@@ -30,9 +29,8 @@ public class UserController {
 				.collect(Collectors.toList());
 	}
 
-	@GetMapping("/{id}")
+	@GetMapping("/findid/{id}")
 	public UserDTO getUser(@PathVariable Long id) {
-		DBConnector dbc = new DBConnector();
 		User user = dbc.findUserById(id);
 		UserDTO u = new UserDTO();
 		u.setName(user.getName());
@@ -50,9 +48,8 @@ public class UserController {
 	 * @param name - name of user
 	 * @return list of users that match the search term
 	 */
-	@GetMapping("/find")
-	public List<UserDTO> findUsers(@RequestParam String name) {
-		DBConnector dbc = new DBConnector();
+	@GetMapping("/findname/{name}")
+	public List<UserDTO> findUsers(@PathVariable String name) {
 		List<User> users = dbc.findUsersByPrefix(name);
 		return users.stream()
 				.map(user -> {

@@ -14,6 +14,8 @@ import java.util.List;
 public class ObligationController {
 	@Autowired
 	private JwtService jwtService;
+	private DBConnector dbc = new DBConnector();
+
 	@GetMapping("/user/{id}")
 	public List<ObligationWithIdDTO> getObligationsFor(@PathVariable Long id) {
 		return null;
