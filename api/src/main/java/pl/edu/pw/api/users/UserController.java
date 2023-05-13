@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pl.edu.pw.DBConnector;
+import pl.edu.pw.api.auth.dto.UserTokenDTO;
 import pl.edu.pw.api.security.JwtService;
 import pl.edu.pw.api.users.dto.UserDTO;
 import pl.edu.pw.models.User;
@@ -11,37 +12,41 @@ import pl.edu.pw.models.User;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RestController
-@RequestMapping("/users")
+@RestController("/users")
 public class UserController {
 	@Autowired
 	private JwtService jwtService;
-	@GetMapping
-	public List<UserDTO> getUsers() {
-		DBConnector dbc = new DBConnector();
-		List<User> users = dbc.getAllUsers();
-		return users.stream()
-				.map(user -> {
-					UserDTO userDTO = new UserDTO();
-					userDTO.setId(user.getId());
-					userDTO.setName(user.getName());
-					return userDTO;
-				})
-				.collect(Collectors.toList());
+	private DBConnector dbc = new DBConnector();
+	@GetMapping("/user/{id}/allusers")
+	public List<UserDTO> getUsers(@PathVariable("id") Long id, HttpServletRequest request) {
+		if (jwtService.checkUserToken(id, request)) {
+			List<User> users = dbc.getAllUsers();
+			return users.stream()
+					.map(user -> {
+						UserDTO userDTO = new UserDTO();
+						userDTO.setId(user.getId());
+						userDTO.setName(user.getName());
+						return userDTO;
+					})
+					.collect(Collectors.toList());
+		}
+		return null;
+	}
+	@GetMapping("/user/{id}/total/{toid}")
+	public String getTotalObligationsToTo(@PathVariable("id") Long id, HttpServletRequest request, @PathVariable("toid") Long toId) {
+		//TODO: Do we need it???
+		return null;
 	}
 
-	@GetMapping("/{id}")
-	public UserDTO getUser(@PathVariable Long id) {
-		DBConnector dbc = new DBConnector();
-		User user = dbc.findUserById(id);
-		UserDTO u = new UserDTO();
-		u.setName(user.getName());
-		u.setId(user.getId());
-		return u;
-	}
-
-	@GetMapping("/{id}/total")
-	public String getTotalObligationsToTo(@PathVariable Long id) {
+	@GetMapping("user/{id}/findid/{userid}")
+	public UserDTO getUser(@PathVariable("id") Long id, HttpServletRequest request,@PathVariable("userid") Long userId) {
+		if (jwtService.checkUserToken(id, request)) {
+			User user = dbc.findUserById(userId);
+			UserDTO u = new UserDTO();
+			u.setName(user.getName());
+			u.setId(user.getId());
+			return u;
+		}
 		return null;
 	}
 
@@ -50,17 +55,19 @@ public class UserController {
 	 * @param name - name of user
 	 * @return list of users that match the search term
 	 */
-	@GetMapping("/find")
-	public List<UserDTO> findUsers(@RequestParam String name) {
-		DBConnector dbc = new DBConnector();
-		List<User> users = dbc.findUsersByPrefix(name);
-		return users.stream()
-				.map(user -> {
-					UserDTO userDTO = new UserDTO();
-					userDTO.setId(user.getId());
-					userDTO.setName(user.getName());
-					return userDTO;
-				})
-				.collect(Collectors.toList());
+	@GetMapping("user/{id}/findname/{name}")
+	public List<UserDTO> findUsers(@PathVariable("id") Long id, HttpServletRequest request, @PathVariable String name) {
+		if (jwtService.checkUserToken(id, request)) {
+			List<User> users = dbc.findUsersByPrefix(name);
+			return users.stream()
+					.map(user -> {
+						UserDTO userDTO = new UserDTO();
+						userDTO.setId(user.getId());
+						userDTO.setName(user.getName());
+						return userDTO;
+					})
+					.collect(Collectors.toList());
+		}
+		return null;
 	}
 }

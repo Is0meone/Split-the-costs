@@ -43,7 +43,6 @@ public class AuthController {
 		return null;
 	}
 
-
 //	@GetMapping("/logout")
 //	public void logout() {
 		// TODO: On APP side --> Delete active token

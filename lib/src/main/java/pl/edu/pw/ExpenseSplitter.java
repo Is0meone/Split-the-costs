@@ -25,7 +25,7 @@ public class ExpenseSplitter {
 	 * @param users
 	 */
 
-	void split(Double amount, User... users) {
+	public void split(Double amount, User... users) {
 		Double splittedAmount;
 		splittedAmount = amount/users.length;
 		for (User user: users) {
@@ -39,7 +39,7 @@ public class ExpenseSplitter {
 	 * @param amount
 	 * @param users
 	 */
-	void split(Double amount, List<User> users) {
+	public void split(Double amount, List<User> users) {
 		Double splittedAmount;
 		splittedAmount = amount/users.size();
 		for (User user: users) {
@@ -52,7 +52,7 @@ public class ExpenseSplitter {
 	 * Splits the expense by the given amounts.
 	 * @param users a map with users as keys and the amounts they should pay as values
 	 */
-	void split(Map<User, Double> users) {
+	public void split(Map<User, Double> users) {
 		for (Map.Entry<User, Double> entry : users.entrySet()) {
 			if(actor.isSuperFriend(entry.getKey())) dbc.addObligation(new Obligation(actor, entry.getKey(), entry.getValue(), Obligation.Status.ACCEPTED));
 			else dbc.addObligation(new Obligation(actor, entry.getKey(), entry.getValue(), Obligation.Status.ACCEPTED));

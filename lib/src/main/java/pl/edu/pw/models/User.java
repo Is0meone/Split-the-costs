@@ -12,8 +12,7 @@ import java.util.stream.Collectors;
 
 @NodeEntity
 public class User{
-	@Id
-	@GeneratedValue
+	@Id	@GeneratedValue
 	private Long id;
 
 	private String name;
@@ -36,7 +35,6 @@ public class User{
 		this.isOwed = new ArrayList<>();
 		this.friendsWith = new ArrayList<>();
 	}
-
 	public boolean passwordCompare(String pass1, String pass2) {
 		Argon2PasswordEncoder encoder = new Argon2PasswordEncoder(32,64,1,15*1024,2);
 		return encoder.matches(pass1, pass2);
@@ -83,9 +81,10 @@ public class User{
 	}
 
 	public List<Friendship> getFriendsWith() {
-		return this.friendsWith.stream()
-				.filter(friendship -> (friendship.getStatus() == Friendship.Status.ACCEPTED || friendship.getStatus() == Friendship.Status.AUTO_APPROVE))
-				.collect(Collectors.toList());
+		return friendsWith;
+//		return this.friendsWith.stream()
+//				.filter(friendship -> (friendship.getStatus() == Friendship.Status.ACCEPTED || friendship.getStatus() == Friendship.Status.AUTO_APPROVE))
+//				.collect(Collectors.toList());
 	}
 
 	public void setFriendsWith(List<Friendship> friendsWith) {
@@ -162,7 +161,7 @@ public class User{
 	 */
 	public void payObligationTo(User user) {
 		for (Obligation obligation: this.owes
-		) {
+			 ) {
 			if(obligation.getCreditor().equals(user)) obligation.pay();
 		}
 	}
@@ -243,7 +242,6 @@ public class User{
 				.filter(friendship -> friendship.getStatus() == Friendship.Status.PENDING)
 				.collect(Collectors.toList());
 	}
-
 	public void rejectFriendship(User user){
 		try{
 			Optional<Friendship>  friend = this.friendsWith.stream()
@@ -257,7 +255,6 @@ public class User{
 			System.out.println("No pending friendship request from "+ user);
 		}
 	}
-
 	public void markAsAutoAccept(User user){
 		try {
 			for (Friendship friend : this.friendsWith) {
@@ -271,7 +268,6 @@ public class User{
 			System.out.println("You cannot mark " + user + "as a friend!");
 		}
 	}
-
 	public List<Obligation> getPendingObligations(){
 		List<Obligation> pendingOwes = this.owes.stream()
 				.filter(obligation -> obligation.getStatus().equals(Friendship.Status.PENDING))
@@ -282,7 +278,6 @@ public class User{
 		pendingOwes.addAll(pendingOwed);
 		return pendingOwes;
 	}
-
 	public boolean isFriend(User user){
 		for (Friendship f : this.friendsWith) {
 			if((f.getSender().equals(user) || f.getReceiver().equals(user)) &&

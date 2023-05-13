@@ -32,6 +32,7 @@ public class FriendshipController {
 		}
 	}
 
+
 	/**
 	 * Rejects the friendship request from the user with the given id (or cancels the friendship if it was already accepted)
 	 * @param id id of the second user
@@ -45,6 +46,7 @@ public class FriendshipController {
 		}
 	}
 
+
 	/**
 	 * Makes it so that the current user will automatically accept obligations from the user with the given id
 	 * @param id id of the second user
@@ -57,6 +59,7 @@ public class FriendshipController {
 			dbc.updateUser(user);
 		}
 	}
+
 
 	/**
 	 * Returns a list of all users that are friends with the current user
@@ -72,6 +75,7 @@ public class FriendshipController {
 		return null;
 	}
 
+
 	/**
 	 * Returns a list of all users that have sent a friendship request to the current user
 	 */
@@ -84,4 +88,5 @@ public class FriendshipController {
 		}
 		return null;
 	}
+
 }
