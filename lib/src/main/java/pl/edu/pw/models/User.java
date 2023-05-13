@@ -87,7 +87,6 @@ public class User{
 //				.collect(Collectors.toList());
 	}
 
-
 	public void setFriendsWith(List<Friendship> friendsWith) {
 		this.friendsWith = friendsWith;
 	}
@@ -166,6 +165,7 @@ public class User{
 			if(obligation.getCreditor().equals(user)) obligation.pay();
 		}
 	}
+
 	/**
 	 * Follow the graph to find the end users who owe you money
 	 * (that is, following who owes money to people who owe you money)
@@ -187,6 +187,7 @@ public class User{
 	public void addOwed(Obligation obligation){
 		this.isOwed.add(obligation);
 	}
+
 	public void addOwes(Obligation obligation){
 		this.owes.add(obligation);
 	}
@@ -200,29 +201,25 @@ public class User{
 				switch (f.get().getStatus()) {
 					case ACCEPTED:
 					case AUTO_APPROVE:
-						throw new IllegalStateException();		//AlreadyAcceptedException
+						throw new IllegalStateException();        //AlreadyAcceptedException
 					case PENDING:
 						f.get().setStatus(Friendship.Status.ACCEPTED);
 					case DECLINED:
-						throw new IllegalAccessException();		//DeclinedByReceiverException
+						throw new IllegalAccessException();        //DeclinedByReceiverException
 				}
-			}
-			else {
+			} else {
 				Optional<Friendship> onlF = this.friendsWith.stream()
 						.filter(friendship -> friendship.getSender().equals(this))
 						.filter(friendship -> friendship.getReceiver().equals(user))
 						.findFirst();
 				if(onlF.isEmpty()) return Optional.of(new Friendship(this, user, Friendship.Status.PENDING));
-				else throw new IllegalCallerException();		//RequestAlreadySentException
+				else throw new IllegalCallerException();        //RequestAlreadySentException
 			}
-		}
-		catch(IllegalStateException e) {
+		} catch(IllegalStateException e) {
 			System.out.println("Already friends with " + user + "!");
-		}
-		catch(IllegalAccessException e) {
+		} catch(IllegalAccessException e) {
 			System.out.println("Request has been already declined by " + user + "!");
-		}
-		catch(IllegalCallerException e) {
+		} catch(IllegalCallerException e) {
 			System.out.println("You already sent the request to " + user + "!");
 		}
 		return Optional.empty();
@@ -235,8 +232,7 @@ public class User{
 					.findFirst();
 			if (f.isPresent()) f.get().setStatus(Friendship.Status.DECLINED);
 			else throw new NoSuchElementException();
-		}
-		catch(Exception e){
+		} catch(Exception e){
 			System.out.println("Friendship request from " + user + "does not exists!");
 		}
 	}
@@ -254,10 +250,8 @@ public class User{
 					.findFirst();
 			if(friend.isPresent()){
 				friend.get().setStatus(Friendship.Status.DECLINED);
-			}
-			else throw new NoSuchElementException();		//NoPendingInvitationException
-		}
-		catch (NoSuchElementException e){
+			} else throw new NoSuchElementException();        //NoPendingInvitationException
+		} catch (NoSuchElementException e){
 			System.out.println("No pending friendship request from "+ user);
 		}
 	}
