@@ -26,6 +26,13 @@ public class ExpenseSplitter {
 	 */
 
 	public void split(Double amount, User... users) {
+		try {
+			for (User user : users) {
+				if (!actor.isFriend(user)) throw new IllegalArgumentException();
+			}
+		}catch (IllegalArgumentException e) {
+			return;
+		}
 		Double splittedAmount;
 		splittedAmount = amount/users.length;
 		for (User user: users) {
@@ -40,6 +47,13 @@ public class ExpenseSplitter {
 	 * @param users
 	 */
 	public void split(Double amount, List<User> users) {
+		try {
+			for (User user : users) {
+				if (!actor.isFriend(user)) throw new IllegalArgumentException();
+			}
+		}catch (IllegalArgumentException e){
+			return;
+		}
 		Double splittedAmount;
 		splittedAmount = amount/users.size();
 		for (User user: users) {
@@ -53,6 +67,13 @@ public class ExpenseSplitter {
 	 * @param users a map with users as keys and the amounts they should pay as values
 	 */
 	public void split(Map<User, Double> users) {
+		try {
+			for (Map.Entry<User, Double> entry : users.entrySet()) {
+				if (!actor.isFriend(entry.getKey())) throw new IllegalArgumentException();
+			}
+		}catch (IllegalArgumentException e){
+			return;
+		}
 		for (Map.Entry<User, Double> entry : users.entrySet()) {
 			if(actor.isSuperFriend(entry.getKey())) dbc.addObligation(new Obligation(actor, entry.getKey(), entry.getValue(), Obligation.Status.ACCEPTED));
 			else dbc.addObligation(new Obligation(actor, entry.getKey(), entry.getValue(), Obligation.Status.ACCEPTED));
