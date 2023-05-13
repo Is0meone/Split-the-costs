@@ -29,7 +29,8 @@ public class ExpenseSplitter {
 		Double splittedAmount;
 		splittedAmount = amount/users.length;
 		for (User user: users) {
-			dbc.addObligation(new Obligation(actor, user, splittedAmount, Obligation.Status.PENDING));
+			if(actor.isSuperFriend(user)) dbc.addObligation(new Obligation(actor, user, splittedAmount, Obligation.Status.ACCEPTED));
+			else dbc.addObligation(new Obligation(actor, user, splittedAmount, Obligation.Status.PENDING));
 		}
 	}
 
@@ -42,7 +43,8 @@ public class ExpenseSplitter {
 		Double splittedAmount;
 		splittedAmount = amount/users.size();
 		for (User user: users) {
-			dbc.addObligation(new Obligation(actor, user, splittedAmount, Obligation.Status.PENDING));
+			if(actor.isSuperFriend(user)) dbc.addObligation(new Obligation(actor, user, splittedAmount, Obligation.Status.ACCEPTED));
+			else dbc.addObligation(new Obligation(actor, user, splittedAmount, Obligation.Status.PENDING));
 		}
 	}
 
@@ -52,7 +54,8 @@ public class ExpenseSplitter {
 	 */
 	void split(Map<User, Double> users) {
 		for (Map.Entry<User, Double> entry : users.entrySet()) {
-			dbc.addObligation(new Obligation(actor, entry.getKey(), entry.getValue(), Obligation.Status.PENDING));
+			if(actor.isSuperFriend(entry.getKey())) dbc.addObligation(new Obligation(actor, entry.getKey(), entry.getValue(), Obligation.Status.ACCEPTED));
+			else dbc.addObligation(new Obligation(actor, entry.getKey(), entry.getValue(), Obligation.Status.ACCEPTED));
 		}
-	}
+	}	//TODO: dodac exeption jesli podani userze nie sa znajomymi, albo weryfikacje tego w API
 }
