@@ -3,9 +3,10 @@ package pl.edu.pw.api.users;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
 import pl.edu.pw.DBConnector;
-import pl.edu.pw.api.auth.dto.UserTokenDTO;
 import pl.edu.pw.api.security.JwtService;
 import pl.edu.pw.api.users.dto.UserDTO;
 import pl.edu.pw.models.User;
@@ -17,7 +18,7 @@ import java.util.stream.Collectors;
 public class UserController {
 	@Autowired
 	private JwtService jwtService;
-	private DBConnector dbc = new DBConnector(1);
+	private DBConnector dbc = new DBConnector("t");
 	@GetMapping("/user/{id}/allusers")
 	public List<UserDTO> getUsers(@PathVariable("id") Long id, HttpServletRequest request, HttpServletResponse response) {
 		if (jwtService.checkUserToken(id, request)) {

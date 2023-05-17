@@ -54,7 +54,7 @@ public class DBConnector {
     public void updateUser(User user){
         Session session = sessionFactory.openSession();
         try (Transaction tx = session.beginTransaction()) {
-            session.save(user);
+            session.save(user,2);
             tx.commit();
         }
     }

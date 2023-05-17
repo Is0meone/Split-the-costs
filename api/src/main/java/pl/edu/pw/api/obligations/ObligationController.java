@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class ObligationController {
 	@Autowired
 	private JwtService jwtService;
-	private DBConnector dbc = new DBConnector(1);
+	private DBConnector dbc = new DBConnector("t");
 	private GraphLogic gl = new GraphLogic(dbc);
 	@GetMapping("/user/{id}")
 	public List<ObligationWithIdDTO> getObligationsFor(@PathVariable Long id) {

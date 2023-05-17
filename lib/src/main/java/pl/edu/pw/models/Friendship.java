@@ -1,6 +1,5 @@
 package pl.edu.pw.models;
 
-import ch.qos.logback.classic.joran.sanity.IfNestedWithinSecondPhaseElementSC;
 import org.neo4j.ogm.annotation.*;
 
 import java.util.Objects;
@@ -24,6 +23,7 @@ public class Friendship {
 	private User receiver;
 	private Status status;
 
+	public Friendship(){};
 	public Friendship(User sender, User receiver, Status status){
 		this.sender=sender;
 		this.receiver=receiver;

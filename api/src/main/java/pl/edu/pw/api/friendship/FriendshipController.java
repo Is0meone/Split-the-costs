@@ -3,26 +3,24 @@ package pl.edu.pw.api.friendship;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
 import pl.edu.pw.DBConnector;
-import pl.edu.pw.api.auth.dto.LoginDTO;
 import pl.edu.pw.api.friendship.dto.FriendsDTO;
-import pl.edu.pw.api.friendship.dto.FriendshipDTO;
 import pl.edu.pw.api.friendship.dto.FriendshipRequestDTO;
 import pl.edu.pw.api.security.JwtService;
-import pl.edu.pw.api.users.dto.UserDTO;
 import pl.edu.pw.models.Friendship;
 import pl.edu.pw.models.User;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController("/friends")
 public class FriendshipController {
 	@Autowired
 	private JwtService jwtService;
-	private DBConnector dbc = new DBConnector(1);
+	private DBConnector dbc = new DBConnector("t");
 
 	/**
 	 * Sends a friendship request to the user with the given id (or accepts the friendship if the other side requested it)
@@ -32,10 +30,7 @@ public class FriendshipController {
 	public void requestOrAcceptFriendship(@PathVariable("id") Long id, HttpServletRequest request,@PathVariable("withid") Long withId) {
 		if(jwtService.checkUserToken(id, request)) {
 			User user = dbc.findUserById(id);
-			Optional<Friendship> fnew = user.sendOrAcceptFriendship(dbc.findUserById(withId));
-			if(fnew.isPresent()) {
-				dbc.addFriendship(fnew.get());
-			}
+			user.sendOrAcceptFriendship(dbc.findUserById(withId));
 			dbc.updateUser(user);
 		}
 	}
