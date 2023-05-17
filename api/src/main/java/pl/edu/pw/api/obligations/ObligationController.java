@@ -25,6 +25,7 @@ public class ObligationController {
 	private JwtService jwtService;
 	private DBConnector dbc = new DBConnector(1);
 	private GraphLogic gl = new GraphLogic(dbc);
+
 	@GetMapping("/user/{id}/obligationwith")
 	public List<ObligationWithIdDTO> getObligationsFor(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		// ja wisze
@@ -37,7 +38,7 @@ public class ObligationController {
 						obligationWithIdDTO.setId(obligation.getId());
 						obligationWithIdDTO.setAmount(obligation.getAmount());
 						obligationWithIdDTO.setStatus(obligation.getStatus());
-						obligationWithIdDTO.setTimestamp(obligation.getTimestamp().toString());
+						obligationWithIdDTO.setTimestamp(obligation.getTimestamp());
 						obligationWithIdDTO.setCreditorId(obligation.getCreditor().getName());
 						obligationWithIdDTO.setDebtorId(obligation.getDebtor().getName());
 						obligationWithIdDTO.setDescription(obligation.getDescription());
@@ -45,13 +46,13 @@ public class ObligationController {
 					})
 					.collect(Collectors.toList());
 		}else {
-			response.getWriter().print("Invalid Token");
+			response.getWriter().print("Access Denied");
 			response.setStatus(401);
 		}
 		return null;
 	}
 
-	@GetMapping("/to/{id}/obligationto")
+	@GetMapping("/user/{id}/obligationto")
 	public ObligationsToDTO getObligationsTo(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		//inni mi wisza
 		if(jwtService.checkUserToken(id, request)) {
@@ -63,50 +64,49 @@ public class ObligationController {
 						obligationWithIdDTO.setId(obligation.getId());
 						obligationWithIdDTO.setAmount(obligation.getAmount());
 						obligationWithIdDTO.setStatus(obligation.getStatus());
-						obligationWithIdDTO.setTimestamp(obligation.getTimestamp().toString());
+						obligationWithIdDTO.setTimestamp(obligation.getTimestamp());
 						obligationWithIdDTO.setCreditorId(obligation.getCreditor().getName());
 						obligationWithIdDTO.setDebtorId(obligation.getDebtor().getName());
 						obligationWithIdDTO.setDescription(obligation.getDescription());
 						return obligationWithIdDTO;
 					})
 					.collect(Collectors.toList()));
+			Double total = 0.0;
+			for (Obligation ob:
+					obligations) {
+				total += ob.getAmount();
+			}
+			obligationsToDTO.setTotal(total);
+			return obligationsToDTO;
 		}else {
-			response.getWriter().print("Invalid Token");
+			response.getWriter().print("Access Denied");
 			response.setStatus(401);
 		}
 		return null;
 	}
 
-	@PutMapping("/user/{id}/requestObligation/{fromid}")
+	@PostMapping("/user/{id}/requestObligation/{fromid}")
 	public void requestObligationFrom(@PathVariable Long id, @RequestBody ObligationDTO obligationDTO, HttpServletRequest request, @PathVariable("fromid") Long fromId, HttpServletResponse response) throws IOException {
 		if(jwtService.checkUserToken(id, request)) {
 			User user = dbc.findUserById(id);
 			user.requestObligationFrom(dbc.findUserById(fromId), obligationDTO.getAmount(), obligationDTO.getDescription(), obligationDTO.getTimestamp());
 			dbc.updateUser(user);
 		}else {
-			response.getWriter().print("Invalid Token");
+			response.getWriter().print("Access Denied");
 			response.setStatus(401);
 		}
 	}
-	@PostMapping("/user/{id}/acceptoblication/{toid}")
+
+	@GetMapping("/user/{id}/acceptoblication/{toid}")
 	public void acceptObligation(@PathVariable Long id, HttpServletRequest request, @PathVariable("toid") Long toId, HttpServletResponse response) throws IOException {
 		if (jwtService.checkUserToken(id, request)) {
 			User user = dbc.findUserById(id);
 			user.acceptObligationTo(user,toId);
 			dbc.updateUser(user);
 		}else {
-			response.getWriter().print("Invalid Token");
+			response.getWriter().print("Access Denied");
 			response.setStatus(401);
 		}
-	}
-	/**
-	 * return the amounts ultimately owed to all users
-	 * @return
-	 */
-	@GetMapping("/user/{id}/total")
-	public List<ObligationTotalDTO> getObligationTotals() {
-		//TODO:
-		return null;
 	}
 
 	@GetMapping("/user/{id}/pending") // Nie wiem czy dziala
@@ -115,38 +115,57 @@ public class ObligationController {
 			User user = dbc.findUserById(id);
 			List<Obligation> obligations = user.getPendingObligations();
 			return obligations.stream()
-					.map(u -> {
+					.map(obligation -> {
 						ObligationWithIdDTO obligationDTO = new ObligationWithIdDTO();
-						obligationDTO.setId(user.getId());
-						obligationDTO.setAmount(u.getAmount());
-						obligationDTO.setCreditorId(u.getCreditor().getName());
-						obligationDTO.setDebtorId(u.getDebtor().getName());
-						obligationDTO.setDescription(u.getDescription());
-						obligationDTO.setTimestamp(u.getTimestamp().toString());
+						obligationDTO.setId(obligation.getId());
+						obligationDTO.setAmount(obligation.getAmount());
+						obligationDTO.setStatus(obligation.getStatus());
+						obligationDTO.setCreditorId(obligation.getCreditor().getName());
+						obligationDTO.setDebtorId(obligation.getDebtor().getName());
+						obligationDTO.setDescription(obligation.getDescription());
+						obligationDTO.setTimestamp(obligation.getTimestamp());
 						return obligationDTO;
 					})
 					.collect(Collectors.toList());
 		}else {
-			response.getWriter().print("Wrong token");
+			response.getWriter().print("Access Denied");
 			response.setStatus(401);
 		}
 		return null;
 	}
 
-	@GetMapping("/user/{id}/getObligation")
-	public ObligationWithIdDTO getObligation(@PathVariable("id") Long id, HttpServletRequest request, HttpServletResponse response) throws IOException {
+	@GetMapping("/user/{id}/getobligation/{withid}")
+	public List<ObligationWithIdDTO> getObligation(@PathVariable("id") Long id, HttpServletRequest request, HttpServletResponse response, @PathVariable("withid") Long withId) throws IOException {
 		if (jwtService.checkUserToken(id, request)) {
 			User user = dbc.findUserById(id);
-			Obligation obligation = new Obligation();
-			//TODO:
+			List<Obligation> obligations = user.getOwes();
+			for (Obligation ob :
+					user.getIsOwed()) {
+				obligations.add(ob);
+			}
+			return obligations.stream()
+					.map(obligation -> {
+						ObligationWithIdDTO obligationWithIdDTO = new ObligationWithIdDTO();
+						obligationWithIdDTO.setId(obligation.getId());
+						obligationWithIdDTO.setId(obligation.getId());
+						obligationWithIdDTO.setAmount(obligation.getAmount());
+						obligationWithIdDTO.setStatus(obligation.getStatus());
+						obligationWithIdDTO.setTimestamp(obligation.getTimestamp());
+						obligationWithIdDTO.setCreditorId(obligation.getCreditor().getName());
+						obligationWithIdDTO.setDebtorId(obligation.getDebtor().getName());
+						obligationWithIdDTO.setDescription(obligation.getDescription());
+						return obligationWithIdDTO;
+					})
+					.collect(Collectors.toList());
+			//TODO: Dalej to
 		}else {
-			response.getWriter().print("Invalid Token");
+			response.getWriter().print("Access Denied");
 			response.setStatus(401);
 		}
 		return null;
 	}
 
-	@PutMapping("/user{id}/split")
+	@PostMapping("/user{id}/split")
 	public void splitObligationEqually(@PathVariable("id") Long id, HttpServletRequest request, @RequestBody SplitObligationDTO obligationDTO, HttpServletResponse response) throws IOException {
 		if (jwtService.checkUserToken(id, request)) {
 			User user = dbc.findUserById(id);
@@ -165,16 +184,17 @@ public class ObligationController {
 			ExpenseSplitter expenseSplitter = new ExpenseSplitter(user,dbc);
 			expenseSplitter.split(obligationDTO.getAmount(), payers);
 		}else {
-			response.getWriter().print("Invalid Token");
+			response.getWriter().print("Access Denied");
 			response.setStatus(401);
 		}
 	}
+
 	@PutMapping("/user/{id}/split/manual")
 	public void splitObligationManually(@PathVariable("id") Long id, HttpServletRequest request, @RequestBody SplitObligationManualDTO obligationManualDTO, HttpServletResponse response) throws IOException {
 		if (jwtService.checkUserToken(id, request)) {
 			//TODO:
 		}else {
-			response.getWriter().print("Invalid Token");
+			response.getWriter().print("Access Denied");
 			response.setStatus(401);
 		}
 	}
