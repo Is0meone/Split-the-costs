@@ -11,25 +11,11 @@ import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 
 
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
-//@SpringBootApplication
-//@EnableWebSecurity(debug = true)
-//@EnableMethodSecurity(securedEnabled = true)
 public class ApiApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ApiApplication.class, args);
 	}
 
-
-//	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//		return http.csrf().disable()
-//				.authorizeHttpRequests()
-//				.requestMatchers("/login").permitAll()
-//				.and()
-//				.authorizeHttpRequests().requestMatchers("/users")
-//				.authenticated().and()
-//				.formLogin()
-//				.and().build();
-//	}
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
 				.authorizeHttpRequests(
