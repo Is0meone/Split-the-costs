@@ -34,10 +34,9 @@ public class ObligationController {
 					.map(obligation -> {
 						ObligationWithIdDTO obligationWithIdDTO = new ObligationWithIdDTO();
 						obligationWithIdDTO.setId(obligation.getId());
-						obligationWithIdDTO.setId(obligation.getId());
 						obligationWithIdDTO.setAmount(obligation.getAmount());
 						obligationWithIdDTO.setStatus(obligation.getStatus());
-						obligationWithIdDTO.setTimestamp(obligation.getTimestamp().toString());
+						obligationWithIdDTO.setTimestamp(obligation.getTimestamp());
 						obligationWithIdDTO.setCreditorId(obligation.getCreditor().getName());
 						obligationWithIdDTO.setDebtorId(obligation.getDebtor().getName());
 						obligationWithIdDTO.setDescription(obligation.getDescription());
@@ -77,7 +76,7 @@ public class ObligationController {
 		return null;
 	}
 
-	@PutMapping("/user/{id}/requestObligation/{fromid}")
+	@PostMapping("/user/{id}/requestObligation/{fromid}")
 	public void requestObligationFrom(@PathVariable Long id, @RequestBody ObligationDTO obligationDTO, HttpServletRequest request, @PathVariable("fromid") Long fromId, HttpServletResponse response) throws IOException {
 		if(jwtService.checkUserToken(id, request)) {
 			User user = dbc.findUserById(id);
