@@ -1,6 +1,7 @@
 package pl.edu.pw.api.users;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pl.edu.pw.DBConnector;
@@ -18,7 +19,7 @@ public class UserController {
 	private JwtService jwtService;
 	private DBConnector dbc = new DBConnector();
 	@GetMapping("/user/{id}/allusers")
-	public List<UserDTO> getUsers(@PathVariable("id") Long id, HttpServletRequest request) {
+	public List<UserDTO> getUsers(@PathVariable("id") Long id, HttpServletRequest request, HttpServletResponse response) {
 		if (jwtService.checkUserToken(id, request)) {
 			List<User> users = dbc.getAllUsers();
 			return users.stream()
@@ -30,6 +31,7 @@ public class UserController {
 					})
 					.collect(Collectors.toList());
 		}
+		response.setStatus(401);
 		return null;
 	}
 	@GetMapping("/user/{id}/total/{toid}")
@@ -39,7 +41,7 @@ public class UserController {
 	}
 
 	@GetMapping("user/{id}/findid/{userid}")
-	public UserDTO getUser(@PathVariable("id") Long id, HttpServletRequest request,@PathVariable("userid") Long userId) {
+	public UserDTO getUser(@PathVariable("id") Long id, HttpServletRequest request,@PathVariable("userid") Long userId, HttpServletResponse response) {
 		if (jwtService.checkUserToken(id, request)) {
 			User user = dbc.findUserById(userId);
 			UserDTO u = new UserDTO();
@@ -47,6 +49,7 @@ public class UserController {
 			u.setId(user.getId());
 			return u;
 		}
+		response.setStatus(401);
 		return null;
 	}
 
@@ -56,7 +59,7 @@ public class UserController {
 	 * @return list of users that match the search term
 	 */
 	@GetMapping("user/{id}/findname/{name}")
-	public List<UserDTO> findUsers(@PathVariable("id") Long id, HttpServletRequest request, @PathVariable String name) {
+	public List<UserDTO> findUsers(@PathVariable("id") Long id, HttpServletRequest request, @PathVariable String name, HttpServletResponse response) {
 		if (jwtService.checkUserToken(id, request)) {
 			List<User> users = dbc.findUsersByPrefix(name);
 			return users.stream()
@@ -68,6 +71,7 @@ public class UserController {
 					})
 					.collect(Collectors.toList());
 		}
+		response.setStatus(401);
 		return null;
 	}
 }
