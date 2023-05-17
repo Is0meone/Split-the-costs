@@ -13,6 +13,7 @@ import pl.edu.pw.api.security.JwtService;
 import pl.edu.pw.models.Obligation;
 import pl.edu.pw.models.User;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -22,10 +23,10 @@ import java.util.stream.Collectors;
 public class ObligationController {
 	@Autowired
 	private JwtService jwtService;
-	private DBConnector dbc = new DBConnector("t");
+	private DBConnector dbc = new DBConnector(1);
 	private GraphLogic gl = new GraphLogic(dbc);
 	@GetMapping("/user/{id}/obligationwith")
-	public List<ObligationWithIdDTO> getObligationsFor(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
+	public List<ObligationWithIdDTO> getObligationsFor(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		// ja wisze
 		if(jwtService.checkUserToken(id, request)) {
 			List<Obligation> obligations = dbc.findUserById(id).getOwes();
@@ -37,13 +38,14 @@ public class ObligationController {
 					})
 					.collect(Collectors.toList());
 		}else {
+			response.getWriter().print("Invalid Token");
 			response.setStatus(401);
 		}
 		return null;
 	}
 
 	@GetMapping("/to/{id}/obligationto")
-	public ObligationsToDTO getObligationsTo(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
+	public ObligationsToDTO getObligationsTo(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		//inni mi wisza
 		if(jwtService.checkUserToken(id, request)) {
 			List<Obligation> obligations = dbc.findUserById(id).getIsOwed();
@@ -57,28 +59,31 @@ public class ObligationController {
 					.collect(Collectors.toList()));
 			return obligationsToDTO;
 		}else {
+			response.getWriter().print("Invalid Token");
 			response.setStatus(401);
 		}
 		return null;
 	}
 
 	@PutMapping("/user/{id}/requestObligation/{fromid}")
-	public void requestObligationFrom(@PathVariable Long id, @RequestBody ObligationDTO obligationDTO, HttpServletRequest request, @PathVariable("fromid") Long fromId, HttpServletResponse response) {
+	public void requestObligationFrom(@PathVariable Long id, @RequestBody ObligationDTO obligationDTO, HttpServletRequest request, @PathVariable("fromid") Long fromId, HttpServletResponse response) throws IOException {
 		if(jwtService.checkUserToken(id, request)) {
 			User user = dbc.findUserById(id);
 			user.requestObligationFrom(dbc.findUserById(fromId), obligationDTO.getAmount());
 			dbc.updateUser(user);
 		}else {
+			response.getWriter().print("Invalid Token");
 			response.setStatus(401);
 		}
 	}
 	@PostMapping("/user/{id}/acceptoblication/{toid}")
-	public void acceptObligation(@PathVariable Long id, HttpServletRequest request, @PathVariable("toid") Long toId, HttpServletResponse response) {
+	public void acceptObligation(@PathVariable Long id, HttpServletRequest request, @PathVariable("toid") Long toId, HttpServletResponse response) throws IOException {
 		if (jwtService.checkUserToken(id, request)) {
 			User user = dbc.findUserById(id);
 			user.acceptObligationTo(user,toId);
 			dbc.updateUser(user);
 		}else {
+			response.getWriter().print("Invalid Token");
 			response.setStatus(401);
 		}
 	}
@@ -93,7 +98,7 @@ public class ObligationController {
 	}
 
 	@GetMapping("/user/{id}/pending") // Nie wiem czy dziala
-	public List<ObligationWithIdDTO> getPendingObligations(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) {
+	public List<ObligationWithIdDTO> getPendingObligations(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		if (jwtService.checkUserToken(id, request)) {
 			User user = dbc.findUserById(id);
 			List<Obligation> obligations = user.getPendingObligations();
@@ -110,23 +115,27 @@ public class ObligationController {
 					})
 					.collect(Collectors.toList());
 		}else {
+			response.getWriter().print("Wrong token");
 			response.setStatus(401);
 		}
 		return null;
 	}
 
 	@GetMapping("/user/{id}/getObligation")
-	public ObligationWithIdDTO getObligation(@PathVariable("id") Long id, HttpServletRequest request, HttpServletResponse response) {
+	public ObligationWithIdDTO getObligation(@PathVariable("id") Long id, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		if (jwtService.checkUserToken(id, request)) {
 			User user = dbc.findUserById(id);
 			Obligation obligation = new Obligation();
 			//TODO:
+		}else {
+			response.getWriter().print("Invalid Token");
+			response.setStatus(401);
 		}
 		return null;
 	}
 
 	@PutMapping("/user{id}/split")
-	public void splitObligationEqually(@PathVariable("id") Long id, HttpServletRequest request, @RequestBody SplitObligationDTO obligationDTO, HttpServletResponse response) {
+	public void splitObligationEqually(@PathVariable("id") Long id, HttpServletRequest request, @RequestBody SplitObligationDTO obligationDTO, HttpServletResponse response) throws IOException {
 		if (jwtService.checkUserToken(id, request)) {
 			User user = dbc.findUserById(id);
 			User somePayer;
@@ -144,14 +153,16 @@ public class ObligationController {
 			ExpenseSplitter expenseSplitter = new ExpenseSplitter(user,dbc);
 			expenseSplitter.split(obligationDTO.getAmount(), payers);
 		}else {
+			response.getWriter().print("Invalid Token");
 			response.setStatus(401);
 		}
 	}
 	@PutMapping("/user/{id}/split/manual")
-	public void splitObligationManually(@PathVariable("id") Long id, HttpServletRequest request, @RequestBody SplitObligationManualDTO obligationManualDTO, HttpServletResponse response) {
+	public void splitObligationManually(@PathVariable("id") Long id, HttpServletRequest request, @RequestBody SplitObligationManualDTO obligationManualDTO, HttpServletResponse response) throws IOException {
 		if (jwtService.checkUserToken(id, request)) {
 			//TODO:
 		}else {
+			response.getWriter().print("Invalid Token");
 			response.setStatus(401);
 		}
 	}

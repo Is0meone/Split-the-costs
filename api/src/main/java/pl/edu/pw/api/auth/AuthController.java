@@ -12,27 +12,31 @@ import pl.edu.pw.api.auth.dto.UserTokenDTO;
 import pl.edu.pw.api.security.JwtService;
 import pl.edu.pw.models.User;
 
+import java.io.IOException;
+
 
 @RestController("/auth")
 public class AuthController {
 	@Autowired
 	private JwtService jwtService;
-	private DBConnector dbc = new DBConnector("t");
+	private DBConnector dbc = new DBConnector(1);
 
 	@PostMapping("/register")
-	public UserTokenDTO register(@RequestBody @Validated RegisterDTO registerDTO) {
+	public UserTokenDTO register(@RequestBody @Validated RegisterDTO registerDTO,HttpServletResponse response) throws IOException {
 		if(dbc.findUserByName(registerDTO.getUsername())==null) { //Check if username already exists
 			dbc.addUser(new User(registerDTO.getUsername(), registerDTO.getPassword()));
 			UserTokenDTO utdto = new UserTokenDTO();
 			utdto.setToken(jwtService.generateToken(registerDTO.getUsername()));
 			utdto.setUserId(dbc.findUserByName(registerDTO.getUsername()).getId());
 			return utdto;
+		}else {
+			response.getWriter().print("This username already exists");
 		}
 		return null;
 	}
 
 	@PostMapping("/login")
-	public UserTokenDTO authenticateAndGetToken(@RequestBody LoginDTO loginDTO, HttpServletResponse response) {
+	public UserTokenDTO authenticateAndGetToken(@RequestBody LoginDTO loginDTO, HttpServletResponse response) throws IOException {
 		if(dbc.findUserByName(loginDTO.getUsername())!=null) {
 			User user = new User(loginDTO.getUsername(), loginDTO.getPassword());
 			if (user.passwordCompare(loginDTO.getPassword(),dbc.findUserByName(loginDTO.getUsername()).getPasswordHash())) {
@@ -41,6 +45,8 @@ public class AuthController {
 				utdto.setUserId(dbc.findUserByName(loginDTO.getUsername()).getId());
 				return utdto;
 			}
+		}else {
+			response.getWriter().print("Wrong username or password");
 		}
 		response.setStatus(401);
 		return null;

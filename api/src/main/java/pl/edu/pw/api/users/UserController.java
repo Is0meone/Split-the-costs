@@ -11,6 +11,7 @@ import pl.edu.pw.api.security.JwtService;
 import pl.edu.pw.api.users.dto.UserDTO;
 import pl.edu.pw.models.User;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,9 +19,9 @@ import java.util.stream.Collectors;
 public class UserController {
 	@Autowired
 	private JwtService jwtService;
-	private DBConnector dbc = new DBConnector("t");
+	private DBConnector dbc = new DBConnector(1);
 	@GetMapping("/user/{id}/allusers")
-	public List<UserDTO> getUsers(@PathVariable("id") Long id, HttpServletRequest request, HttpServletResponse response) {
+	public List<UserDTO> getUsers(@PathVariable("id") Long id, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		if (jwtService.checkUserToken(id, request)) {
 			List<User> users = dbc.getAllUsers();
 			return users.stream()
@@ -31,8 +32,10 @@ public class UserController {
 						return userDTO;
 					})
 					.collect(Collectors.toList());
+		}else {
+			response.getWriter().print("Invalid Token");
+			response.setStatus(401);
 		}
-		response.setStatus(401);
 		return null;
 	}
 	@GetMapping("/user/{id}/total/{toid}")
@@ -42,15 +45,17 @@ public class UserController {
 	}
 
 	@GetMapping("user/{id}/findid/{userid}")
-	public UserDTO getUser(@PathVariable("id") Long id, HttpServletRequest request,@PathVariable("userid") Long userId, HttpServletResponse response) {
+	public UserDTO getUser(@PathVariable("id") Long id, HttpServletRequest request,@PathVariable("userid") Long userId, HttpServletResponse response) throws IOException {
 		if (jwtService.checkUserToken(id, request)) {
 			User user = dbc.findUserById(userId);
 			UserDTO u = new UserDTO();
 			u.setName(user.getName());
 			u.setId(user.getId());
 			return u;
+		}else {
+			response.getWriter().print("Invalid Token");
+			response.setStatus(401);
 		}
-		response.setStatus(401);
 		return null;
 	}
 
@@ -60,7 +65,7 @@ public class UserController {
 	 * @return list of users that match the search term
 	 */
 	@GetMapping("user/{id}/findname/{name}")
-	public List<UserDTO> findUsers(@PathVariable("id") Long id, HttpServletRequest request, @PathVariable String name, HttpServletResponse response) {
+	public List<UserDTO> findUsers(@PathVariable("id") Long id, HttpServletRequest request, @PathVariable String name, HttpServletResponse response) throws IOException {
 		if (jwtService.checkUserToken(id, request)) {
 			List<User> users = dbc.findUsersByPrefix(name);
 			return users.stream()
@@ -71,8 +76,10 @@ public class UserController {
 						return userDTO;
 					})
 					.collect(Collectors.toList());
+		}else {
+			response.getWriter().print("Invalid Token");
+			response.setStatus(401);
 		}
-		response.setStatus(401);
 		return null;
 	}
 }
