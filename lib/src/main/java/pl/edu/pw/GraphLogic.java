@@ -62,15 +62,49 @@ public class GraphLogic {
     * rozważanie statusu obligacji/ znajomych/ "archiwizowanie" obligacji(Latwe)
     * sprawdzenie dzialania dla dużych struktur i ogarnięcie splitu
      */
-    public boolean debtTransfer(Obligation obligation){
-        if(transferLogicCreditor(obligation,getActiveCreditorOwes(obligation))==true) return true;
-        if(transferLogicDebtor(obligation,getActiveDebtorisOwned(obligation))==true) return true;
-    return false;
+    public void debtTransfer(Obligation obligation){
+        //+obsługa null
+        List<Obligation> transfedDebt = new ArrayList<Obligation>();
+        List listCred = new ArrayList<Obligation>();
+        List listDebt = new ArrayList<Obligation>();
+            listCred = getActiveCreditorOwes(obligation);
+            listDebt = getActiveDebtorisOwned(obligation);
+            if (listCred.size() != 0) {
+                transfedDebt = transferLogicCreditor(obligation, getActiveCreditorOwes(obligation));
+            } else if (listDebt.size() != 0) {
+                transfedDebt = transferLogicDebtor(obligation, getActiveDebtorisOwned(obligation));
+            }
+
+            for (Obligation o : transfedDebt) {
+                if (!isStable(o)) {
+                    boolean bol = debtTransferHelper(o);
+                }
+            }
     }
-    private boolean transferLogicCreditor(Obligation obligation,List<Obligation> ListToCheck){
+    private boolean debtTransferHelper(Obligation obligation){
+        List<Obligation> transfedDebt = new ArrayList<Obligation>();
+
+        List listCred = new ArrayList<Obligation>();
+        List listDebt = new ArrayList<Obligation>();
+        listCred = getActiveCreditorOwes(obligation);
+        listDebt = getActiveDebtorisOwned(obligation);
+        if (listCred.size() != 0) {
+            transfedDebt = transferLogicCreditor(obligation, getActiveCreditorOwes(obligation));
+        } else if (listDebt.size() != 0) {
+            transfedDebt = transferLogicDebtor(obligation, getActiveDebtorisOwned(obligation));
+        }
+
+            for (Obligation o : transfedDebt) {
+                if (!isStable(o)) return debtTransferHelper(o);
+            }
+            return true;
+    }
+    private List<Obligation> transferLogicCreditor(Obligation obligation,List<Obligation> ListToCheck){
         double restToPay = obligation.getAmount();
         int i =0;
-        if(ListToCheck == null) return false;
+        if(ListToCheck == null) return null;
+        List<Obligation> transferedDebt = new ArrayList<>();
+
         while (i<ListToCheck.size()&&!ListToCheck.get(i).equals(obligation)){//kurczaki trzeba dodac zeby sie zatrzymywalo jak dlug zejdzie caly
             double DebtToPay = ListToCheck.get(i).getAmount();
             double margin = DebtToPay - obligation.getAmount();
@@ -81,10 +115,11 @@ public class GraphLogic {
                 dbc.addObligation(obligation);
 
                 if(!ListToCheck.get(i).getCreditor().equals(obligation.getDebtor())){
-                    Obligation transferedDebt = new Obligation(ListToCheck.get(i).getCreditor(),obligation.getDebtor(),obligation.getAmount(),Obligation.Status.AUTOGEN);
-                    dbc.addObligation(transferedDebt);
+                    Obligation newDebt = new Obligation(ListToCheck.get(i).getCreditor(),obligation.getDebtor(),obligation.getAmount(),Obligation.Status.AUTOGEN);
+                    transferedDebt.add(newDebt);
+                    dbc.addObligation(newDebt);
                 }
-                return true;
+                return transferedDebt;
             }
             else{
                 ListToCheck.get(i).autopay();
@@ -92,34 +127,39 @@ public class GraphLogic {
                 dbc.addObligation(ListToCheck.get(i));
                 dbc.addObligation(obligation);
                 if(!ListToCheck.get(i).getCreditor().equals(obligation.getDebtor())) {
-                    Obligation transferedDebt = new Obligation(ListToCheck.get(i).getCreditor(),obligation.getDebtor(),DebtToPay,Obligation.Status.AUTOGEN);
-                    dbc.addObligation(transferedDebt);
+                    Obligation newDebt = new Obligation(ListToCheck.get(i).getCreditor(),obligation.getDebtor(),DebtToPay,Obligation.Status.AUTOGEN);
+                    transferedDebt.add(newDebt);
+                    dbc.addObligation(newDebt);
                 }
                 restToPay = restToPay - DebtToPay;
             }
             i++;
         }
-        return false;
+        return transferedDebt;
     }
-    private boolean transferLogicDebtor(Obligation obligation,List<Obligation> ListToCheck){
+    private List<Obligation> transferLogicDebtor(Obligation obligation,List<Obligation> ListToCheck){
         int i =0;
-        if(ListToCheck == null) return false;
+        if(ListToCheck == null) return null;
+        List<Obligation> transferedDebt = new ArrayList<>();
+
         while (i<ListToCheck.size()&&!ListToCheck.get(i).equals(obligation)){//kurczaki trzeba dodac zeby sie zatrzymywalo jak dlug zejdzie caly
             double DebtToPay = ListToCheck.get(i).getAmount();
             double margin = DebtToPay - obligation.getAmount();
             if(margin>=0){ //wszystko splaci w jednym
                 ListToCheck.get(i).setAmount(DebtToPay-obligation.getAmount());
-                obligation.autopay();
-
-                if(!ListToCheck.get(i).getDebtor().equals(obligation.getCreditor())){
-                    Obligation transferedDebt = new Obligation(obligation.getCreditor(),ListToCheck.get(i).getDebtor(),obligation.getAmount(),Obligation.Status.AUTOGEN);
-                    dbc.addObligation(transferedDebt);
+                if(ListToCheck.get(i).getAmount()==0){
+                    ListToCheck.get(i).autopay();
                 }
+                obligation.autopay();
                 dbc.addObligation(ListToCheck.get(i));
                 dbc.addObligation(obligation);
 
-
-                return true;
+                if(!ListToCheck.get(i).getDebtor().equals(obligation.getCreditor())){
+                   Obligation newDebt= new Obligation(obligation.getCreditor(),ListToCheck.get(i).getDebtor(),obligation.getAmount(),Obligation.Status.AUTOGEN);
+                   transferedDebt.add(newDebt);
+                   dbc.addObligation(newDebt);
+                }
+                return transferedDebt;
             }
             else{
                 ListToCheck.get(i).autopay();
@@ -127,13 +167,14 @@ public class GraphLogic {
                 dbc.addObligation(ListToCheck.get(i));
                 dbc.addObligation(obligation);
                 if(!ListToCheck.get(i).getDebtor().equals(obligation.getCreditor())) {
-                    Obligation transferedDebt = new Obligation(obligation.getCreditor(),ListToCheck.get(i).getDebtor(),DebtToPay,Obligation.Status.AUTOGEN);
-                    dbc.addObligation(transferedDebt);
+                    Obligation newDebt = new Obligation(obligation.getCreditor(),ListToCheck.get(i).getDebtor(),DebtToPay,Obligation.Status.AUTOGEN);
+                    transferedDebt.add(newDebt);
+                    dbc.addObligation(newDebt);
                 }
             }
             i++;
         }
-        return false;
+        return transferedDebt;
     }
     public static List<Obligation> getCleanObl(List<Obligation> obligationsList){
         List<Obligation> cleanList = new ArrayList<Obligation>();
@@ -145,11 +186,24 @@ public class GraphLogic {
         }
         return cleanList;
     }
+    public boolean isStable(Obligation obligation){
+        List listCred = new ArrayList<Obligation>();
+        List listDebt = new ArrayList<Obligation>();
+        listCred = getActiveCreditorOwes(obligation);
+        listDebt = getActiveDebtorisOwned(obligation);
+        if (listCred.size() != 0) {
+            return false;
+        } else if (listDebt.size() != 0) {
+            return false;
+        }
+
+        return true;
+    }
     public static void main(String[] args){
         //problem friendship ale raczej z baza
         DBConnector dbc = new DBConnector();
         GraphLogic logic = new GraphLogic(dbc);
-/*
+
         User user = new User("a","daje");
         User user2 = new User("b","wisi/daje");
         User user3 = new User("c","wisi");
@@ -158,6 +212,7 @@ public class GraphLogic {
         dbc.addUser(user);
         dbc.addUser(user2);
         dbc.addUser(user3);
+        dbc.makeLove();
         dbc.addObligation(obligation);
         dbc.addObligation(obligation2);
         logic.debtTransfer(obligation2);
@@ -165,9 +220,7 @@ public class GraphLogic {
         User user4 = new User("d","daje");
         User user5 = new User("e","wisi/daje");
         User user6 = new User("f","f");
-        Friendship friendship = new Friendship(user,user2, Friendship.Status.ACCEPTED);
-        Friendship friendship1 = new Friendship(user2,user3, Friendship.Status.ACCEPTED);
-        Friendship friendship2 = new Friendship(user,user3, Friendship.Status.ACCEPTED);
+
         dbc.addUser(user4);
         dbc.addUser(user5);
         dbc.addUser(user6);
@@ -176,17 +229,18 @@ public class GraphLogic {
         dbc.addObligation(obligation3);
         Obligation obligation4 = new Obligation(user4,user,(double)25);
         dbc.addObligation(obligation4);
+        /*
         logic.debtTransfer(dbc.findObligationById(4L));
-        */
+
 
         User user6 = new User("f","f");
         Obligation obligation5 = new Obligation(user6,dbc.findUserById(3L),(double)130);
         dbc.addObligation(obligation5);
 
         logic.debtTransfer(dbc.findObligationById(6L));
-       // logic.getCleanObl(dbc.getAllObligations());
+        logic.getCleanObl(dbc.getAllObligations());
 
-
+*/
     }
 
 }//TODO
