@@ -15,7 +15,8 @@ import pl.edu.pw.models.User;
 import java.io.IOException;
 
 
-@RestController("/auth")
+@RestController
+@RequestMapping("/auth")
 public class AuthController {
 	@Autowired
 	private JwtService jwtService;

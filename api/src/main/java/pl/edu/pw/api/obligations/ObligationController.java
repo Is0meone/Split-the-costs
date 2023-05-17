@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import pl.edu.pw.DBConnector;
 import pl.edu.pw.ExpenseSplitter;
 import pl.edu.pw.GraphLogic;
-import pl.edu.pw.api.friendship.dto.FriendshipRequestDTO;
 import pl.edu.pw.api.obligations.dto.*;
 import pl.edu.pw.api.security.JwtService;
 import pl.edu.pw.models.Obligation;
@@ -19,7 +18,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
-@RestController("/obligations")
+@RestController
+@RequestMapping("/obligations")
 public class ObligationController {
 	@Autowired
 	private JwtService jwtService;
@@ -81,7 +81,7 @@ public class ObligationController {
 	public void requestObligationFrom(@PathVariable Long id, @RequestBody ObligationDTO obligationDTO, HttpServletRequest request, @PathVariable("fromid") Long fromId, HttpServletResponse response) throws IOException {
 		if(jwtService.checkUserToken(id, request)) {
 			User user = dbc.findUserById(id);
-			user.requestObligationFrom(dbc.findUserById(fromId), obligationDTO.getAmount());
+			user.requestObligationFrom(dbc.findUserById(fromId), obligationDTO.getAmount(), obligationDTO.getDescription(), obligationDTO.getTimestamp());
 			dbc.updateUser(user);
 		}else {
 			response.getWriter().print("Invalid Token");

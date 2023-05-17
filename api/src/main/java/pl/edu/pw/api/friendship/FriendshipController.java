@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.edu.pw.DBConnector;
 import pl.edu.pw.api.friendship.dto.FriendsDTO;
@@ -17,7 +18,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RestController("/friends")
+@RestController
+@RequestMapping("/friends")
 public class FriendshipController {
 	@Autowired
 	private JwtService jwtService;

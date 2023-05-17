@@ -121,7 +121,7 @@ public class User{
 	 * @param amount amount to request
 	 */
 
-	public Optional<Obligation> requestObligationFrom(User user, Double amount) {
+	public Optional<Obligation> requestObligationFrom(User user, Double amount, String desc, String time) {
 		Optional<Friendship> f = this.friendsWith.stream()
 				.filter(friendship -> friendship.getSender().equals(user))
 				.filter(friendship -> friendship.getReceiver().equals(user))
@@ -130,9 +130,9 @@ public class User{
 			if (f.isPresent()) {
 				switch (f.get().getStatus()) {
 					case ACCEPTED:
-						return Optional.of(new Obligation(this, user, amount, Obligation.Status.PENDING));
+						return Optional.of(new Obligation(this, user, amount, Obligation.Status.PENDING, desc, time));
 					case AUTO_APPROVE:
-						return Optional.of(new Obligation(this, user, amount, Obligation.Status.ACCEPTED));
+						return Optional.of(new Obligation(this, user, amount, Obligation.Status.ACCEPTED, desc, time));
 					case PENDING:
 					case DECLINED: {
 						throw new IllegalArgumentException();        //NotInAFriendshipException
@@ -144,6 +144,9 @@ public class User{
 		}
 		return Optional.empty();
 	}
+
+
+
 
 	/**
 	 * accept obligation from another user
@@ -220,7 +223,7 @@ public class User{
 					this.friendsWith.add(nfriendship);
 					user.addFriendsWith(nfriendship);
 				}
-				else throw new IllegalCallerException();        //RequestAlreadySentException
+				else throw new IllegalCallerException();        //RequestAlreadySentException.java
 			}
 		} catch(IllegalStateException e) {
 			System.out.println("Already friends with " + user + "!");
