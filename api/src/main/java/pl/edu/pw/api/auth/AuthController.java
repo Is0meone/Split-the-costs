@@ -17,7 +17,7 @@ import pl.edu.pw.models.User;
 public class AuthController {
 	@Autowired
 	private JwtService jwtService;
-	private DBConnector dbc = new DBConnector();
+	private DBConnector dbc = new DBConnector(1);
 
 	@PostMapping("/register")
 	public UserTokenDTO register(@RequestBody @Validated RegisterDTO registerDTO) {

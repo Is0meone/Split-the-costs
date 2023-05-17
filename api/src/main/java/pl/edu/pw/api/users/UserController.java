@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public class UserController {
 	@Autowired
 	private JwtService jwtService;
-	private DBConnector dbc = new DBConnector();
+	private DBConnector dbc = new DBConnector(1);
 	@GetMapping("/user/{id}/allusers")
 	public List<UserDTO> getUsers(@PathVariable("id") Long id, HttpServletRequest request, HttpServletResponse response) {
 		if (jwtService.checkUserToken(id, request)) {

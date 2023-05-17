@@ -35,6 +35,14 @@ public class DBConnector {
 
         this.sessionFactory = new SessionFactory(configuration, "pl.edu.pw.models");
     }
+    public DBConnector(int test) {
+        Configuration configuration = new Configuration.Builder()
+                .uri("neo4j+s://29a77c86.databases.neo4j.io")
+                .credentials("neo4j", "UzFgqWHpeB9K_90-pumkbUSdTaQA9nJY1v8Fuh-HE_E")
+                .build();
+
+        this.sessionFactory = new SessionFactory(configuration, "pl.edu.pw.models");
+    }
 
     public void addUser(User user) {
         Session session = sessionFactory.openSession();
