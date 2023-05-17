@@ -98,8 +98,9 @@ public class ObligationController {
 	public void acceptObligation(@PathVariable Long id, HttpServletRequest request, @PathVariable("toid") Long toId, HttpServletResponse response) throws IOException {
 		if (jwtService.checkUserToken(id, request)) {
 			User user = dbc.findUserById(id);
-			user.acceptObligationTo(user,toId);
+			Obligation obligation = user.acceptObligationTo(user,toId);
 			dbc.updateUser(user);
+			gl.debtTransfer(obligation);
 		}else {
 			response.getWriter().print("Access Denied");
 			response.setStatus(401);
