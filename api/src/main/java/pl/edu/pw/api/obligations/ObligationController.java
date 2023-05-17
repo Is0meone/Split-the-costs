@@ -34,6 +34,13 @@ public class ObligationController {
 					.map(obligation -> {
 						ObligationWithIdDTO obligationWithIdDTO = new ObligationWithIdDTO();
 						obligationWithIdDTO.setId(obligation.getId());
+						obligationWithIdDTO.setId(obligation.getId());
+						obligationWithIdDTO.setAmount(obligation.getAmount());
+						obligationWithIdDTO.setStatus(obligation.getStatus());
+						obligationWithIdDTO.setTimestamp(obligation.getTimestamp().toString());
+						obligationWithIdDTO.setCreditorId(obligation.getCreditor().getName());
+						obligationWithIdDTO.setDebtorId(obligation.getDebtor().getName());
+						obligationWithIdDTO.setDescription(obligation.getDescription());
 						return obligationWithIdDTO;
 					})
 					.collect(Collectors.toList());
@@ -54,6 +61,12 @@ public class ObligationController {
 					.map(obligation -> {
 						ObligationWithIdDTO obligationWithIdDTO = new ObligationWithIdDTO();
 						obligationWithIdDTO.setId(obligation.getId());
+						obligationWithIdDTO.setAmount(obligation.getAmount());
+						obligationWithIdDTO.setStatus(obligation.getStatus());
+						obligationWithIdDTO.setTimestamp(obligation.getTimestamp().toString());
+						obligationWithIdDTO.setCreditorId(obligation.getCreditor().getName());
+						obligationWithIdDTO.setDebtorId(obligation.getDebtor().getName());
+						obligationWithIdDTO.setDescription(obligation.getDescription());
 						return obligationWithIdDTO;
 					})
 					.collect(Collectors.toList()));
