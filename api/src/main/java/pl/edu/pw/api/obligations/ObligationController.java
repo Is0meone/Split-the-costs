@@ -70,7 +70,6 @@ public class ObligationController {
 						return obligationWithIdDTO;
 					})
 					.collect(Collectors.toList()));
-			return obligationsToDTO;
 		}else {
 			response.getWriter().print("Invalid Token");
 			response.setStatus(401);
