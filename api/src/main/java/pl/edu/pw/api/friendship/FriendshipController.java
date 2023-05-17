@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.edu.pw.DBConnector;
 import pl.edu.pw.api.friendship.dto.FriendsDTO;
@@ -13,25 +14,30 @@ import pl.edu.pw.api.security.JwtService;
 import pl.edu.pw.models.Friendship;
 import pl.edu.pw.models.User;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RestController("/friends")
+@RestController
+@RequestMapping("/friends")
 public class FriendshipController {
 	@Autowired
 	private JwtService jwtService;
-	private DBConnector dbc = new DBConnector("t");
+	private DBConnector dbc = new DBConnector(1);
 
 	/**
 	 * Sends a friendship request to the user with the given id (or accepts the friendship if the other side requested it)
 	 * @param id id of the second user
 	 */
 	@GetMapping("/user/{id}/requestoracceptfriendship/{withid}")
-	public void requestOrAcceptFriendship(@PathVariable("id") Long id, HttpServletRequest request,@PathVariable("withid") Long withId) {
+	public void requestOrAcceptFriendship(@PathVariable("id") Long id, HttpServletRequest request,@PathVariable("withid") Long withId, HttpServletResponse response) throws IOException {
 		if(jwtService.checkUserToken(id, request)) {
 			User user = dbc.findUserById(id);
 			user.sendOrAcceptFriendship(dbc.findUserById(withId));
 			dbc.updateUser(user);
+		}else {
+			response.getWriter().print("Invalid Token");
+			response.setStatus(401);
 		}
 	}
 
@@ -41,11 +47,14 @@ public class FriendshipController {
 	 * @param id id of the second user
 	 */
 	@GetMapping("/user/{id}/rejectfriendship/{withid}")
-	public void rejectFriendship(@PathVariable("id") Long id, HttpServletRequest request,@PathVariable("withid") Long withId) {
+	public void rejectFriendship(@PathVariable("id") Long id, HttpServletRequest request,@PathVariable("withid") Long withId, HttpServletResponse response) throws IOException {
 		if(jwtService.checkUserToken(id, request)) {
 			User user = dbc.findUserById(id);
 			user.rejectFriendship(dbc.findUserById(withId));
 			dbc.updateUser(user);
+		}else {
+			response.getWriter().print("Invalid Token");
+			response.setStatus(401);
 		}
 	}
 
@@ -55,11 +64,14 @@ public class FriendshipController {
 	 * @param id id of the second user
 	 */
 	@GetMapping("/user/{id}/auto/{withid}")
-	public void markAsAutoAccept(@PathVariable("id") Long id, HttpServletRequest request, @PathVariable("withid") Long withId) {
+	public void markAsAutoAccept(@PathVariable("id") Long id, HttpServletRequest request, @PathVariable("withid") Long withId, HttpServletResponse response) throws IOException {
 		if(jwtService.checkUserToken(id, request)) {
 			User user = dbc.findUserById(id);
 			user.markAsAutoAccept(dbc.findUserById(withId));
 			dbc.updateUser(user);
+		}else {
+			response.getWriter().print("Invalid Token");
+			response.setStatus(401);
 		}
 	}
 
@@ -69,19 +81,28 @@ public class FriendshipController {
 	 * @return list of friends
 	 */
 	@GetMapping("/user/{id}/friends")
-	public List<FriendsDTO> getFriends(@PathVariable("id") Long id, HttpServletRequest request, HttpServletResponse response) {
+	public List<FriendsDTO> getFriends(@PathVariable("id") Long id, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		if(jwtService.checkUserToken(id, request)) {
 			User user = dbc.findUserById(id);
-			List<Friendship> friends = user.getFriendsWith();
+			List<Friendship> friends = user.getAllFriends();
 			return friends.stream()
 					.map(friend -> {
 						FriendsDTO friendsDTO = new FriendsDTO();
-						friendsDTO.setId(user.getId());
-						friendsDTO.setUsername(user.getName());
+						if(friend.getSender().getId() != user.getId()){
+							friendsDTO.setId(friend.getSender().getId());
+							friendsDTO.setUsername(friend.getSender().getName());
+						}
+						else{
+							friendsDTO.setId(friend.getReceiver().getId());
+							friendsDTO.setUsername(friend.getReceiver().getName());
+						}
+
+
 						return friendsDTO;
 					})
 					.collect(Collectors.toList());
-		} else{
+		}else {
+			response.getWriter().print("Invalid Token");
 			response.setStatus(401);
 		}
 		return null;
@@ -92,19 +113,20 @@ public class FriendshipController {
 	 * Returns a list of all users that have sent a friendship request to the current user
 	 */
 	@GetMapping("/user/{id}/requests")
-	public List<FriendshipRequestDTO> getFriendshipRequests(@PathVariable("id") Long id, HttpServletRequest request, HttpServletResponse response) {
+	public List<FriendshipRequestDTO> getFriendshipRequests(@PathVariable("id") Long id, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		if(jwtService.checkUserToken(id, request)) {
 			User user = dbc.findUserById(id);
 			List<Friendship> friendshipRequests = user.getAllFriendshipRequests();
 			return friendshipRequests.stream()
 					.map(friend -> {
 						FriendshipRequestDTO friendsDTO = new FriendshipRequestDTO();
-						friendsDTO.setId(user.getId());
-						friendsDTO.setUsername(user.getName());
+						friendsDTO.setId(friend.getSender().getId());
+						friendsDTO.setUsername(friend.getSender().getName());
 						return friendsDTO;
 					})
 					.collect(Collectors.toList());
 		}else {
+			response.getWriter().print("Invalid Token");
 			response.setStatus(401);
 		}
 		return null;

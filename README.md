@@ -243,3 +243,87 @@ An IntelliJ UML version from which this mermaid code was generated is also inclu
 ### Use case diagram
 
 ![usecase diagram](docs-assets/usecases.svg)
+
+## Use cases (using API)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; This note features all available API methods with 
+endpoints, parameters and basic usage. <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; All parameters are meant to be sent in JSON format.
+For every method following scheme is used:
+ - /end/point/method
+   - POST/GET
+   - parameter1, parameter2, parameter3...
+   - result1, result2, result3...
+### /authorisation:
+Basic idea behind implemented authorisation is to return Bearer token
+whenever a user is logging in or registering. On app side destroying token when 
+logging out needs implementation.
+Token must be sent with every other request do API. <nl>
+
+  - /auth/register
+    - POST
+    - username, password
+    - token, id
+  - /auth/login
+    - POST
+    - username, password
+    - token, id
+
+### /friend:
+Methods related to friend accepting, requesting, declining etc. are presented below.
+###
+  With this method the current user will either send or accept
+request if it's waiting to be accepted by the user.
+  - /friend/user/{id}/requestoracceptfriendship/{withid}
+    - GET
+    - (your) id, (friends) withid, token
+###
+Reject pending relationship invitation. <nl>
+  - /friend/user/{id}/rejectfriendship/{withid}
+    - GET
+    - (your) id, (friends) withid, token.
+###
+With this method, all future obligations between users will be automatically accepted.
+  - /friend/user/{id}/auto/{withid}
+    - GET
+    - (your) id, (friends) withid, token
+###
+ Get all friends of the user.
+  - /friend/user/{id}/friends
+    - GET
+    - (your) id, token
+    - user1(name, id), user2(name, id)...
+###
+Get all friendship request received by the user.
+  - /friend/user/{id}/requests
+    - GET
+    - (your) id, token
+    - name
+## /obligation:
+Asking for money, splitting bills, accepting  or declining obligations
+###
+Get all obligation that user owes to others
+ - /obligations/user/{id}/obligationwith
+   - GET
+   - (your) id, token
+   - debtor info, creditor info, id, status, description...
+###
+Getall obligation that others owes to user
+ - /obligations/to/{id}/obligationto
+    - GET
+    - (your) id, token
+    - debtor info, creditor info, id, status, description...
+###
+Get all obligation that others owes to user
+- /obligations/to/{id}/obligationto
+    - GET
+    - (your) id, token
+    - debtor info, creditor info, id, status, description...
+###
+Ask for money
+ -/obligations/user/{id}/requestObligation/{fromid}
+ - POST
+ - (your) id, (friend) id, description, timestamp, status, token
+
+
+
+

@@ -2,10 +2,6 @@ package pl.edu.pw.models;
 
 import org.neo4j.ogm.annotation.*;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 @RelationshipEntity(type="OWES")
@@ -31,13 +27,13 @@ public class Obligation {
 	private Status status;
 
 	private String description;
-	private LocalDateTime timestamp;
+	private String timestamp;
 
 	public Obligation() {
 	}
 
 	public Obligation(
-			User creditor, User debtor, Double amount, Status status, String description, LocalDateTime timestamp
+			User creditor, User debtor, Double amount, Status status, String description, String timestamp
 	) {
 		this.creditor = creditor;
 		this.debtor = debtor;
@@ -113,11 +109,11 @@ public class Obligation {
 		this.description = description;
 	}
 
-	public LocalDateTime getTimestamp() {
+	public String getTimestamp() {
 		return timestamp;
 	}
 
-	public void setTimestamp(LocalDateTime timestamp) {
+	public void setTimestamp(String timestamp) {
 		this.timestamp = timestamp;
 	}
 
