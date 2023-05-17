@@ -1,5 +1,6 @@
 package pl.edu.pw;
 
+import pl.edu.pw.models.Friendship;
 import pl.edu.pw.models.Obligation;
 import pl.edu.pw.models.User;
 
@@ -27,7 +28,7 @@ public class GraphLogic {
                     justFriends.add(obl);
                 }
             }
-            return obligation.getCreditor().getOwes()
+            return justFriends
                 .stream()
                 .filter(o -> o.getStatus() != Obligation.Status.PAID&&o.getStatus() != Obligation.Status.AUTOPAID)
                 .collect(Collectors.toList());
@@ -44,7 +45,7 @@ public class GraphLogic {
             }
         }
         if(obligation.getDebtor().getIsOwed() != null){
-        return obligation.getDebtor().getIsOwed()
+        return justFriends
                 .stream()
                 .filter(o -> o.getStatus() != Obligation.Status.PAID&&o.getStatus() != Obligation.Status.AUTOPAID)
                 .collect(Collectors.toList());
@@ -134,7 +135,7 @@ public class GraphLogic {
     public static List<Obligation> getCleanObl(List<Obligation> obligationsList){
         List<Obligation> cleanList = new ArrayList<Obligation>();
         for (Obligation o: obligationsList) {
-            if(o.getStatus()==null){
+            if(o.getStatus()==null||o.getStatus()== Obligation.Status.AUTOGEN){
                 System.out.println("Obligacja nr: "+o.getId() +" " +o.getCreditor().getName()+" <- "+ o.getDebtor().getName()+" value "+o.getAmount());
                 cleanList.add(o);
             }
@@ -142,7 +143,9 @@ public class GraphLogic {
         return cleanList;
     }
     public static void main(String[] args){
-        DBConnector dbc = new DBConnector("test");
+        //problem friendship ale raczej z baza
+
+        DBConnector dbc = new DBConnector();
         GraphLogic logic = new GraphLogic(dbc);
 
         User user = new User("a","daje");
@@ -150,21 +153,57 @@ public class GraphLogic {
         User user3 = new User("c","wisi");
         Obligation obligation = new Obligation(user,user2,(double)100);
         Obligation obligation2 = new Obligation(user2,user3,(double)50);
+        Friendship friendship = new Friendship(user,user2, Friendship.Status.ACCEPTED);
+        Friendship friendship1 = new Friendship(user2,user3, Friendship.Status.ACCEPTED);
+        Friendship friendship2 = new Friendship(user,user3, Friendship.Status.ACCEPTED);
+
         dbc.addUser(user);
         dbc.addUser(user2);
         dbc.addUser(user3);
         dbc.addObligation(obligation);
         dbc.addObligation(obligation2);
+        dbc.addFriendship(friendship);
+        dbc.addFriendship(friendship1);
+        dbc.addFriendship(friendship2);
+
         logic.debtTransfer(obligation2);
 
 
-        dbc.getAllObligations();
-        logic.getCleanObl(dbc.getAllObligations());
+        //System.out.println(dbc.getAllObligations());
+       // System.out.println(dbc.getAllUsers());
+        //logic.getCleanObl(dbc.getAllObligations());
 
     }
 
 }//TODO
 /*
+
+                DBConnector dbc = new DBConnector();
+        GraphLogic logic = new GraphLogic(dbc);
+
+        User user = new User("a","daje");
+        User user2 = new User("b","wisi/daje");
+        User user3 = new User("c","wisi");
+        Obligation obligation = new Obligation(user,user2,(double)100);
+        Obligation obligation2 = new Obligation(user2,user3,(double)50);
+        Friendship friendship = new Friendship(user,user2, Friendship.Status.ACCEPTED);
+        Friendship friendship1 = new Friendship(user2,user3, Friendship.Status.ACCEPTED);
+        Friendship friendship2 = new Friendship(user,user3, Friendship.Status.ACCEPTED);
+
+        dbc.addUser(user);
+        dbc.addUser(user2);
+        dbc.addUser(user3);
+        dbc.addObligation(obligation);
+        dbc.addObligation(obligation2);
+        dbc.addFriendship(friendship);
+        dbc.addFriendship(friendship1);
+        dbc.addFriendship(friendship2);
+
+
+
+
+
+
         DBConnector dbc = new DBConnector();
         GraphLogic logic = new GraphLogic();
 

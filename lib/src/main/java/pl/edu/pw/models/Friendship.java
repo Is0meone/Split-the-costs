@@ -79,8 +79,8 @@ public class Friendship {
 	public String toString() {
 		return "Friendship{" +
 				"id=" + id +
-				", sender=" + sender +
-				", receiver=" + receiver +
+			//	", sender=" + sender +
+			//	", receiver=" + receiver +
 				", status=" + status +
 				'}';
 	}

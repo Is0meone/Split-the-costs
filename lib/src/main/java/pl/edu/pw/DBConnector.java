@@ -5,6 +5,7 @@ import org.neo4j.ogm.model.Result;
 import org.neo4j.ogm.session.Session;
 import org.neo4j.ogm.session.SessionFactory;
 import org.neo4j.ogm.transaction.Transaction;
+import pl.edu.pw.models.Friendship;
 import pl.edu.pw.models.Obligation;
 import pl.edu.pw.models.User;
 
@@ -20,8 +21,8 @@ public class DBConnector {
 
     public DBConnector() {
         Configuration configuration = new Configuration.Builder()
-                .uri("neo4j+s://2be25d7b.databases.neo4j.io")
-                .credentials("neo4j", "Ob45K7a1DfSQUFb6qI_WFh8edC_epUaAbGxkA7tb26Y")
+                .uri("neo4j+s://c88dea7a.databases.neo4j.io")
+                .credentials("neo4j", "PBHgFL1vQV_dsgdfS_TIBmC2KAMRHyjFxiQuC0Oc1Dg")
                 .build();
 
         this.sessionFactory = new SessionFactory(configuration, "pl.edu.pw.models");
@@ -46,7 +47,7 @@ public class DBConnector {
     public void addUser(User user) {
         Session session = sessionFactory.openSession();
         try (Transaction tx = session.beginTransaction()) {
-            session.save(user);
+            session.save(user,10);
             tx.commit();
         }
     }
@@ -64,8 +65,20 @@ public class DBConnector {
         obligation.getDebtor().addOwes(obligation);
         obligation.getCreditor().addOwed(obligation);
 
-        session.save(obligation.getCreditor(),1);
+        session.save(obligation.getCreditor(),2);
     }
+    public void addFriendship(Friendship f){
+        unNullifier(f.getSender());
+        unNullifier(f.getReceiver());
+        f.getSender().addFriendship(f);
+        f.getReceiver().addFriendship(f);
+        Session session = sessionFactory.openSession();
+        try (Transaction tx = session.beginTransaction()) {
+            session.save(f);
+            tx.commit();
+        }
+    }
+
 
     public List<User> getAllUsers() {
         Session session = sessionFactory.openSession();

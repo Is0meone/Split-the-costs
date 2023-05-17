@@ -90,7 +90,9 @@ public class User{
 	public void setFriendsWith(List<Friendship> friendsWith) {
 		this.friendsWith = friendsWith;
 	}
-
+	public void addFriendship(Friendship f){
+		this.friendsWith.add(f);
+	}
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -109,7 +111,7 @@ public class User{
 				"id=" + id +
 				", name='" + name + '\'' +
 				", passwordHash='" + passwordHash + '\'' +
-				", friendsWith=" + friendsWith +
+				//", friendsWith=" + friendsWith +
 				'}';
 	}
 

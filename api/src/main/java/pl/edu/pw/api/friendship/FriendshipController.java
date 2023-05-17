@@ -15,6 +15,7 @@ import pl.edu.pw.models.Friendship;
 import pl.edu.pw.models.User;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController("/friends")
@@ -31,7 +32,10 @@ public class FriendshipController {
 	public void requestOrAcceptFriendship(@PathVariable("id") Long id, HttpServletRequest request,@PathVariable("withid") Long withId) {
 		if(jwtService.checkUserToken(id, request)) {
 			User user = dbc.findUserById(id);
-			user.sendOrAcceptFriendship(dbc.findUserById(withId));
+			Optional<Friendship> fnew = user.sendOrAcceptFriendship(dbc.findUserById(withId));
+			if(fnew.isPresent()) {
+				dbc.addFriendship(fnew.get());
+			}
 			dbc.updateUser(user);
 		}
 	}
