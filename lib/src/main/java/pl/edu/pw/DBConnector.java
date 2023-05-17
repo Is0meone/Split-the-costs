@@ -127,7 +127,23 @@ public class DBConnector {
         }
         return null;
     }
+    public void makeLove(){
+        Session session = sessionFactory.openSession();
+        List<User> loveList = getAllUsers();
 
+        for(int i=0;i<loveList.size();i++){
+            for(int j =0;j<loveList.size();j++){
+                Friendship f = new Friendship(loveList.get(i),loveList.get(j),Friendship.Status.ACCEPTED);
+                addFriendship(f);
+            }
+        }
+    }
+    public void createFriend(User user, User user2){
+        Session session = sessionFactory.openSession();
+        Friendship f = new Friendship(user,user2,Friendship.Status.ACCEPTED);
+        addFriendship(f);
+
+    }
 
     public List<User> findUsersByPrefix(String name) {
         Session session = sessionFactory.openSession();
