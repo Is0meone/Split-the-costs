@@ -88,6 +88,9 @@ public class ObligationController {
 			User user = dbc.findUserById(id);
 			user.requestObligationFrom(dbc.findUserById(fromId), obligationDTO.getAmount(), obligationDTO.getDescription(), obligationDTO.getTimestamp());
 			dbc.updateUser(user);
+			if(user.isSuperFriend(dbc.findUserById(fromId))){
+				gl.debtTransfer(dbc.findObligationBetweenUsers(dbc.findUserById(id),dbc.findUserById(fromId)));
+			}
 		}else {
 			response.getWriter().print("Access Denied");
 			response.setStatus(401);
