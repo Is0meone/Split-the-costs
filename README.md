@@ -253,7 +253,7 @@ For every method following scheme is used:
    - POST/GET
    - parameter1, parameter2, parameter3...
    - result1, result2, result3...
-### authorisation:
+### /authorisation:
 Basic idea behind implemented authorisation is to return Bearer token
 whenever a user is logging in or registering. On app side destroying token when 
 logging out needs implementation.
@@ -268,7 +268,7 @@ Token must be sent with every other request do API. <nl>
     - username, password
     - token, id
 
-### friend:
+### /friend:
 Methods related to friend accepting, requesting, declining etc. are presented below.
 ###
   With this method the current user will either send or accept
@@ -298,6 +298,32 @@ Get all friendship request received by the user.
     - GET
     - (your) id, token
     - name
-##
+## /obligation:
+Asking for money, splitting bills, accepting  or declining obligations
+###
+Get all obligation that user owes to others
+ - /obligations/user/{id}/obligationwith
+   - GET
+   - (your) id, token
+   - debtor info, creditor info, id, status, description...
+###
+Getall obligation that others owes to user
+ - /obligations/to/{id}/obligationto
+    - GET
+    - (your) id, token
+    - debtor info, creditor info, id, status, description...
+###
+Get all obligation that others owes to user
+- /obligations/to/{id}/obligationto
+    - GET
+    - (your) id, token
+    - debtor info, creditor info, id, status, description...
+###
+Ask for money
+ -/obligations/user/{id}/requestObligation/{fromid}
+ - POST
+ - (your) id, (friend) id, description, timestamp, status, token
+
+
 
 

@@ -13,9 +13,7 @@ import pl.edu.pw.models.Obligation;
 import pl.edu.pw.models.User;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -34,7 +32,6 @@ public class ObligationController {
 			return obligations.stream()
 					.map(obligation -> {
 						ObligationWithIdDTO obligationWithIdDTO = new ObligationWithIdDTO();
-						obligationWithIdDTO.setId(obligation.getId());
 						obligationWithIdDTO.setId(obligation.getId());
 						obligationWithIdDTO.setAmount(obligation.getAmount());
 						obligationWithIdDTO.setStatus(obligation.getStatus());
@@ -192,7 +189,21 @@ public class ObligationController {
 	@PutMapping("/user/{id}/split/manual")
 	public void splitObligationManually(@PathVariable("id") Long id, HttpServletRequest request, @RequestBody SplitObligationManualDTO obligationManualDTO, HttpServletResponse response) throws IOException {
 		if (jwtService.checkUserToken(id, request)) {
-			//TODO:
+			User user = dbc.findUserById(id);
+			ExpenseSplitter es = new ExpenseSplitter(user, dbc);
+			User somePayer;
+			Map<User, Double> payers = new HashMap<>();
+			try {
+				for (Map.Entry<Long, Double> entry : obligationManualDTO.getUsers().entrySet()) {
+					somePayer = dbc.findUserById(entry.getKey());
+					if(somePayer!=null) payers.put(somePayer, entry.getValue());
+					else throw new NoSuchElementException();
+				}
+				es.split(payers);
+			}catch (Exception e){
+				System.out.println("Brak conajmniej 1 użytkownika o danym id! Został pomminiety.");
+			}
+
 		}else {
 			response.getWriter().print("Access Denied");
 			response.setStatus(401);
