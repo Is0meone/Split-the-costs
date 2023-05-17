@@ -76,8 +76,16 @@ public class FriendshipController {
 			return friends.stream()
 					.map(friend -> {
 						FriendsDTO friendsDTO = new FriendsDTO();
-						friendsDTO.setId(friend.getSender().getId());
-						friendsDTO.setUsername(friend.getSender().getName());
+						if(friend.getSender().getId() != user.getId()){
+							friendsDTO.setId(friend.getSender().getId());
+							friendsDTO.setUsername(friend.getSender().getName());
+						}
+						else{
+							friendsDTO.setId(friend.getReceiver().getId());
+							friendsDTO.setUsername(friend.getReceiver().getName());
+						}
+
+
 						return friendsDTO;
 					})
 					.collect(Collectors.toList());
