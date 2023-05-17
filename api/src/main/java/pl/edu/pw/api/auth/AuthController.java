@@ -1,6 +1,7 @@
 package pl.edu.pw.api.auth;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -31,15 +32,17 @@ public class AuthController {
 	}
 
 	@PostMapping("/login")
-	public String authenticateAndGetToken(@RequestBody LoginDTO loginDTO) {
+	public UserTokenDTO authenticateAndGetToken(@RequestBody LoginDTO loginDTO, HttpServletResponse response) {
 		if(dbc.findUserByName(loginDTO.getUsername())!=null) {
 			User user = new User(loginDTO.getUsername(), loginDTO.getPassword());
 			if (user.passwordCompare(loginDTO.getPassword(),dbc.findUserByName(loginDTO.getUsername()).getPasswordHash())) {
-				return jwtService.generateToken(loginDTO.getUsername());
-			} else {
-				return null;
+				UserTokenDTO utdto = new UserTokenDTO();
+				utdto.setToken(jwtService.generateToken(loginDTO.getUsername()));
+				utdto.setUserId(user.getId());
+				return utdto;
 			}
 		}
+		response.setStatus(401);
 		return null;
 	}
 
