@@ -72,7 +72,7 @@ public class FriendshipController {
 	public List<FriendsDTO> getFriends(@PathVariable("id") Long id, HttpServletRequest request, HttpServletResponse response) {
 		if(jwtService.checkUserToken(id, request)) {
 			User user = dbc.findUserById(id);
-			List<Friendship> friends = user.getFriendsWith();
+			List<Friendship> friends = user.getAllFriends();
 			return friends.stream()
 					.map(friend -> {
 						FriendsDTO friendsDTO = new FriendsDTO();

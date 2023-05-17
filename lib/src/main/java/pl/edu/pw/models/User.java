@@ -248,6 +248,12 @@ public class User{
 				.filter(friendship -> friendship.getStatus() == Friendship.Status.PENDING)
 				.collect(Collectors.toList());
 	}
+
+	public List<Friendship> getAllFriends(){
+		return this.friendsWith.stream()
+				.filter(friendship -> friendship.getStatus() == Friendship.Status.ACCEPTED || friendship.getStatus() == Friendship.Status.AUTO_APPROVE)
+				.collect(Collectors.toList());
+	}
 	public void rejectFriendship(User user){
 		try{
 			Optional<Friendship>  friend = this.friendsWith.stream()

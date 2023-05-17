@@ -11,7 +11,9 @@ import pl.edu.pw.api.security.JwtService;
 import pl.edu.pw.models.Obligation;
 import pl.edu.pw.models.User;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @RestController("/obligations")
@@ -94,9 +96,20 @@ public class ObligationController {
 	public void splitObligationEqually(@PathVariable("id") Long id, HttpServletRequest request, @RequestBody SplitObligationDTO obligationDTO) {
 		if (jwtService.checkUserToken(id, request)) {
 			User user = dbc.findUserById(id);
+			User somePayer;
+			List<User> payers = new ArrayList<>();
+			try {
+				for (Long usersId : obligationDTO.getUsers()) {
+					somePayer = dbc.findUserById(usersId);
+					if (somePayer != null) {
+						payers.add(somePayer);
+					} else throw new NoSuchElementException();
+				}
+			}catch (Exception e){
+				System.out.println("Brak conajmniej 1 użytkownika o danym id! Został pomminiety, a kwota podzielona przez pozostalych uzytownikow");
+			}
 			ExpenseSplitter expenseSplitter = new ExpenseSplitter(user,dbc);
-//			expenseSplitter.split();
-			//TODO:
+			expenseSplitter.split(obligationDTO.getAmount(), payers);
 		}
 	}
 	@PutMapping("/user/{id}/split/manual")
