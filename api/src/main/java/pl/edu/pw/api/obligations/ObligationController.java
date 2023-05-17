@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class ObligationController {
 	@Autowired
 	private JwtService jwtService;
-	private DBConnector dbc = new DBConnector();
+	private DBConnector dbc = new DBConnector(1);
 	@GetMapping("/user/{id}")
 	public List<ObligationWithIdDTO> getObligationsFor(@PathVariable Long id) {
 		User user = dbc.findUserById(id);

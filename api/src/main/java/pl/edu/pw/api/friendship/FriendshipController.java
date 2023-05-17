@@ -1,23 +1,27 @@
 package pl.edu.pw.api.friendship;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pl.edu.pw.DBConnector;
 import pl.edu.pw.api.auth.dto.LoginDTO;
+import pl.edu.pw.api.friendship.dto.FriendsDTO;
 import pl.edu.pw.api.friendship.dto.FriendshipDTO;
+import pl.edu.pw.api.friendship.dto.FriendshipRequestDTO;
 import pl.edu.pw.api.security.JwtService;
 import pl.edu.pw.api.users.dto.UserDTO;
 import pl.edu.pw.models.Friendship;
 import pl.edu.pw.models.User;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController("/friends")
 public class FriendshipController {
 	@Autowired
 	private JwtService jwtService;
-	private DBConnector dbc = new DBConnector();
+	private DBConnector dbc = new DBConnector(1);
 
 	/**
 	 * Sends a friendship request to the user with the given id (or accepts the friendship if the other side requested it)
@@ -66,11 +70,20 @@ public class FriendshipController {
 	 * @return list of friends
 	 */
 	@GetMapping("/user/{id}/friends")
-	public List<Friendship> getFriends(@PathVariable("id") Long id, HttpServletRequest request) {
+	public List<FriendsDTO> getFriends(@PathVariable("id") Long id, HttpServletRequest request, HttpServletResponse response) {
 		if(jwtService.checkUserToken(id, request)) {
 			User user = dbc.findUserById(id);
 			List<Friendship> friends = user.getFriendsWith();
-			return friends;
+			return friends.stream()
+					.map(friend -> {
+						FriendsDTO friendsDTO = new FriendsDTO();
+						friendsDTO.setId(user.getId());
+						friendsDTO.setUsername(user.getName());
+						return friendsDTO;
+					})
+					.collect(Collectors.toList());
+		} else{
+			response.setStatus(401);
 		}
 		return null;
 	}
@@ -80,11 +93,20 @@ public class FriendshipController {
 	 * Returns a list of all users that have sent a friendship request to the current user
 	 */
 	@GetMapping("/user/{id}/requests")
-	public List<Friendship> getFriendshipRequests(@PathVariable("id") Long id, HttpServletRequest request) {
+	public List<FriendshipRequestDTO> getFriendshipRequests(@PathVariable("id") Long id, HttpServletRequest request, HttpServletResponse response) {
 		if(jwtService.checkUserToken(id, request)) {
 			User user = dbc.findUserById(id);
 			List<Friendship> friendshipRequests = user.getAllFriendshipRequests();
-			return friendshipRequests;
+			return friendshipRequests.stream()
+					.map(friend -> {
+						FriendshipRequestDTO friendsDTO = new FriendshipRequestDTO();
+						friendsDTO.setId(user.getId());
+						friendsDTO.setUsername(user.getName());
+						return friendsDTO;
+					})
+					.collect(Collectors.toList());
+		}else {
+			response.setStatus(401);
 		}
 		return null;
 	}
