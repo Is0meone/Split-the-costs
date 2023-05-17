@@ -153,11 +153,15 @@ public class User{
 	 * @param user user who sent the obligation request
 	 * @param id id of the obligation
 	 */
-	public void acceptObligationTo(User user, Long id) {
+	public Obligation acceptObligationTo(User user, Long id) {
 		for (Obligation obligation: this.owes
 		) {
-			if(obligation.getCreditor().equals(user) && obligation.getId()==id) obligation.accept();
+			if(obligation.getCreditor().equals(user) && obligation.getId()==id){
+				obligation.accept();
+				return obligation;
+			}
 		}
+		return null;
 	}
 
 	/**

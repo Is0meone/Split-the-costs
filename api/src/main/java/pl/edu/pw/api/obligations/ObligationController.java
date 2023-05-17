@@ -142,6 +142,7 @@ public class ObligationController {
 				obligations.add(ob);
 			}
 			return obligations.stream()
+					.filter(obl -> (obl.getCreditor().getId()==withId)||(obl.getDebtor().getId()==withId))
 					.map(obligation -> {
 						ObligationWithIdDTO obligationWithIdDTO = new ObligationWithIdDTO();
 						obligationWithIdDTO.setId(obligation.getId());
@@ -155,7 +156,6 @@ public class ObligationController {
 						return obligationWithIdDTO;
 					})
 					.collect(Collectors.toList());
-			//TODO: Dalej to
 		}else {
 			response.getWriter().print("Access Denied");
 			response.setStatus(401);
