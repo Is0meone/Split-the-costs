@@ -276,18 +276,33 @@ public class User{
 	}
 	public List<Obligation> getPendingObligations(){
 		List<Obligation> pendingOwes = this.owes.stream()
-				.filter(obligation -> obligation.getStatus().equals(Friendship.Status.PENDING))
+				.filter(obligation -> obligation.getStatus().equals(Obligation.Status.PENDING))
 				.collect(Collectors.toList());
 		List<Obligation> pendingOwed = this.isOwed.stream()
-				.filter(obligation -> obligation.getStatus().equals(Friendship.Status.PENDING))
+				.filter(obligation -> obligation.getStatus().equals(Obligation.Status.PENDING))
+				.collect(Collectors.toList());
+		pendingOwes.addAll(pendingOwed);
+		return pendingOwes;
+	}
+	/*
+	* This func retun all active Obligation all = isOwed and owes
+	* */
+	public List<Obligation> getActiveObligation(){
+		List<Obligation> pendingOwes = this.owes.stream()
+				.filter(obligation -> obligation.getStatus().equals(Obligation.Status.ACCEPTED)||obligation.getStatus().equals(Obligation.Status.AUTOGEN))
+				.collect(Collectors.toList());
+		List<Obligation> pendingOwed = this.isOwed.stream()
+				.filter(obligation -> obligation.getStatus().equals(Friendship.Status.ACCEPTED)||obligation.getStatus().equals(Obligation.Status.AUTOGEN))
 				.collect(Collectors.toList());
 		pendingOwes.addAll(pendingOwed);
 		return pendingOwes;
 	}
 	public boolean isFriend(User user){
-		for (Friendship f : this.friendsWith) {
-			if((f.getSender().equals(user) || f.getReceiver().equals(user)) &&
-					(f.getStatus().equals(Friendship.Status.ACCEPTED) || (f.getStatus().equals(Friendship.Status.AUTO_APPROVE)))) return true;
+		if(this.friendsWith!=null){
+			for (Friendship f : this.friendsWith) {
+				if((f.getSender().equals(user) || f.getReceiver().equals(user)) &&
+						(f.getStatus().equals(Friendship.Status.ACCEPTED) || (f.getStatus().equals(Friendship.Status.AUTO_APPROVE)))) return true;
+			}
 		}
 		return false;
 	}

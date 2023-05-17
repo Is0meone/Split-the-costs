@@ -26,6 +26,7 @@ public class Obligation {
 	@StartNode
 	private User debtor;
 	private Double amount;
+	private Double coreAmount; //moze finall
 
 	private Status status;
 
@@ -41,6 +42,7 @@ public class Obligation {
 		this.creditor = creditor;
 		this.debtor = debtor;
 		this.amount = amount;
+		this.coreAmount = amount;
 		this.status = status;
 		this.description = description;
 		this.timestamp = timestamp;
@@ -50,17 +52,15 @@ public class Obligation {
 		this.creditor = creditor;
 		this.debtor = debtor;
 		this.amount = amount;
+		this.coreAmount = amount;
 		this.status = status;
 	}
 
 	public Obligation(User creditor, User debtor, Double amount) {
 		this.creditor = creditor;
 		this.debtor = debtor;
+		this.coreAmount = amount;
 		this.amount = amount;
-	}
-
-	public Obligation(Long id) {
-		this.id = id;
 	}
 
 	public Long getId() {
@@ -82,7 +82,9 @@ public class Obligation {
 	public User getDebtor() {
 		return debtor;
 	}
-
+	public Double getCoreAmount(){
+		return coreAmount;
+	}
 	public void setDebtor(User debtor) {
 		this.debtor = debtor;
 	}

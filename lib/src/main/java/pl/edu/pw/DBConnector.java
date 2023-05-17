@@ -65,14 +65,14 @@ public class DBConnector {
         obligation.getDebtor().addOwes(obligation);
         obligation.getCreditor().addOwed(obligation);
 
-        session.save(obligation.getCreditor(),2);
+        session.save(obligation,2);
     }
     public void addFriendship(Friendship f){
+        Session session = sessionFactory.openSession();
         unNullifier(f.getSender());
         unNullifier(f.getReceiver());
         f.getSender().addFriendship(f);
         f.getReceiver().addFriendship(f);
-        Session session = sessionFactory.openSession();
         try (Transaction tx = session.beginTransaction()) {
             session.save(f);
             tx.commit();
@@ -155,7 +155,6 @@ public class DBConnector {
         Session session = sessionFactory.openSession();
         try{
             User user = session.load(User.class,id);
-
             if(user!=null) {
                 unNullifier(user);
                 return user;
