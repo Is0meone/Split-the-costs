@@ -38,7 +38,7 @@ public class AuthController {
 			if (user.passwordCompare(loginDTO.getPassword(),dbc.findUserByName(loginDTO.getUsername()).getPasswordHash())) {
 				UserTokenDTO utdto = new UserTokenDTO();
 				utdto.setToken(jwtService.generateToken(loginDTO.getUsername()));
-				utdto.setUserId(user.getId());
+				utdto.setUserId(dbc.findUserByName(loginDTO.getUsername()).getId());
 				return utdto;
 			}
 		}
@@ -48,7 +48,7 @@ public class AuthController {
 
 //	@GetMapping("/logout")
 //	public void logout() {
-		// TODO: On APP side --> Delete active token
+	// TODO: On APP side --> Delete active token
 //	}
 
 	@GetMapping("/test")
@@ -58,6 +58,7 @@ public class AuthController {
 		login.setPassword("PassWord");
 		return login;
 	}
+
 	@GetMapping("/test/{id}")
 	public @ResponseBody String generateReport(@PathVariable("id") Long id, HttpServletRequest request) {
 
