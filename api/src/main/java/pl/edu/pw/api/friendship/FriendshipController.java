@@ -76,12 +76,12 @@ public class FriendshipController {
 			return friends.stream()
 					.map(friend -> {
 						FriendsDTO friendsDTO = new FriendsDTO();
-						friendsDTO.setId(user.getId());
-						friendsDTO.setUsername(user.getName());
+						friendsDTO.setId(friend.getSender().getId());
+						friendsDTO.setUsername(friend.getSender().getName());
 						return friendsDTO;
 					})
 					.collect(Collectors.toList());
-		} else{
+		}else {
 			response.setStatus(401);
 		}
 		return null;
@@ -99,8 +99,8 @@ public class FriendshipController {
 			return friendshipRequests.stream()
 					.map(friend -> {
 						FriendshipRequestDTO friendsDTO = new FriendshipRequestDTO();
-						friendsDTO.setId(user.getId());
-						friendsDTO.setUsername(user.getName());
+						friendsDTO.setId(friend.getSender().getId());
+						friendsDTO.setUsername(friend.getSender().getName());
 						return friendsDTO;
 					})
 					.collect(Collectors.toList());

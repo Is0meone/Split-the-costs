@@ -1,5 +1,6 @@
 package pl.edu.pw;
 
+import com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer;
 import pl.edu.pw.models.Friendship;
 import pl.edu.pw.models.Obligation;
 import pl.edu.pw.models.User;
@@ -37,13 +38,15 @@ public class GraphLogic {
     }
     public List<Obligation> getActiveDebtorisOwned(Obligation obligation){
         //TODO jeśli chcemy uwzględniać Friendship to odkomentować i zmienić liste podawaną do strumienia
-        List<Obligation> list = obligation.getDebtor().getIsOwed();
+      List<Obligation> list = obligation.getDebtor().getIsOwed();
         List<Obligation> justFriends = new ArrayList<>();
         for (Obligation obl: list) {
-            if(obl.getDebtor().isFriend(obligation.getCreditor())){
+            if(obl.getCreditor().isFriend(obligation.getDebtor())){
                 justFriends.add(obl);
             }
         }
+
+
         if(obligation.getDebtor().getIsOwed() != null){
         return justFriends
                 .stream()
@@ -144,34 +147,45 @@ public class GraphLogic {
     }
     public static void main(String[] args){
         //problem friendship ale raczej z baza
-
         DBConnector dbc = new DBConnector();
         GraphLogic logic = new GraphLogic(dbc);
-
+/*
         User user = new User("a","daje");
         User user2 = new User("b","wisi/daje");
         User user3 = new User("c","wisi");
         Obligation obligation = new Obligation(user,user2,(double)100);
         Obligation obligation2 = new Obligation(user2,user3,(double)50);
-        Friendship friendship = new Friendship(user,user2, Friendship.Status.ACCEPTED);
-        Friendship friendship1 = new Friendship(user2,user3, Friendship.Status.ACCEPTED);
-        Friendship friendship2 = new Friendship(user,user3, Friendship.Status.ACCEPTED);
-
         dbc.addUser(user);
         dbc.addUser(user2);
         dbc.addUser(user3);
         dbc.addObligation(obligation);
         dbc.addObligation(obligation2);
-        dbc.addFriendship(friendship);
-        dbc.addFriendship(friendship1);
-        dbc.addFriendship(friendship2);
-
         logic.debtTransfer(obligation2);
+        List<Obligation> list = logic.getCleanObl(dbc.getAllObligations());
+        User user4 = new User("d","daje");
+        User user5 = new User("e","wisi/daje");
+        User user6 = new User("f","f");
+        Friendship friendship = new Friendship(user,user2, Friendship.Status.ACCEPTED);
+        Friendship friendship1 = new Friendship(user2,user3, Friendship.Status.ACCEPTED);
+        Friendship friendship2 = new Friendship(user,user3, Friendship.Status.ACCEPTED);
+        dbc.addUser(user4);
+        dbc.addUser(user5);
+        dbc.addUser(user6);
 
+        Obligation obligation3  = new Obligation(user4,user5,(double)30);
+        dbc.addObligation(obligation3);
+        Obligation obligation4 = new Obligation(user4,user,(double)25);
+        dbc.addObligation(obligation4);
+        logic.debtTransfer(dbc.findObligationById(4L));
+        */
 
-        //System.out.println(dbc.getAllObligations());
-       // System.out.println(dbc.getAllUsers());
-        //logic.getCleanObl(dbc.getAllObligations());
+        User user6 = new User("f","f");
+        Obligation obligation5 = new Obligation(user6,dbc.findUserById(3L),(double)130);
+        dbc.addObligation(obligation5);
+
+        logic.debtTransfer(dbc.findObligationById(6L));
+       // logic.getCleanObl(dbc.getAllObligations());
+
 
     }
 
