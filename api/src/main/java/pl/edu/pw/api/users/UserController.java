@@ -35,7 +35,7 @@ public class UserController {
 					})
 					.collect(Collectors.toList());
 		}else {
-			response.getWriter().print("Invalid Token");
+			response.getWriter().print("Access Denied");
 			response.setStatus(401);
 		}
 		return null;
@@ -55,7 +55,7 @@ public class UserController {
 			u.setId(user.getId());
 			return u;
 		}else {
-			response.getWriter().print("Invalid Token");
+			response.getWriter().print("Access Denied");
 			response.setStatus(401);
 		}
 		return null;
@@ -79,7 +79,7 @@ public class UserController {
 					})
 					.collect(Collectors.toList());
 		}else {
-			response.getWriter().print("Invalid Token");
+			response.getWriter().print("Access Denied");
 			response.setStatus(401);
 		}
 		return null;

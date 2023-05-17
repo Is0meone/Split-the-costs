@@ -45,6 +45,8 @@ public class AuthController {
 				utdto.setToken(jwtService.generateToken(loginDTO.getUsername()));
 				utdto.setUserId(dbc.findUserByName(loginDTO.getUsername()).getId());
 				return utdto;
+			}else {
+				response.getWriter().print("Wrong username or password");
 			}
 		}else {
 			response.getWriter().print("Wrong username or password");

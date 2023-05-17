@@ -36,7 +36,7 @@ public class FriendshipController {
 			user.sendOrAcceptFriendship(dbc.findUserById(withId));
 			dbc.updateUser(user);
 		}else {
-			response.getWriter().print("Invalid Token");
+			response.getWriter().print("Access Denied");
 			response.setStatus(401);
 		}
 	}
@@ -53,7 +53,7 @@ public class FriendshipController {
 			user.rejectFriendship(dbc.findUserById(withId));
 			dbc.updateUser(user);
 		}else {
-			response.getWriter().print("Invalid Token");
+			response.getWriter().print("Access Denied");
 			response.setStatus(401);
 		}
 	}
@@ -70,7 +70,7 @@ public class FriendshipController {
 			user.markAsAutoAccept(dbc.findUserById(withId));
 			dbc.updateUser(user);
 		}else {
-			response.getWriter().print("Invalid Token");
+			response.getWriter().print("Access Denied");
 			response.setStatus(401);
 		}
 	}
@@ -102,7 +102,7 @@ public class FriendshipController {
 					})
 					.collect(Collectors.toList());
 		}else {
-			response.getWriter().print("Invalid Token");
+			response.getWriter().print("Access Denied");
 			response.setStatus(401);
 		}
 		return null;
@@ -126,7 +126,7 @@ public class FriendshipController {
 					})
 					.collect(Collectors.toList());
 		}else {
-			response.getWriter().print("Invalid Token");
+			response.getWriter().print("Access Denied");
 			response.setStatus(401);
 		}
 		return null;
