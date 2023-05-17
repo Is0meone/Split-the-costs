@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class GraphLogic {
-    private DBConnector dbc;
+    private DBConnector dbc = new DBConnector(1);
     public GraphLogic(DBConnector dbc){
         this.dbc=dbc;
     }

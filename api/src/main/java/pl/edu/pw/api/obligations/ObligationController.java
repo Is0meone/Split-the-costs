@@ -186,7 +186,7 @@ public class ObligationController {
 		}
 	}
 
-	@PutMapping("/user/{id}/split/manual")
+	@PostMapping("/user/{id}/split/manual")
 	public void splitObligationManually(@PathVariable("id") Long id, HttpServletRequest request, @RequestBody SplitObligationManualDTO obligationManualDTO, HttpServletResponse response) throws IOException {
 		if (jwtService.checkUserToken(id, request)) {
 			User user = dbc.findUserById(id);

@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.edu.pw.DBConnector;
+import pl.edu.pw.api.obligations.dto.ObligationsToDTO;
 import pl.edu.pw.api.security.JwtService;
 import pl.edu.pw.api.users.dto.UserDTO;
+import pl.edu.pw.models.Obligation;
 import pl.edu.pw.models.User;
 
 import java.io.IOException;
@@ -22,6 +24,7 @@ public class UserController {
 	@Autowired
 	private JwtService jwtService;
 	private DBConnector dbc = new DBConnector(1);
+
 	@GetMapping("/user/{id}/allusers")
 	public List<UserDTO> getUsers(@PathVariable("id") Long id, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		if (jwtService.checkUserToken(id, request)) {
@@ -40,9 +43,24 @@ public class UserController {
 		}
 		return null;
 	}
+
 	@GetMapping("/user/{id}/total/{toid}")
-	public String getTotalObligationsToTo(@PathVariable("id") Long id, HttpServletRequest request, @PathVariable("toid") Long toId) {
-		//TODO: Do we need it???
+	public String getTotalObligationsToTo(@PathVariable("id") Long id, HttpServletRequest request, @PathVariable("toid") Long toId, HttpServletResponse response) throws IOException {
+		if(jwtService.checkUserToken(id, request)) {
+			Long userid= dbc.findUserById(toId).getId();
+			List<Obligation> obligations = dbc.findUserById(id).getOwes();
+			Double total = 0.0;
+			for (Obligation ob :
+					obligations) {
+				if(ob.getCreditor().getId() == userid){
+					total += ob.getAmount();
+				}
+			}
+			return total.toString();
+		}else {
+			response.getWriter().print("Access Denied");
+			response.setStatus(401);
+		}
 		return null;
 	}
 
