@@ -5,9 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pl.edu.pw.DBConnector;
 import pl.edu.pw.ExpenseSplitter;
+import pl.edu.pw.GraphLogic;
 import pl.edu.pw.api.obligations.dto.*;
 import pl.edu.pw.api.security.JwtService;
-import pl.edu.pw.api.users.dto.UserDTO;
 import pl.edu.pw.models.Obligation;
 import pl.edu.pw.models.User;
 
@@ -19,6 +19,7 @@ public class ObligationController {
 	@Autowired
 	private JwtService jwtService;
 	private DBConnector dbc = new DBConnector(1);
+	private GraphLogic gl = new GraphLogic(dbc);
 	@GetMapping("/user/{id}")
 	public List<ObligationWithIdDTO> getObligationsFor(@PathVariable Long id) {
 		User user = dbc.findUserById(id);

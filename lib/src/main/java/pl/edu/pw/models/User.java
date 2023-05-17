@@ -191,8 +191,9 @@ public class User{
 	public void addOwes(Obligation obligation){
 		this.owes.add(obligation);
 	}
+	public void addFriendsWith(Friendship friendship){ this.friendsWith.add(friendship);}
 
-	public Optional<Friendship> sendOrAcceptFriendship(User user){
+	public void sendOrAcceptFriendship(User user){
 		try {
 			Optional<Friendship> f = this.friendsWith.stream()
 					.filter(friendship -> friendship.getSender().equals(user))
@@ -212,7 +213,11 @@ public class User{
 						.filter(friendship -> friendship.getSender().equals(this))
 						.filter(friendship -> friendship.getReceiver().equals(user))
 						.findFirst();
-				if(onlF.isEmpty()) return Optional.of(new Friendship(this, user, Friendship.Status.PENDING));
+				if(onlF.isEmpty()) {
+					Friendship nfriendship = new Friendship(this, user, Friendship.Status.PENDING);
+					this.friendsWith.add(nfriendship);
+					user.addFriendsWith(nfriendship);
+				}
 				else throw new IllegalCallerException();        //RequestAlreadySentException
 			}
 		} catch(IllegalStateException e) {
@@ -222,7 +227,6 @@ public class User{
 		} catch(IllegalCallerException e) {
 			System.out.println("You already sent the request to " + user + "!");
 		}
-		return Optional.empty();
 	}
 
 	public void declineFriendship(User user){

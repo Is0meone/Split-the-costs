@@ -9,7 +9,6 @@ import pl.edu.pw.models.Obligation;
 import pl.edu.pw.models.User;
 
 import java.util.*;
-import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -216,9 +215,9 @@ public class DBConnector {
 
     public static void main(String[] args) {
         DBConnector dbc = new DBConnector();
-//        dbc.addObligation(new Obligation(dbc.findUserByName("pugalak"), dbc.findUserByName("janusz"), 50D));
-//  //     List<User> list = dbc.getAllUsers();
- //           dbc.addUser(new User("pugalak", "bajojao"));
+//      dbc.addObligation(new Obligation(dbc.findUserByName("pugalak"), dbc.findUserByName("janusz"), 50D));
+//     List<User> list = dbc.getAllUsers();
+//           dbc.addUser(new User("pugalak", "bajojao"));
 //   //     System.out.println(list);
         User user = dbc.findUserByName("pudlak");
 //            user.payObligationTo(dbc.findUserByName("WLADCATYCHNAP"));

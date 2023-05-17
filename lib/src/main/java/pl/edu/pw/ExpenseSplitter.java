@@ -9,11 +9,12 @@ import java.util.Map;
 public class ExpenseSplitter {
 	private User actor;
 	private DBConnector dbc;
-	private GraphLogic gl = new GraphLogic(dbc);
+	private GraphLogic gl;
 
 	public ExpenseSplitter(User actor, DBConnector dbc) {
 		this.actor = actor;
 		this.dbc = dbc;
+		this.gl = new GraphLogic(dbc);
 	}
 
 	public User getActor() {
@@ -93,5 +94,5 @@ public class ExpenseSplitter {
 				dbc.addObligation(new Obligation(actor, entry.getKey(), entry.getValue(), Obligation.Status.PENDING));
 			}
 		}
-	}	//TODO: dodac exeption jesli podani userze nie sa znajomymi, albo weryfikacje tego w API
+	}
 }
