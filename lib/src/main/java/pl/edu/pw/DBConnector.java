@@ -130,7 +130,7 @@ public class DBConnector {
         List<User> loveList = getAllUsers();
 
         for(int i=0;i<loveList.size();i++){
-            for(int j =0;j<loveList.size();j++){
+            for(int j =i;j<loveList.size();j++){
                 Friendship f = new Friendship(loveList.get(i),loveList.get(j),Friendship.Status.ACCEPTED);
                 addFriendship(f);
             }

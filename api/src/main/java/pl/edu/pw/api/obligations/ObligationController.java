@@ -198,7 +198,8 @@ public class ObligationController {
 	}
 
 	@PostMapping("/user/{id}/split/manual")
-	public void splitObligationManually(@PathVariable("id") Long id, HttpServletRequest request, @RequestBody SplitObligationManualDTO obligationManualDTO, HttpServletResponse response) throws IOException {
+	public void splitObligationManually(@PathVariable("id") Long id, HttpServletRequest request,
+										@RequestBody SplitObligationManualDTO obligationManualDTO, HttpServletResponse response) throws IOException {
 		if (jwtService.checkUserToken(id, request)) {
 			User user = dbc.findUserById(id);
 			ExpenseSplitter es = new ExpenseSplitter(user, dbc);

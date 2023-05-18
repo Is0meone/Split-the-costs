@@ -231,10 +231,10 @@ public class GraphLogic {
         List<User> pathForDebtor = findShortest(obligation.getDebtor(),obligation.getCreditor());
         int sizeCreditor;
         int sizeDebtor;
-        if(pathForCreditor == null){sizeCreditor = -1;}
+        if(pathForCreditor == null){sizeCreditor = 1000000;} //Max int
         else sizeCreditor = pathForCreditor.size();
 
-        if(pathForDebtor == null){sizeDebtor = -1;}
+        if(pathForDebtor == null){sizeDebtor = 1000000;}
         else sizeDebtor = pathForDebtor.size();
 
         if(sizeDebtor >= sizeCreditor){return 1;}
