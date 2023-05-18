@@ -5,7 +5,7 @@ import org.neo4j.ogm.annotation.GeneratedValue;
 import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
-//import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
+import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -29,16 +29,15 @@ public class User{
 
 	public User(String name, String password) {
 		this.name = name;
-//		Argon2PasswordEncoder encoder = new Argon2PasswordEncoder(32,64,1,15*1024,2);
-//		this.passwordHash = encoder.encode(password); // Password Hashing
+		Argon2PasswordEncoder encoder = new Argon2PasswordEncoder(32,64,1,15*1024,2);
+		this.passwordHash = encoder.encode(password); // Password Hashing
 		this.owes = new ArrayList<>();
 		this.isOwed = new ArrayList<>();
 		this.friendsWith = new ArrayList<>();
 	}
 	public boolean passwordCompare(String pass1, String pass2) {
-//		Argon2PasswordEncoder encoder = new Argon2PasswordEncoder(32,64,1,15*1024,2);
-//		return encoder.matches(pass1, pass2);
-		return false;
+		Argon2PasswordEncoder encoder = new Argon2PasswordEncoder(32,64,1,15*1024,2);
+		return encoder.matches(pass1, pass2);
 	}
 
 	public Long getId() {
@@ -253,6 +252,7 @@ public class User{
 	public List<Friendship> getAllFriendshipRequests(){
 		return this.friendsWith.stream()
 				.filter(friendship -> friendship.getStatus() == Friendship.Status.PENDING)
+				.filter(friendship -> friendship.getReceiver().equals(this))
 				.collect(Collectors.toList());
 	}
 

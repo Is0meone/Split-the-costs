@@ -3,6 +3,8 @@ package pl.edu.pw;
 import pl.edu.pw.models.Obligation;
 import pl.edu.pw.models.User;
 
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -28,15 +30,9 @@ public class ExpenseSplitter {
 	 */
 
 	public void split(Double amount, User... users) {
-		try {
-			for (User user : users) {
-				if (!actor.isFriend(user)) throw new IllegalArgumentException();
-			}
-		}catch (IllegalArgumentException e) {
-			return;
-		}
+		users = (User[]) Arrays.stream(users).filter( user -> actor.isFriend(user)).toArray();
 		Double splittedAmount;
-		splittedAmount = amount/users.length;
+		splittedAmount = amount/users.length+1;
 		for (User user: users) {
 			if(actor.isSuperFriend(user)) {
 				Obligation obl = new Obligation(actor, user, splittedAmount, Obligation.Status.ACCEPTED);
@@ -53,12 +49,13 @@ public class ExpenseSplitter {
 	 * @param users
 	 */
 	public void split(Double amount, List<User> users) {
-
-			for (User user : users) {
-				if (!actor.isFriend(user)) users.remove(user);
+		Iterator<User> i = users.iterator();
+			while(i.hasNext()){
+				User u = i.next();
+				if (!actor.isFriend(u)) users.remove(u);
 			}
 		Double splittedAmount;
-		splittedAmount = amount/users.size();
+		splittedAmount = amount/users.size()+1;
 		for (User user: users) {
 			if(actor.isSuperFriend(user)) {
 				Obligation obl = new Obligation(actor, user, splittedAmount, Obligation.Status.ACCEPTED);
@@ -74,12 +71,8 @@ public class ExpenseSplitter {
 	 * @param users a map with users as keys and the amounts they should pay as values
 	 */
 	public void split(Map<User, Double> users) {
-		try {
 			for (Map.Entry<User, Double> entry : users.entrySet()) {
-				if (!actor.isFriend(entry.getKey())) throw new IllegalArgumentException();
-			}
-		}catch (IllegalArgumentException e){
-			return;
+				if (!actor.isFriend(entry.getKey())) users.remove(entry.getKey());
 		}
 		for (Map.Entry<User, Double> entry : users.entrySet()) {
 			if(actor.isSuperFriend(entry.getKey())){

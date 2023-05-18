@@ -104,12 +104,13 @@ public class ObligationController {
 		}
 	}}
 
-	@GetMapping("/user/{id}/acceptoblication/{toid}")
-	public void acceptObligation(@PathVariable Long id, HttpServletRequest request, @PathVariable("toid") Long toId, HttpServletResponse response) throws IOException {
+	@GetMapping("/user/{id}/acceptobligation/{toid}/{oblid}")
+	public void acceptObligation(@PathVariable Long id, HttpServletRequest request, @PathVariable("toid") Long toId, @PathVariable("oblid") Long oblid, HttpServletResponse response) throws IOException {
 		if (jwtService.checkUserToken(id, request)) {
 			User user = dbc.findUserById(id);
-			Obligation obligation = user.acceptObligationTo(user,toId);
-			dbc.updateUser(user);
+			User payer = dbc.findUserById(toId);
+			Obligation obligation = user.acceptObligationTo(payer, oblid);
+			dbc.addObligation(obligation);
 			gl.debtTransfer(obligation);
 		}else {
 			response.getWriter().print("Access Denied");

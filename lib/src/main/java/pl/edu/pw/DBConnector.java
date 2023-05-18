@@ -116,7 +116,7 @@ public class DBConnector {
         Session session = sessionFactory.openSession();
         try{
             User user = session.queryForObject(User.class, "MATCH (u:User) WHERE u.name = $name RETURN u", Map.of("name", name));
-            user = session.load(User.class, user.getId());
+            user = session.load(User.class, user.getId(),4);
             unNullifier(user);
             return user;
         }
@@ -155,7 +155,7 @@ public class DBConnector {
             for (Map<String, Object> row : result) {
                 User user = (User) row.get("u");
                 Long id = user.getId();
-                User loadedUser = session.load(User.class, id);
+                User loadedUser = session.load(User.class, id, 5);
                 unNullifier(loadedUser);
                 users.add(loadedUser);
             }
@@ -170,7 +170,7 @@ public class DBConnector {
     public User findUserById(Long id) {
         Session session = sessionFactory.openSession();
         try{
-            User user = session.load(User.class,id);
+            User user = session.load(User.class,id, 5);
             if(user!=null) {
                 unNullifier(user);
                 return user;
@@ -242,12 +242,13 @@ public class DBConnector {
 
 
     public static void main(String[] args) {
-        DBConnector dbc = new DBConnector();
+        DBConnector dbc = new DBConnector("t");
+        dbc.makeLove();
 //      dbc.addObligation(new Obligation(dbc.findUserByName("pugalak"), dbc.findUserByName("janusz"), 50D));
 //     List<User> list = dbc.getAllUsers();
 //           dbc.addUser(new User("pugalak", "bajojao"));
 //   //     System.out.println(list);
-        User user = dbc.findUserByName("pudlak");
+//        User user = dbc.findUserByName("pudlak");
 //            user.payObligationTo(dbc.findUserByName("WLADCATYCHNAP"));
 //            System.out.println(user.getOwes());
 //    dbc.addUser(new User("pejusz", "gimp"));

@@ -244,9 +244,12 @@ public class GraphLogic {
     }
     public static void main(String[] args){
         //problem friendship ale raczej z baza
-        DBConnector dbc = new DBConnector();
+
+        DBConnector dbc = new DBConnector("1");
         GraphLogic logic = new GraphLogic(dbc);
 
+        logic.debtTransfer(dbc.findObligationById(7L));
+/*
         User user = new User("a","daje");
         User user2 = new User("b","wisi/daje");
         User user3 = new User("c","wisi");
@@ -316,7 +319,7 @@ public class GraphLogic {
 
 
         DBConnector dbc = new DBConnector();
-        GraphLogic logic = new GraphLogic();
+         GraphLogic logic = new GraphLogic();
 
        // dbc.dropDatabase();
         User user = new User("a","daje");
