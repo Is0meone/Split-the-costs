@@ -121,7 +121,7 @@ public class DBConnector {
             return user;
         }
         catch(Exception e){
-            System.out.println("no user with name " + name);
+            System.out.println("no user with name " + name + "or more than 1 record found");
         }
         return null;
     }

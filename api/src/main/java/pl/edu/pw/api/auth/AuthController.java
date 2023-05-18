@@ -1,10 +1,12 @@
 package pl.edu.pw.api.auth;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import pl.edu.pw.DBConnector;
 import pl.edu.pw.api.auth.dto.LoginDTO;
 import pl.edu.pw.api.auth.dto.RegisterDTO;
@@ -59,21 +61,4 @@ public class AuthController {
 //	public void logout() {
 	// TODO: On APP side --> Delete active token
 //	}
-
-	@GetMapping("/test")
-	public LoginDTO test1() {
-		LoginDTO login = new LoginDTO();
-		login.setUsername("jan");
-		login.setPassword("PassWord");
-		return login;
-	}
-
-	@GetMapping("/test/{id}")
-	public @ResponseBody String generateReport(@PathVariable("id") Long id, HttpServletRequest request) {
-
-		if(jwtService.checkUserToken(id, request)){
-			return "correct " + jwtService.getUsernameFromToken(id,request);
-		}
-		return "wrong";
-	}
 }

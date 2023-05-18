@@ -9,7 +9,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class GraphLogicTest {
-    DBConnector dbc = new DBConnector("test");
+    DBConnector dbc = new DBConnector();
 
     @Test
     void getActiveCreditors() {
