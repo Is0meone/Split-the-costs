@@ -121,12 +121,12 @@ public class DBConnector {
         Session session = sessionFactory.openSession();
         try{
             User user = session.queryForObject(User.class, "MATCH (u:User) WHERE u.name = $name RETURN u", Map.of("name", name));
-            user = session.load(User.class, user.getId(),4);
+            user = session.load(User.class, user.getId(),2);
             unNullifier(user);
             return user;
         }
         catch(Exception e){
-            System.out.println("no user with name " + name);
+            System.out.println("no user with name " + name + "or more than 1 record found");
         }
         return null;
     }
@@ -160,7 +160,7 @@ public class DBConnector {
             for (Map<String, Object> row : result) {
                 User user = (User) row.get("u");
                 Long id = user.getId();
-                User loadedUser = session.load(User.class, id, 5);
+                User loadedUser = session.load(User.class, id, 2);
                 unNullifier(loadedUser);
                 users.add(loadedUser);
             }
@@ -175,7 +175,7 @@ public class DBConnector {
     public User findUserById(Long id) {
         Session session = sessionFactory.openSession();
         try{
-            User user = session.load(User.class,id, 5);
+            User user = session.load(User.class,id, 2);
             if(user!=null) {
                 unNullifier(user);
                 return user;

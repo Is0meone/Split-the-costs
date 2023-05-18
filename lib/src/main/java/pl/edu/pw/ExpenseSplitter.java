@@ -32,7 +32,7 @@ public class ExpenseSplitter {
 	public void split(Double amount, User... users) {
 		users = (User[]) Arrays.stream(users).filter( user -> actor.isFriend(user)).toArray();
 		Double splittedAmount;
-		splittedAmount = amount/users.length+1;
+		splittedAmount = amount/(users.length+1);
 		for (User user: users) {
 			if(actor.isSuperFriend(user)) {
 				Obligation obl = new Obligation(actor, user, splittedAmount, Obligation.Status.ACCEPTED);
@@ -52,10 +52,10 @@ public class ExpenseSplitter {
 		Iterator<User> i = users.iterator();
 			while(i.hasNext()){
 				User u = i.next();
-				if (!actor.isFriend(u)) users.remove(u);
+				if (!actor.isFriend(u)) i.remove();
 			}
 		Double splittedAmount;
-		splittedAmount = amount/users.size()+1;
+		splittedAmount = amount/(users.size()+1);
 		for (User user: users) {
 			if(actor.isSuperFriend(user)) {
 				Obligation obl = new Obligation(actor, user, splittedAmount, Obligation.Status.ACCEPTED);

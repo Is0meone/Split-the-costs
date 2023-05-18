@@ -302,28 +302,43 @@ Get all friendship request received by the user.
 Asking for money, splitting bills, accepting  or declining obligations
 ###
 Get all obligation that user owes to others
- - /obligations/user/{id}/obligationwith
+ - /obligations/user/{id}/debts
    - GET
    - (your) id, token
-   - debtor info, creditor info, id, status, description...
-###
-Getall obligation that others owes to user
- - /obligations/to/{id}/obligationto
-    - GET
-    - (your) id, token
-    - debtor info, creditor info, id, status, description...
+   - list of((creditor) id, (debtor) id, description, amount, timestamp, status, token)
 ###
 Get all obligation that others owes to user
-- /obligations/to/{id}/obligationto
+ - /obligations/user/{id}/credits
     - GET
     - (your) id, token
-    - debtor info, creditor info, id, status, description...
+    - list of((creditor) id, (debtor) id, description, amount, timestamp, status, token)
 ###
 Ask for money
- -/obligations/user/{id}/requestObligation/{fromid}
- - POST
- - (your) id, (friend) id, description, timestamp, status, token
+ - /obligations/user/{id}/request
+   - POST
+   - (your) id, (friend) id, description, timestamp, status, token
+###
+Accept single obligation from another user
+ - /obligations/user/{id}/accept/{toid}/{oblid}
+   - GET
+   - (your) id, (friend) toid, (obligation) oblid
+###
+ Get both incoming and outgoing pending (waiting to be accepted by friend or you) obligations
+- /obligations/user/{id}/pending
+  - GET
+  - (your) id
+  - list of((creditor) id, (debtor) id, description, amount, timestamp, status, token)
 
-
-
-
+###
+Get all (both historic and current) obligations between you and a friend
+- /user/{id}/getwith/{withid}
+  - GET
+  - (your) id, (friend) withid
+  - list of((creditor) id, (debtor) id, description, amount, timestamp, status, token)
+###
+Get single obligation by its id
+- /user/{id}/getbyid/{withid}
+  - GET
+  - (your) id, (obligation) withid
+  - (creditor) id, (debtor) id, description, amount, timestamp, status, token
+###

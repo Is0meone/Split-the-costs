@@ -7,8 +7,8 @@ public class ObligationDTO {
 	private String timestamp;
 	private Obligation.Status status;
 	private Double amount;
-	private String debtorId;
-	private String creditorId;
+	private Long debtorId;
+	private Long creditorId;
 
 	public String getDescription() {
 		return description;
@@ -42,19 +42,19 @@ public class ObligationDTO {
 		this.amount = amount;
 	}
 
-	public String getDebtorId() {
+	public Long getDebtorId() {
 		return debtorId;
 	}
 
-	public void setDebtorId(String debtorId) {
+	public void setDebtorId(Long debtorId) {
 		this.debtorId = debtorId;
 	}
 
-	public String getCreditorId() {
+	public Long getCreditorId() {
 		return creditorId;
 	}
 
-	public void setCreditorId(String creditorId) {
+	public void setCreditorId(Long creditorId) {
 		this.creditorId = creditorId;
 	}
 }
