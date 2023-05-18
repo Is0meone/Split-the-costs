@@ -86,23 +86,29 @@ public class ObligationController {
 	public void requestObligationFrom(@PathVariable Long id, @RequestBody ObligationDTO obligationDTO, HttpServletRequest request,HttpServletResponse response) throws IOException {
 		if(jwtService.checkUserToken(id, request)) {
 			User user = dbc.findUserById(id);
-			if(user!=null){
-				Optional<Obligation> optional = user.requestObligationFrom(dbc.findUserById(obligationDTO.getDebtorId()), obligationDTO.getAmount(), obligationDTO.getDescription(), obligationDTO.getTimestamp());
-			if(optional.isPresent()){
-				dbc.addObligation(optional.get());
-
-				if(user.isSuperFriend(dbc.findUserById(obligationDTO.getDebtorId()))) {
-					gl.debtTransfer(dbc.findObligationBetweenUsers(dbc.findUserById(id), dbc.findUserById(obligationDTO.getDebtorId())));
-				}
-			}else{
-				response.getWriter().print("No such user!");
+			if(user.getId()==obligationDTO.getDebtorId()){
+				response.getWriter().print("You can't request yourself for money, dumbass");
 				response.setStatus(420);
+				return;
+			}
+			if(user!=null) {
+				Optional<Obligation> optional = user.requestObligationFrom(dbc.findUserById(obligationDTO.getDebtorId()), obligationDTO.getAmount(), obligationDTO.getDescription(), obligationDTO.getTimestamp());
+				if (optional.isPresent()) {
+					dbc.addObligation(optional.get());
+					response.getWriter().print("Obligation requested!");
+					if (user.isSuperFriend(dbc.findUserById(obligationDTO.getDebtorId()))) {
+						gl.debtTransfer(dbc.findObligationBetweenUsers(dbc.findUserById(id), dbc.findUserById(obligationDTO.getDebtorId())));
+					}
+				} else {
+					response.getWriter().print("No such user in your friendlist");
+					response.setStatus(420);
+				}
 			}
 		}else {
 			response.getWriter().print("Access Denied");
 			response.setStatus(401);
 		}
-	}}
+	}
 
 	@GetMapping("/user/{id}/accept/{toid}/{oblid}")
 	public void acceptObligation(@PathVariable Long id, HttpServletRequest request, @PathVariable("toid") Long toId, @PathVariable("oblid") Long oblid, HttpServletResponse response) throws IOException {
@@ -150,7 +156,7 @@ public class ObligationController {
 	}
 
 	@GetMapping("/user/{id}/getwith/{withid}")
-	public List<ObligationDTO> getObligationWith(@PathVariable("id") Long id, HttpServletRequest request, HttpServletResponse response, @PathVariable("withid") Long withId) throws IOException {
+	public List<ObligationWithIdDTO> getObligationWith(@PathVariable("id") Long id, HttpServletRequest request, HttpServletResponse response, @PathVariable("withid") Long withId) throws IOException {
 		if (jwtService.checkUserToken(id, request)) {
 			User user = dbc.findUserById(id);
 			List<Obligation> obligations = user.getOwes();

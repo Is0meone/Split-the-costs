@@ -160,35 +160,6 @@ public class User{
 		return null;
 	}
 
-	/**
-	 *
-	 * @param user
-	 */
-	public void payObligationTo(User user) {
-		for (Obligation obligation: this.owes
-			 ) {
-			if(obligation.getCreditor().equals(user)) obligation.pay();
-		}
-	}
-
-	/**
-	 * Follow the graph to find the end users who owe you money
-	 * (that is, following who owes money to people who owe you money)
-	 * @return a map with users as keys and the amounts they need to pay you as values
-	 */
-	public Map<User,Double> findFinalDebtors() {
-		return null;
-	}
-
-	/**
-	 * Follow the graph to find the end users who you owe money
-	 * (that is, following who people you owe money to owe money to)
-	 * @return a map with users as keys and the amounts you need to pay them as values
-	 */
-	public Map<User,Double> findFinalCreditors() {
-		return null;
-	}
-
 	public void addOwed(Obligation obligation){
 		this.isOwed.add(obligation);
 	}
@@ -234,17 +205,6 @@ public class User{
 		}
 	}
 
-	public void declineFriendship(User user){
-		try {
-			Optional<Friendship> f = this.friendsWith.stream()
-					.filter(friendship -> friendship.getSender().equals(user))
-					.findFirst();
-			if (f.isPresent()) f.get().setStatus(Friendship.Status.DECLINED);
-			else throw new NoSuchElementException();
-		} catch(Exception e){
-			System.out.println("Friendship request from " + user + "does not exists!");
-		}
-	}
 
 	public List<Friendship> getAllFriendshipRequests(){
 		return this.friendsWith.stream()
