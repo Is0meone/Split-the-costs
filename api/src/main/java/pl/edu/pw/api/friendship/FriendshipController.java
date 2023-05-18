@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 public class FriendshipController {
 	@Autowired
 	private JwtService jwtService;
-	private DBConnector dbc = new DBConnector(1);
+	private DBConnector dbc = new DBConnector("1");
 
 	/**
 	 * Sends a friendship request to the user with the given id (or accepts the friendship if the other side requested it)

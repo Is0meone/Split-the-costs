@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class ObligationController {
 	@Autowired
 	private JwtService jwtService;
-	private DBConnector dbc = new DBConnector(1);
+	private DBConnector dbc = new DBConnector("1");
 	private GraphLogic gl = new GraphLogic(dbc);
 
 	@GetMapping("/user/{id}/obligationwith")
@@ -86,16 +86,23 @@ public class ObligationController {
 	public void requestObligationFrom(@PathVariable Long id, @RequestBody ObligationDTO obligationDTO, HttpServletRequest request, @PathVariable("fromid") Long fromId, HttpServletResponse response) throws IOException {
 		if(jwtService.checkUserToken(id, request)) {
 			User user = dbc.findUserById(id);
-			user.requestObligationFrom(dbc.findUserById(fromId), obligationDTO.getAmount(), obligationDTO.getDescription(), obligationDTO.getTimestamp());
-			dbc.updateUser(user);
-			if(user.isSuperFriend(dbc.findUserById(fromId))){
-				gl.debtTransfer(dbc.findObligationBetweenUsers(dbc.findUserById(id),dbc.findUserById(fromId)));
+			if(user!=null){
+				Optional<Obligation> optional = user.requestObligationFrom(dbc.findUserById(fromId), obligationDTO.getAmount(), obligationDTO.getDescription(), obligationDTO.getTimestamp());
+			if(optional.isPresent()){
+				dbc.addObligation(optional.get());
+
+				if(user.isSuperFriend(dbc.findUserById(fromId))) {
+					gl.debtTransfer(dbc.findObligationBetweenUsers(dbc.findUserById(id), dbc.findUserById(fromId)));
+				}
+			}else{
+				response.getWriter().print("No such user!");
+				response.setStatus(420);
 			}
 		}else {
 			response.getWriter().print("Access Denied");
 			response.setStatus(401);
 		}
-	}
+	}}
 
 	@GetMapping("/user/{id}/acceptoblication/{toid}")
 	public void acceptObligation(@PathVariable Long id, HttpServletRequest request, @PathVariable("toid") Long toId, HttpServletResponse response) throws IOException {
@@ -166,7 +173,7 @@ public class ObligationController {
 		return null;
 	}
 
-	@PostMapping("/user{id}/split")
+	@PostMapping("/user/{id}/split")
 	public void splitObligationEqually(@PathVariable("id") Long id, HttpServletRequest request, @RequestBody SplitObligationDTO obligationDTO, HttpServletResponse response) throws IOException {
 		if (jwtService.checkUserToken(id, request)) {
 			User user = dbc.findUserById(id);

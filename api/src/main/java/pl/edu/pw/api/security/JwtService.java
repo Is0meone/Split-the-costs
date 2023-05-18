@@ -18,7 +18,7 @@ import java.util.function.Function;
 
 @Component
 public class JwtService {
-    private static DBConnector dbc = new DBConnector(1);
+    private static DBConnector dbc = new DBConnector("1");
     private static final String SECRET = "7638792F423F4528482B4D6251655468576D5A7133743677397A24432646294A404E635266556A586E327235753778214125442A472D4B6150645367566B5970";
     public String generateToken(String username) {
         Map<String,Object> claims = new HashMap<>();

@@ -14,8 +14,6 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 public class DBConnector {
-
-
     private static SessionFactory sessionFactory;
 
 
@@ -29,8 +27,8 @@ public class DBConnector {
     }
     public DBConnector(String test) {
         Configuration configuration = new Configuration.Builder()
-                .uri("neo4j+s://ea165f78.databases.neo4j.io")
-                .credentials("neo4j", "KrSTu_-Wz_9HKTAhbdLuqvEHOhjXqTwB7I7_JVAQvuw")
+                .uri("neo4j+s://5709781b.databases.neo4j.io")
+                .credentials("neo4j", "D8NzxoSubQDqQ5y-BNMvM4WwM4KC6pRQ_ualwyWv574")
                 .build();
 
         this.sessionFactory = new SessionFactory(configuration, "pl.edu.pw.models");

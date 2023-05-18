@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.edu.pw.DBConnector;
-import pl.edu.pw.api.obligations.dto.ObligationsToDTO;
 import pl.edu.pw.api.security.JwtService;
 import pl.edu.pw.api.users.dto.UserDTO;
 import pl.edu.pw.models.Obligation;
@@ -23,7 +22,7 @@ import java.util.stream.Collectors;
 public class UserController {
 	@Autowired
 	private JwtService jwtService;
-	private DBConnector dbc = new DBConnector(1);
+	private DBConnector dbc = new DBConnector("1");
 
 	@GetMapping("/user/{id}/allusers")
 	public List<UserDTO> getUsers(@PathVariable("id") Long id, HttpServletRequest request, HttpServletResponse response) throws IOException {

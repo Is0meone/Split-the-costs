@@ -322,6 +322,7 @@ public class User{
 
 	public boolean isSuperFriend(User user){
 		for (Friendship f : this.friendsWith) {
+			if(f.getReceiver()==null||f.getSender()==null) return false;
 			if((f.getSender().equals(user) || f.getReceiver().equals(user)) && f.getStatus().equals(Friendship.Status.ACCEPTED)) return true;
 		}
 		return false;

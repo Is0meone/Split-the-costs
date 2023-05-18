@@ -1,7 +1,5 @@
 package pl.edu.pw;
 
-import com.fasterxml.jackson.datatype.jsr310.deser.InstantDeserializer;
-import pl.edu.pw.models.Friendship;
 import pl.edu.pw.models.Obligation;
 import pl.edu.pw.models.User;
 
@@ -10,7 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class GraphLogic {
-    private DBConnector dbc = new DBConnector(1);
+    private DBConnector dbc;
     public GraphLogic(DBConnector dbc){
         this.dbc=dbc;
     }

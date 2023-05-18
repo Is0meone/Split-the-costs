@@ -20,7 +20,7 @@ import java.io.IOException;
 public class AuthController {
 	@Autowired
 	private JwtService jwtService;
-	private DBConnector dbc = new DBConnector(1);
+	private DBConnector dbc = new DBConnector("1");
 
 	@PostMapping("/register")
 	public UserTokenDTO register(@RequestBody @Validated RegisterDTO registerDTO,HttpServletResponse response) throws IOException {
