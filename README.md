@@ -302,25 +302,20 @@ Get all friendship request received by the user.
 Asking for money, splitting bills, accepting  or declining obligations
 ###
 Get all obligation that user owes to others
- - /obligations/user/{id}/obligationwith
+ - /obligations/user/{id}/debts
    - GET
    - (your) id, token
    - debtor info, creditor info, id, status, description...
 ###
-Getall obligation that others owes to user
- - /obligations/to/{id}/obligationto
-    - GET
-    - (your) id, token
-    - debtor info, creditor info, id, status, description...
-###
 Get all obligation that others owes to user
-- /obligations/to/{id}/obligationto
+ - /obligations/to/{id}/credits
     - GET
     - (your) id, token
     - debtor info, creditor info, id, status, description...
 ###
+
 Ask for money
- -/obligations/user/{id}/requestObligation/{fromid}
+ - /obligations/user/{id}/request
  - POST
  - (your) id, (friend) id, description, timestamp, status, token
 
