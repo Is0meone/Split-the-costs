@@ -82,9 +82,6 @@ public class User{
 
 	public List<Friendship> getFriendsWith() {
 		return friendsWith;
-//		return this.friendsWith.stream()
-//				.filter(friendship -> (friendship.getStatus() == Friendship.Status.ACCEPTED || friendship.getStatus() == Friendship.Status.AUTO_APPROVE))
-//				.collect(Collectors.toList());
 	}
 
 	public void setFriendsWith(List<Friendship> friendsWith) {

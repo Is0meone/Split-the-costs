@@ -90,7 +90,7 @@ public class JwtService {
         username = extractUsername(jwt);
 
         User user = dbc.findUserById(id);
-        if(username != null && validateToken(jwt, user.getName())) {
+        if(user!=null && username != null && validateToken(jwt, user.getName())) {
             return true;
         }
         return false;
@@ -104,13 +104,5 @@ public class JwtService {
         }
         jwt = authHeader.substring(7);
         return extractUsername(jwt);
-    }
-    public static void main(String[] args) {
-        JwtService j = new JwtService();
-        String token = j.generateToken("imie");
-        System.out.println(token);
-        System.out.println(j.extractAllClaims(token));
-        System.out.println(j.extractUsername(token));
-        System.out.println(j.validateToken(token,"imie"));
     }
 }

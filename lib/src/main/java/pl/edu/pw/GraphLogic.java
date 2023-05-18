@@ -245,7 +245,7 @@ public class GraphLogic {
     public static void main(String[] args){
         //problem friendship ale raczej z baza
 
-        DBConnector dbc = new DBConnector("1");
+        DBConnector dbc = new DBConnector();
         GraphLogic logic = new GraphLogic(dbc);
 
         logic.debtTransfer(dbc.findObligationById(7L));

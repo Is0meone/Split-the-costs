@@ -157,7 +157,6 @@ public class ObligationController {
 					.map(obligation -> {
 						ObligationWithIdDTO obligationWithIdDTO = new ObligationWithIdDTO();
 						obligationWithIdDTO.setId(obligation.getId());
-						obligationWithIdDTO.setId(obligation.getId());
 						obligationWithIdDTO.setAmount(obligation.getAmount());
 						obligationWithIdDTO.setStatus(obligation.getStatus());
 						obligationWithIdDTO.setTimestamp(obligation.getTimestamp());
