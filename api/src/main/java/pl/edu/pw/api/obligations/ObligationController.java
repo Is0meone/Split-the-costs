@@ -130,6 +130,27 @@ public class ObligationController {
 		}
 	}
 
+	@GetMapping("/user/{id}/acceptall")
+	public void acceptAllObligations(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		if (jwtService.checkUserToken(id, request)) {
+			User user = dbc.findUserById(id);
+			int i = 0;
+			List<Obligation> obligations = new ArrayList<>(user.getOwes()); // Tworzenie kopii listy obowiązków
+			for (Obligation obligation : obligations) {
+				if(obligation.getDebtor().equals(user)) {
+					obligation.accept();
+					dbc.addObligation(obligation);
+					gl.debtTransfer(obligation);
+					i++;
+				}
+			}
+			response.getWriter().print("Accepted " + i + " obligations.");
+		} else {
+			response.getWriter().print("Access Denied");
+			response.setStatus(401);
+		}
+	}
+
 	@GetMapping("/user/{id}/pending") // Nie wiem czy dziala
 	public List<ObligationWithIdDTO> getPendingObligations(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		if (jwtService.checkUserToken(id, request)) {
@@ -260,7 +281,6 @@ public class ObligationController {
 			}catch (Exception e){
 				System.out.println("Brak conajmniej 1 użytkownika o danym id! Został pomminiety.");
 			}
-
 		}else {
 			response.getWriter().print("Access Denied");
 			response.setStatus(401);

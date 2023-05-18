@@ -146,7 +146,7 @@ public class Obligation {
 	 * Accept the obligation as valid
 	 */
 	public void accept() {
-		this.status = Status.ACCEPTED;
+		if(this.status.equals(Status.PENDING)||this.status.equals(Status.AUTOGEN)) this.status = Status.ACCEPTED;
 	}
 
 	/**
