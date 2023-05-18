@@ -70,6 +70,21 @@ public class GraphLogic {
             if(listCred == null){listCred = new ArrayList<>();}
             listDebt = getActiveDebtorisOwned(obligation);
             if(listDebt == null){listDebt = new ArrayList<>();}
+            switch (findBestPath(obligation)){
+                case 0:
+                    if(listDebt.size() != 0) {
+                        transfedDebt = transferLogicDebtor(obligation, getActiveDebtorisOwned(obligation));
+                    } else if (listCred.size() != 0) {
+                        transfedDebt = transferLogicCreditor(obligation, getActiveCreditorOwes(obligation));
+                    }
+                    break;
+                case 1:
+                    if (listCred.size() != 0) {
+                        transfedDebt = transferLogicCreditor(obligation, getActiveCreditorOwes(obligation));
+                    } else if(listDebt.size() != 0) {
+                    transfedDebt = transferLogicDebtor(obligation, getActiveDebtorisOwned(obligation));
+                }
+            }
              if(listDebt.size() != 0) {
                 transfedDebt = transferLogicDebtor(obligation, getActiveDebtorisOwned(obligation));
             } else if (listCred.size() != 0) {
@@ -214,8 +229,22 @@ public class GraphLogic {
             }
         }
     }
-    public boolean findBestPath(Obligation obligation){
-        return false;
+    public int findBestPath(Obligation obligation){
+        //Czy int utrzyma null >= int?
+        List<User> pathForCreditor = findShortest(obligation.getCreditor(),obligation.getDebtor());
+        List<User> pathForDebtor = findShortest(obligation.getDebtor(),obligation.getCreditor());
+        int sizeCreditor;
+        int sizeDebtor;
+        if(pathForCreditor == null){sizeCreditor = -1;}
+        else sizeCreditor = pathForCreditor.size();
+
+        if(pathForDebtor == null){sizeDebtor = -1;}
+        else sizeDebtor = pathForDebtor.size();
+
+        if(sizeDebtor >= sizeCreditor){return 1;}
+        else return 0;
+
+
     }
     public static void main(String[] args){
         //problem friendship ale raczej z baza
