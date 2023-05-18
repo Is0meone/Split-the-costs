@@ -53,13 +53,10 @@ public class ExpenseSplitter {
 	 * @param users
 	 */
 	public void split(Double amount, List<User> users) {
-		try {
+
 			for (User user : users) {
-				if (!actor.isFriend(user)) throw new IllegalArgumentException();
+				if (!actor.isFriend(user)) users.remove(user);
 			}
-		}catch (IllegalArgumentException e){
-			return;
-		}
 		Double splittedAmount;
 		splittedAmount = amount/users.size();
 		for (User user: users) {
