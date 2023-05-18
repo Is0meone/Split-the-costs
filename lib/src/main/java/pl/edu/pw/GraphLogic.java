@@ -78,18 +78,14 @@ public class GraphLogic {
                         transfedDebt = transferLogicCreditor(obligation, getActiveCreditorOwes(obligation));
                     }
                     break;
-                case 1:
+                default:
                     if (listCred.size() != 0) {
                         transfedDebt = transferLogicCreditor(obligation, getActiveCreditorOwes(obligation));
                     } else if(listDebt.size() != 0) {
                     transfedDebt = transferLogicDebtor(obligation, getActiveDebtorisOwned(obligation));
+                    break;
                 }
             }
-             if(listDebt.size() != 0) {
-                transfedDebt = transferLogicDebtor(obligation, getActiveDebtorisOwned(obligation));
-            } else if (listCred.size() != 0) {
-                 transfedDebt = transferLogicCreditor(obligation, getActiveCreditorOwes(obligation));
-             }
 
             for (Obligation o : transfedDebt) {
                 if (!isStable(o)) {
