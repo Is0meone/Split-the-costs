@@ -49,7 +49,7 @@ public class GraphLogic {
         if(obligation.getDebtor().getIsOwed() != null){
         return justFriends
                 .stream()
-                .filter(o -> o.getStatus() != Obligation.Status.PAID&&o.getStatus() != Obligation.Status.AUTOPAID)
+                .filter(o -> o.getStatus() == Obligation.Status.ACCEPTED||o.getStatus() == Obligation.Status.AUTOGEN||o.getStatus() ==null)
                 .collect(Collectors.toList());
         }
         else return null;
@@ -86,7 +86,12 @@ public class GraphLogic {
                     break;
                 }
             }
+            obligation = dbc.findObligationById(obligation.getId()); //Update obligation before next roud
 
+            //update transferdebt
+        for (Obligation o : transfedDebt) {
+            o = dbc.findObligationById(o.getId());
+        }
             for (Obligation o : transfedDebt) {
                 if (!isStable(o)) {
                     boolean bol = debtTransferHelper(o);
@@ -105,7 +110,7 @@ public class GraphLogic {
         } else if (listDebt.size() != 0) {
             transfedDebt = transferLogicDebtor(obligation, getActiveDebtorisOwned(obligation));
         }
-
+        obligation = dbc.findObligationById(obligation.getId()); //Update obligation before next roud
             for (Obligation o : transfedDebt) {
                 if (!isStable(o)) return debtTransferHelper(o);
             }
@@ -135,6 +140,7 @@ public class GraphLogic {
                     transferedDebt.add(newDebt);
                     dbc.addObligation(newDebt);
                 }
+                else {transferedDebt.add(ListToCheck.get(i));}
                 return transferedDebt;
             }
             else{
@@ -175,6 +181,7 @@ public class GraphLogic {
                    transferedDebt.add(newDebt);
                    dbc.addObligation(newDebt);
                 }
+                else {transferedDebt.add(ListToCheck.get(i));}
                 return transferedDebt;
             }
             else{
@@ -206,16 +213,16 @@ public class GraphLogic {
         List listCred;
         List listDebt;
         listCred = getActiveCreditorOwes(obligation);
-        if(listCred==null){listCred = new ArrayList<>();}
+               if(listCred==null){listCred = new ArrayList<>();}
         listDebt = getActiveDebtorisOwned(obligation);
-        if(listDebt==null){listDebt = new ArrayList<>();}
-        if (listCred.size() != 0) {
-            return false;
-        } else if (listDebt.size() != 0) {
+                if(listDebt==null){listDebt = new ArrayList<>();}
+
+        if (listCred.size() != 0||listDebt.size() != 0) {
             return false;
         }
-
-        return true;
+        else {
+            return true;
+        }
     }
     public void balanceGraph(){
         List<Obligation> list = dbc.getAllObligations();

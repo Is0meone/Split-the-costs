@@ -52,7 +52,7 @@ public class DBConnector {
     public void updateUser(User user){
         Session session = sessionFactory.openSession();
         try (Transaction tx = session.beginTransaction()) {
-            session.save(user,2);
+            session.save(user,10);
             tx.commit();
         }
     }
@@ -63,7 +63,7 @@ public class DBConnector {
         obligation.getDebtor().addOwes(obligation);
         obligation.getCreditor().addOwed(obligation);
 
-        session.save(obligation,2);
+        session.save(obligation,10);
     }
     public void addFriendship(Friendship f){
         Session session = sessionFactory.openSession();
@@ -72,7 +72,7 @@ public class DBConnector {
         f.getSender().addFriendship(f);
         f.getReceiver().addFriendship(f);
         try (Transaction tx = session.beginTransaction()) {
-            session.save(f);
+            session.save(f,10);
             tx.commit();
         }
     }
@@ -90,7 +90,12 @@ public class DBConnector {
         return StreamSupport.stream(obligations.spliterator(), false)
                 .collect(Collectors.toList());
     }
-
+    public List<Friendship> getAllFriendships() {
+        Session session = sessionFactory.openSession();
+        Iterable<Friendship> users = session.loadAll(Friendship.class);
+        return StreamSupport.stream(users.spliterator(), false)
+                .collect(Collectors.toList());
+    }
     public void deleteObligation(Long id) { //this func is just for having a better view of large database
         Session session = sessionFactory.openSession();
         try (Transaction tx = session.beginTransaction()) {
@@ -103,7 +108,7 @@ public class DBConnector {
     public Obligation findObligationById(Long id){
         Session session = sessionFactory.openSession();
         try{
-            Obligation obligation = session.load(Obligation.class,id);
+            Obligation obligation = session.load(Obligation.class,id,2);
             return obligation;
         }
         catch(Exception e){
