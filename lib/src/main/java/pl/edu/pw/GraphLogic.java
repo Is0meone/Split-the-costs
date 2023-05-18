@@ -37,9 +37,10 @@ public class GraphLogic {
     public List<Obligation> getActiveDebtorisOwned(Obligation obligation){
         //TODO jeśli chcemy uwzględniać Friendship to odkomentować i zmienić liste podawaną do strumienia
       List<Obligation> list = obligation.getDebtor().getIsOwed();
+      if(list== null){list= new ArrayList<>();}
         List<Obligation> justFriends = new ArrayList<>();
         for (Obligation obl: list) {
-            if(obl.getCreditor().isFriend(obligation.getDebtor())){
+            if(obl.getDebtor().isFriend(obligation.getCreditor())){
                 justFriends.add(obl);
             }
         }
@@ -66,12 +67,14 @@ public class GraphLogic {
         List listCred = new ArrayList<Obligation>();
         List listDebt = new ArrayList<Obligation>();
             listCred = getActiveCreditorOwes(obligation);
+            if(listCred == null){listCred = new ArrayList<>();}
             listDebt = getActiveDebtorisOwned(obligation);
-            if (listCred.size() != 0) {
-                transfedDebt = transferLogicCreditor(obligation, getActiveCreditorOwes(obligation));
-            } else if (listDebt.size() != 0) {
+            if(listDebt == null){listDebt = new ArrayList<>();}
+             if(listDebt.size() != 0) {
                 transfedDebt = transferLogicDebtor(obligation, getActiveDebtorisOwned(obligation));
-            }
+            } else if (listCred.size() != 0) {
+                 transfedDebt = transferLogicCreditor(obligation, getActiveCreditorOwes(obligation));
+             }
 
             for (Obligation o : transfedDebt) {
                 if (!isStable(o)) {
@@ -111,6 +114,10 @@ public class GraphLogic {
                 obligation.autopay();
                 dbc.addObligation(ListToCheck.get(i));
                 dbc.addObligation(obligation);
+
+                if(ListToCheck.get(i).getAmount()==0){
+                    ListToCheck.get(i).autopay();
+                }
 
                 if(!ListToCheck.get(i).getCreditor().equals(obligation.getDebtor())){
                     Obligation newDebt = new Obligation(ListToCheck.get(i).getCreditor(),obligation.getDebtor(),obligation.getAmount(),Obligation.Status.AUTOGEN);
@@ -185,10 +192,12 @@ public class GraphLogic {
         return cleanList;
     }
     public boolean isStable(Obligation obligation){
-        List listCred = new ArrayList<Obligation>();
-        List listDebt = new ArrayList<Obligation>();
+        List listCred;
+        List listDebt;
         listCred = getActiveCreditorOwes(obligation);
+        if(listCred==null){listCred = new ArrayList<>();}
         listDebt = getActiveDebtorisOwned(obligation);
+        if(listDebt==null){listDebt = new ArrayList<>();}
         if (listCred.size() != 0) {
             return false;
         } else if (listDebt.size() != 0) {
@@ -196,6 +205,17 @@ public class GraphLogic {
         }
 
         return true;
+    }
+    public void balanceGraph(){
+        List<Obligation> list = dbc.getAllObligations();
+        for (Obligation o : list) {
+            if(!isStable(o)){
+                debtTransfer(o);
+            }
+        }
+    }
+    public boolean findBestPath(Obligation obligation){
+        return false;
     }
     public static void main(String[] args){
         //problem friendship ale raczej z baza
