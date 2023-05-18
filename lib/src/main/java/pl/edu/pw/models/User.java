@@ -124,8 +124,7 @@ public class User{
 
 	public Optional<Obligation> requestObligationFrom(User user, Double amount, String desc, String time) {
 		Optional<Friendship> f = this.friendsWith.stream()
-				.filter(friendship -> friendship.getSender().equals(user))
-				.filter(friendship -> friendship.getReceiver().equals(user))
+				.filter(friendship -> (friendship.getSender().equals(user)||friendship.getReceiver().equals(user)))
 				.findFirst();
 		try {
 			if (f.isPresent()) {
@@ -325,7 +324,7 @@ public class User{
 	public boolean isSuperFriend(User user){
 		for (Friendship f : this.friendsWith) {
 			if(f.getReceiver()==null||f.getSender()==null) return false;
-			if((f.getSender().equals(user) || f.getReceiver().equals(user)) && f.getStatus().equals(Friendship.Status.ACCEPTED)) return true;
+			if((f.getSender().equals(user) || f.getReceiver().equals(user)) && f.getStatus().equals(Friendship.Status.AUTO_APPROVE)) return true;
 		}
 		return false;
 	}
