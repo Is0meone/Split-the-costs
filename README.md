@@ -342,3 +342,17 @@ Get single obligation by its id
   - (your) id, (obligation) withid
   - (creditor) id, (debtor) id, description, amount, timestamp, status, token
 ###
+Split all the obligations between users equally
+- /user/{id}/split
+  - POST 
+  - (your) id, description, timestamp, list of users, amount
+###
+Allows user to split obligations manually
+- /user/{id}/split/manual
+  - POST
+  - (your) id, description, timestamp, list of users, amount
+
+
+
+
+###
