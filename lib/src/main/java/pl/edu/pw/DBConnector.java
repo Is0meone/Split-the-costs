@@ -20,7 +20,7 @@ public class DBConnector {
     public DBConnector() {
         Configuration configuration = new Configuration.Builder()
                 .uri("neo4j+s://c88dea7a.databases.neo4j.io")
-                .credentials("neo4j", "PBHgFL1vQV_dsgdfS_TIBmC2KAMRHyjFxiQuC0Oc1Dg")
+                .credentials("neo4j","PBHgFL1vQV_dsgdfS_TIBmC2KAMRHyjFxiQuC0Oc1Dg")
                 .build();
 
         this.sessionFactory = new SessionFactory(configuration, "pl.edu.pw.models");
@@ -139,6 +139,8 @@ public class DBConnector {
     public void createFriend(User user, User user2){
         Session session = sessionFactory.openSession();
         Friendship f = new Friendship(user,user2,Friendship.Status.ACCEPTED);
+        user.addFriendship(f);
+        user2.addFriendship(f);
         addFriendship(f);
 
     }
