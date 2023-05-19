@@ -88,7 +88,7 @@ public class GraphLogic {
             }
             obligation = dbc.findObligationById(obligation.getId()); //Update obligation before next roud
 
-            //update transferdebt
+            //update transferdebt cuz for strange reason program "forget" changes and have old/very-old data
         for (Obligation o : transfedDebt) {
             o = dbc.findObligationById(o.getId());
         }
@@ -111,6 +111,10 @@ public class GraphLogic {
             transfedDebt = transferLogicDebtor(obligation, getActiveDebtorisOwned(obligation));
         }
         obligation = dbc.findObligationById(obligation.getId()); //Update obligation before next roud
+        //Update transfedDebt
+        for (Obligation o : transfedDebt) {
+            o = dbc.findObligationById(o.getId());
+        }
             for (Obligation o : transfedDebt) {
                 if (!isStable(o)) return debtTransferHelper(o);
             }
@@ -230,6 +234,28 @@ public class GraphLogic {
             if(!isStable(o)){
                 debtTransfer(o);
             }
+        }
+    }
+    //This func sumUp obligations that are attached to same node func to use after couple changes on the graph to keep it clean
+    public void sumUp(){
+        List<Obligation> toCheck = dbc.findAllAutoGen();
+        Double sum =0D;
+        boolean isFirst= true;
+        for (int i = 0;i<toCheck.size();i++) {
+            for(int j =0;j<toCheck.size();j++){
+                if(toCheck.get(i).getCreditor().equals(toCheck.get(j).getCreditor())&&toCheck.get(i).getDebtor().equals(toCheck.get(j).getDebtor())){
+                    sum = sum + toCheck.get(j).getAmount();
+                    if(!isFirst){
+                        toCheck.get(j).setStatus(Obligation.Status.AUTOPAID);
+                        dbc.addObligation(toCheck.get(j));
+                    }
+                    isFirst = false;
+                }
+            }
+            toCheck.get(i).setAmount(sum);
+            dbc.addObligation(toCheck.get(i));
+            isFirst = true;
+            sum = 0D;
         }
     }
     public int findBestPath(Obligation obligation){

@@ -198,16 +198,69 @@ class GraphLogicTest {
         dbc = null;
         DBConnector dbc2 = new DBConnector();
         int size = dbc2.getAllObligations().size();
-        logic.debtTransfer(dbc.findObligationById(3L));
+        logic.debtTransfer(dbc2.findObligationById(3L));
         assertEquals(size,dbc2.getAllObligations().size());
 
-        dbc2.createFriend(dbc2.findUserById(2L),dbc2.findUserById(3L));
+        dbc2.createFriend(dbc2.findUserById(2L),dbc2.findUserById(0L));
         size = dbc2.getAllObligations().size();
-        logic.debtTransfer(dbc.findObligationById(3L));
-        assertEquals(size+1,dbc2.getAllObligations().size());
+        logic.debtTransfer(dbc2.findObligationById(3L));
+        assertEquals(size+2,dbc2.getAllObligations().size());
+        assertEquals(Obligation.Status.AUTOPAID,dbc2.findObligationById(1L).getStatus());
 
     }
+    @Test
+    void balansTest(){
+        DBConnector dbc = new DBConnector();
+        GraphLogic logic = new GraphLogic(dbc);
+        User user = new User("a","daje");
+        User user2 = new User("b","wisi/daje");
+        User user3 = new User("c","wisi");
+        User user4 = new User("d","daje");
+        User user5 = new User("e","wisi/daje");
+        User user6 = new User("f","f");
+        User user7 = new User("g","g");
 
+        Obligation obligation  = new Obligation(user2,user,(double)100);
+        Obligation obligation2  = new Obligation(user2,user3,(double)45);
+        Obligation obligation3  = new Obligation(user,user4,(double)25);
+        Obligation obligation4  = new Obligation(user3,user4,(double)100);
+        Obligation obligation5  = new Obligation(user5,user7,(double)75);
+        Obligation obligation6  = new Obligation(user2,user7,(double)50);
+        Obligation obligation7  = new Obligation(user6,user7,(double)25);
+        Obligation obligation8  = new Obligation(user3,user7,(double)100);
+
+
+
+
+        dbc.addUser(user);
+        dbc.addUser(user2);
+        dbc.addUser(user3);
+        dbc.addUser(user4);
+        dbc.addUser(user5);
+        dbc.addUser(user6);
+        dbc.addUser(user7);
+
+        dbc.addObligation(obligation);
+        dbc.addObligation(obligation2);
+        dbc.addObligation(obligation3);
+        dbc.addObligation(obligation4);
+        dbc.addObligation(obligation5);
+        dbc.addObligation(obligation6);
+        dbc.addObligation(obligation7);
+        dbc.addObligation(obligation8);
+
+      /* dbc.createFriend(user2,user);
+        dbc.createFriend(user2,user3);
+        dbc.createFriend(user4,user);
+        dbc.createFriend(user3,user4);*/
+     //   dbc.makeLove();
+        int size = dbc.getAllObligations().size();
+        logic.balanceGraph();
+
+        assertEquals(size+2,dbc.getAllObligations().size());
+        assertEquals(Obligation.Status.AUTOPAID,dbc.findObligationById(1L));
+
+    }
     @Test
     void splitTest(){
 
@@ -255,5 +308,44 @@ class GraphLogicTest {
         logicT2.debtTransfer(obligationToTest);
         assertEquals(Obligation.Status.AUTOPAID,obligationToTest.getStatus());
         assertEquals(size+1,dbcT3.getAllObligations().size());
+    }
+
+    @Test
+    void sumUp(){
+        DBConnector dbcT = new DBConnector();
+        GraphLogic logicT = new GraphLogic(dbcT);
+
+        User user = new User("a","daje");
+        User user2 = new User("b","wisi/daje");
+        User user3 = new User("c","wisi");
+        User user4 = new User("d","wisi");
+
+        Obligation obligation  = new Obligation(user,user2,(double)100, Obligation.Status.AUTOGEN);
+        Obligation obligation2  = new Obligation(user,user2,(double)45, Obligation.Status.AUTOGEN);
+        Obligation obligation3  = new Obligation(user,user3,(double)25, Obligation.Status.AUTOGEN);
+        Obligation obligation4  = new Obligation(user,user3,(double)100, Obligation.Status.AUTOGEN);
+        Obligation obligation5  = new Obligation(user,user3,(double)50, Obligation.Status.AUTOGEN);
+        Obligation obligation6  = new Obligation(user,user4,(double)75, Obligation.Status.AUTOGEN);
+       // Obligation obligation7  = new Obligation(user4,user,(double)25);
+
+
+        dbcT.addObligation(obligation);
+        dbcT.addObligation(obligation2);
+        dbcT.addObligation(obligation3);
+        dbcT.addObligation(obligation4);
+        dbcT.addObligation(obligation5);
+        dbcT.addObligation(obligation6);
+        //dbcT.addObligation(obligation7);
+       // dbcT.addObligation(obligation8);
+
+        dbcT.addUser(user);
+        dbcT.addUser(user2);
+        dbcT.addUser(user3);
+        dbcT.addUser(user4);
+
+        logicT.sumUp();
+
+        assertEquals(145D,dbcT.findObligationById(0L).getAmount());
+        assertEquals(175D,dbcT.findObligationById(2L).getAmount());
     }
 }

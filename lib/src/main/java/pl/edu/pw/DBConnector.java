@@ -220,7 +220,11 @@ public class DBConnector {
         }
         return null;
     }
-
+    public List<Obligation> findAllAutoGen(){
+        return this.getAllObligations().stream()
+                .filter(obligation -> obligation.getStatus() == Obligation.Status.AUTOGEN)
+                .collect(Collectors.toList());
+    }
     public void unNullifier(User user){
         if(user.getIsOwed() == null) user.setIsOwed(new ArrayList<>());
         if(user.getOwes() == null) user.setOwes(new ArrayList<>());
