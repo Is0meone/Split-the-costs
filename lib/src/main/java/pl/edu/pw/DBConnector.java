@@ -238,6 +238,14 @@ public class DBConnector {
             tx.commit();
         }
     }
+    public void declineObligation(Obligation obligation) {
+        Session session = sessionFactory.openSession();
+        obligation.decline();
+        try (Transaction tx = session.beginTransaction()) {
+            session.save(obligation);
+            tx.commit();
+        }
+    }
 
 
     public void dropDatabase() { //nie dotykac
