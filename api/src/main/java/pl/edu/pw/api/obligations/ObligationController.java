@@ -302,4 +302,22 @@ public class ObligationController {
 			response.setStatus(401);
 		}
 	}
+
+	@GetMapping("/user/{id}/decline/{obligationid}")
+	public void declineObligation(@PathVariable("id") Long id, @PathVariable("obligationid") Long obId, HttpServletRequest request,
+							  HttpServletResponse response) throws IOException {
+		if (jwtService.checkUserToken(id, request)) {
+			User user = dbc.findUserById(id);
+			Obligation obligation = dbc.findObligationById(obId);
+
+			if(Objects.equals(obligation.getDebtor().getName(), user.getName()) || Objects.equals(obligation.getCreditor().getName(), user.getName())) {
+				dbc.declineObligation(obligation);
+			}else {
+				response.getWriter().print("Wrong obligation id");
+			}
+		}else {
+			response.getWriter().print("Access Denied");
+			response.setStatus(401);
+		}
+	}
 }
