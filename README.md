@@ -370,4 +370,9 @@ Finds user by their name
 - user/{id}/find/{name}
   - GET
   - (your) id, (user) name
+
+### /Testing:
+We did our testing in "Postman" when it comes to request sending methods and we advise to at least try it out. Currently defined host port is "8090", but you can change it in api->src->main->resources->application.properties in IntelliJ app or in other compiler.
+
+
 ###
