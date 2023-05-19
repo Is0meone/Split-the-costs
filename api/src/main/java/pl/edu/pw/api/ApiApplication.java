@@ -27,7 +27,6 @@ public class ApiApplication {
 						customizer -> customizer
 								.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
 				)
-				// TODO: add persistence mechanism (tokens?)
 				.build();
 		return http.build();
 	}
