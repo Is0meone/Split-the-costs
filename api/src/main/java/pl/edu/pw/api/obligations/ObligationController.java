@@ -119,8 +119,7 @@ public class ObligationController {
 			if(obligation!=null) {
 				dbc.addObligation(obligation);
 				gl.debtTransfer(obligation);
-			}
-			else{
+			} else{
 				response.getWriter().print("Wrong input provided: no such user or obligation!");
 				response.setStatus(401);
 			}
@@ -237,7 +236,6 @@ public class ObligationController {
 	}
 
 
-
 	@PostMapping("/user/{id}/split")
 	public void splitObligationEqually(@PathVariable("id") Long id, HttpServletRequest request, @RequestBody SplitObligationDTO obligationDTO, HttpServletResponse response) throws IOException {
 		if (jwtService.checkUserToken(id, request)) {
@@ -280,6 +278,24 @@ public class ObligationController {
 				es.split(payers);
 			}catch (Exception e){
 				System.out.println("Brak conajmniej 1 użytkownika o danym id! Został pomminiety.");
+			}
+		}else {
+			response.getWriter().print("Access Denied");
+			response.setStatus(401);
+		}
+	}
+
+	@GetMapping("/user/{id}/pay/{obligationid}")
+	public void payObligation(@PathVariable("id") Long id, @PathVariable("obligationid") Long obId, HttpServletRequest request,
+							  HttpServletResponse response) throws IOException {
+		if (jwtService.checkUserToken(id, request)) {
+			User user = dbc.findUserById(id);
+			Obligation obligation = dbc.findObligationById(obId);
+
+			if(Objects.equals(user.getName(), obligation.getDebtor().getName()) && obligation.getStatus() == Obligation.Status.ACCEPTED) {
+				dbc.payObligation(obligation);
+			}else {
+				response.getWriter().print("Wrong obligation status or id");
 			}
 		}else {
 			response.getWriter().print("Access Denied");
