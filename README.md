@@ -362,12 +362,12 @@ Returns total amount of obligations to a specific person that you define by thei
   - (your) id, (friend) toid
 ###
 Returns name and if of a certain user
--user/{id}/findid/{userid}
+- ser/{id}/findid/{userid}
   - GET
   - (your) id, (user) userid
 ###
 Finds user by their name
 - user/{id}/find/{name}
-  -GET
+  - GET
   - (your) id, (user) name
 ###
