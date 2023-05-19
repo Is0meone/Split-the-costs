@@ -24,7 +24,7 @@ public class UserController {
 	private JwtService jwtService;
 	private DBConnector dbc = new DBConnector("1");
 
-	@GetMapping("/user/{id}/allusers")
+	@GetMapping("/user/{id}/getall")
 	public List<UserDTO> getUsers(@PathVariable("id") Long id, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		if (jwtService.checkUserToken(id, request)) {
 			List<User> users = dbc.getAllUsers();
@@ -46,16 +46,21 @@ public class UserController {
 	@GetMapping("/user/{id}/total/{toid}")
 	public String getTotalObligationsToTo(@PathVariable("id") Long id, HttpServletRequest request, @PathVariable("toid") Long toId, HttpServletResponse response) throws IOException {
 		if(jwtService.checkUserToken(id, request)) {
-			Long userid= dbc.findUserById(toId).getId();
-			List<Obligation> obligations = dbc.findUserById(id).getOwes();
-			Double total = 0.0;
-			for (Obligation ob :
-					obligations) {
-				if(ob.getCreditor().getId() == userid){
-					total += ob.getAmount();
+			User user = dbc.findUserById(id);
+			if( user!=null) {
+				List<Obligation> obligations = user.getOwes();
+				Double total = 0.0;
+				for (Obligation ob :
+						obligations) {
+					if (ob.getCreditor().getId() == toId) {
+						total += ob.getAmount();
+					}
 				}
+				return total.toString();
+			}else{
+				response.getWriter().print("Access Denied");
+				response.setStatus(401);
 			}
-			return total.toString();
 		}else {
 			response.getWriter().print("Access Denied");
 			response.setStatus(401);
@@ -67,10 +72,12 @@ public class UserController {
 	public UserDTO getUser(@PathVariable("id") Long id, HttpServletRequest request,@PathVariable("userid") Long userId, HttpServletResponse response) throws IOException {
 		if (jwtService.checkUserToken(id, request)) {
 			User user = dbc.findUserById(userId);
-			UserDTO u = new UserDTO();
-			u.setName(user.getName());
-			u.setId(user.getId());
-			return u;
+			if(user!=null) {
+				UserDTO u = new UserDTO();
+				u.setName(user.getName());
+				u.setId(user.getId());
+				return u;
+			}
 		}else {
 			response.getWriter().print("Access Denied");
 			response.setStatus(401);
@@ -83,7 +90,7 @@ public class UserController {
 	 * @param name - name of user
 	 * @return list of users that match the search term
 	 */
-	@GetMapping("user/{id}/findname/{name}")
+	@GetMapping("user/{id}/find/{name}")
 	public List<UserDTO> findUsers(@PathVariable("id") Long id, HttpServletRequest request, @PathVariable String name, HttpServletResponse response) throws IOException {
 		if (jwtService.checkUserToken(id, request)) {
 			List<User> users = dbc.findUsersByPrefix(name);
