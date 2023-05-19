@@ -298,7 +298,7 @@ Get all friendship request received by the user.
     - GET
     - (your) id, token
     - name
-## /obligation:
+### /obligation:
 Asking for money, splitting bills, accepting  or declining obligations
 ###
 Get all obligation that user owes to others
@@ -351,8 +351,28 @@ Allows user to split obligations manually
 - /user/{id}/split/manual
   - POST
   - (your) id, description, timestamp, list of users, amount
-
-
-
-
+### /security (JWS tokens):
+This class is implemented in API segment, although it is only responsible for creating and verifying JWS tokens (it does not provide any methods that send POST/GET or other requests). It also checks if a specific token is expired or not (when created it is valid for 1 hour). 
+### /user:
+Finding all users, single user, obligations to certain user, etc.
+##
+Returns list of all users (id + name)
+- /user/{id}/getall
+  - GET
+  - (your) id
+##
+Returns total amount of obligations to a specific person that you define by their id
+- /user/{id}/total/{toid}
+  - GET
+  - (your) id, (friend) toid
+##
+Returns name and if of a certain user
+-user/{id}/findid/{userid}
+  - GET
+  - (your) id, (user) userid
+##
+Finds user by their name
+- user/{id}/find/{name}
+  -GET
+  - (your) id, (user) name
 ###
