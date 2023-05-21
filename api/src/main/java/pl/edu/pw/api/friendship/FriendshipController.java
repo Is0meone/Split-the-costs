@@ -15,7 +15,9 @@ import pl.edu.pw.models.Friendship;
 import pl.edu.pw.models.User;
 
 import java.io.IOException;
+import java.rmi.server.ExportException;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RestController
@@ -33,8 +35,24 @@ public class FriendshipController {
 	public void requestOrAcceptFriendship(@PathVariable("id") Long id, HttpServletRequest request,@PathVariable("withid") Long withId, HttpServletResponse response) throws IOException {
 		if(jwtService.checkUserToken(id, request)) {
 			User user = dbc.findUserById(id);
-			user.sendOrAcceptFriendship(dbc.findUserById(withId));
+			User target = dbc.findUserById(withId);
+			List<Friendship> friends = user.getFriendsWith();
+			for (Friendship f :
+					friends) {
+				if (f.getStatus() == Friendship.Status.ACCEPTED && (Objects.equals(f.getReceiver().getName(), target.getName()) || Objects.equals(f.getSender().getName(), target.getName()))) {
+					response.getWriter().print("Already friends with " + target.getName());
+					return;
+				} else if (f.getStatus() == Friendship.Status.DECLINED && Objects.equals(f.getReceiver().getName(), target.getName())) {
+					response.getWriter().print("Request has been declined by " + target.getName());
+					return;
+				} else if (f.getStatus() == Friendship.Status.PENDING && Objects.equals(f.getReceiver().getName(), target.getName())) {
+					response.getWriter().print("Request was already sent to " + target.getName());
+					return;
+				}
+			}
+			user.sendOrAcceptFriendship(target);
 			dbc.updateUser(user);
+			response.getWriter().print("Request was sent to " + target.getName() + " successfully");
 		}else {
 			response.getWriter().print("Access Denied");
 			response.setStatus(401);
@@ -50,8 +68,21 @@ public class FriendshipController {
 	public void rejectFriendship(@PathVariable("id") Long id, HttpServletRequest request,@PathVariable("withid") Long withId, HttpServletResponse response) throws IOException {
 		if(jwtService.checkUserToken(id, request)) {
 			User user = dbc.findUserById(id);
-			user.rejectFriendship(dbc.findUserById(withId));
+			User target = dbc.findUserById(withId);
+			List<Friendship> friends = user.getFriendsWith();
+			for (Friendship f :
+					friends) {
+				if (f.getStatus() == Friendship.Status.ACCEPTED && (Objects.equals(f.getReceiver().getName(), target.getName()) || Objects.equals(f.getSender().getName(), target.getName()))) {
+					response.getWriter().print("Already friends with " + target.getName());
+					return;
+				} else if (f.getStatus() == Friendship.Status.DECLINED && Objects.equals(f.getSender().getName(), target.getName())) {
+					response.getWriter().print("Request  from " + target.getName() + " has been already declined");
+					return;
+				}
+			}
+			user.rejectFriendship(target);
 			dbc.updateUser(user);
+			response.getWriter().print("Friendship with " + target.getName() + " was declined successfully");
 		}else {
 			response.getWriter().print("Access Denied");
 			response.setStatus(401);
@@ -91,8 +122,7 @@ public class FriendshipController {
 						if(friend.getSender().getId() != user.getId()){
 							friendsDTO.setId(friend.getSender().getId());
 							friendsDTO.setUsername(friend.getSender().getName());
-						}
-						else{
+						} else{
 							friendsDTO.setId(friend.getReceiver().getId());
 							friendsDTO.setUsername(friend.getReceiver().getName());
 						}
