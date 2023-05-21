@@ -253,6 +253,8 @@ For every method following scheme is used:
    - POST/GET
    - parameter1, parameter2, parameter3...
    - result1, result2, result3...
+### Important
+For testing purpuses there is a master token, which is always valid - "MasterToken". You can use it instead of JWT token as "Bearer Token" in PostMan.
 ### /authorisation:
 Basic idea behind implemented authorisation is to return Bearer token
 whenever a user is logging in or registering. On app side destroying token when 
@@ -352,7 +354,7 @@ Allows user to split obligations manually
   - POST
   - (your) id, description, timestamp, list of users, amount
 ### /security (JWS tokens):
-This class is implemented in API segment, although it is only responsible for creating and verifying JWS tokens (it does not provide any methods that send POST/GET or other requests). It also checks if a specific token is expired or not (when created it is valid for 1 hour). 
+This class is implemented in API segment, although it is only responsible for creating and verifying JWS tokens (it does not provide any methods that send POST/GET or other requests). It also checks if a specific token is expired or not (when created it is valid for 1 hour).
 ### /user:
 Finding all users, single user, obligations to certain user, etc.
 ###
