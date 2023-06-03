@@ -8,7 +8,7 @@
         <option name="testRunner" value="PLATFORM" />
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="gradleJvm" value="17" />
+        <option name="gradleJvm" value="semeru-17" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
@@ -23,7 +23,7 @@
         <option name="testRunner" value="GRADLE" />
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$/api" />
-        <option name="gradleJvm" value="17" />
+        <option name="gradleJvm" value="semeru-17" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
@@ -38,7 +38,7 @@
         <option name="testRunner" value="GRADLE" />
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$/app" />
-        <option name="gradleJvm" value="17" />
+        <option name="gradleJvm" value="semeru-17" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
