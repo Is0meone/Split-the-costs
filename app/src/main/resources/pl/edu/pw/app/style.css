@@ -1,0 +1,39 @@
+.root {
+    -fx-font-family: Arial, sans-serif;
+    -fx-alignment: center;
+    -fx-spacing: 10;
+}
+
+.root > .label {
+    -fx-font-size: 24;
+    -fx-font-weight: bold;
+}
+
+.button {
+    -fx-background-color: dodgerblue;
+    -fx-text-fill: white;
+    -fx-padding: 10;
+    -fx-font-size: 18;
+}
+.button2 {
+    -fx-background-color: #ef3939;
+    -fx-text-fill: white;
+    -fx-padding: 5;
+    -fx-font-size: 9;
+}
+.myButtonStyle1 {
+    -fx-background-color: red;
+    -fx-text-fill: white;
+    /* inne właściwości stylu dla stylu 1 */
+}
+
+.myButtonStyle2 {
+    -fx-background-color: blue;
+    -fx-text-fill: yellow;
+    /* inne właściwości stylu dla stylu 2 */
+}
+
+
+.root > .text-field {
+    -fx-pref-width: 200;
+}

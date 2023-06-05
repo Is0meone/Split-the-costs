@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Hyperlink?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.edu.pw.app.LoginController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.edu.pw.app.LoginController">
    <children>
-      <TextField layoutX="225.0" layoutY="162.0" promptText="username" />
+      <TextField layoutX="200.0" layoutY="163.0" promptText="username" />
       <Text layoutX="107.0" layoutY="89.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome to ExpenseSplitter!">
          <font>
             <Font name="Arial" size="30.0" />
@@ -30,8 +27,8 @@
             <Font size="14.0" />
          </font>
       </Hyperlink>
-      <TextField layoutX="225.0" layoutY="200.0" promptText="password" />
-      <Button layoutX="274.0" layoutY="241.0" mnemonicParsing="false" onAction="#goToMainPage" text="Log-in" />
+      <TextField layoutX="200.0" layoutY="200.0" promptText="password" />
+      <Button layoutX="264.0" layoutY="233.0" mnemonicParsing="false" onAction="#goToMainPage" text="Log-in" />
       <Text layoutX="304.0" layoutY="321.0" strokeType="OUTSIDE" strokeWidth="0.0" text="instead">
          <font>
             <Font size="14.0" />
