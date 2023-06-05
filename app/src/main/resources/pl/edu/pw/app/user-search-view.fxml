@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="pl.edu.pw.app.UserSearchController"
-            prefHeight="400.0" prefWidth="600.0">
-
+<AnchorPane fx:id="userPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.edu.pw.app.UserSearchController">
+    <children>
+        <Label fx:id="titleLabel" layoutX="14.0" layoutY="14.0" text="User Search" />
+        <TextField fx:id="searchField" layoutX="14.0" layoutY="48.0" promptText="Search Users" />
+        <Button fx:id="searchButton" layoutX="14.0" layoutY="83.0" text="Search" />
+        <Button fx:id="returnButton" layoutX="453.0" layoutY="282.0" prefHeight="42.0" prefWidth="78.0"  styleClass="button2" text="return" onAction="#returnAction">
+         <font>
+            <Font size="1.0" />
+         </font></Button>
+    </children>
 </AnchorPane>
