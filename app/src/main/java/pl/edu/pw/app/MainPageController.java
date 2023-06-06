@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -13,6 +14,11 @@ public class MainPageController {
     private AnchorPane mainPane;
     private Stage primaryStage;
     private AnchorPane userPane;
+    @FXML
+    private Text userId;
+    @FXML
+    private Text userGreet;
+    private String token;
     public void setUserPane(AnchorPane userPane) {
         this.userPane = userPane;
     }
@@ -38,6 +44,22 @@ public class MainPageController {
         // splitExpenseController.setSomeData(someData);
 
         mainPane.getChildren().setAll(splitExpenseView);
+    }
+
+    public void setUserId(String usrId){
+        StringBuilder id = new StringBuilder();
+        id.append(userId.getText());
+        id.append(" " + usrId);
+        userId.setText(id.toString());
+    }
+    public void setUserGreet(String username){
+        StringBuilder usrname = new StringBuilder();
+        usrname.append(userGreet.getText());
+        usrname.append(" " + username + "!");
+        userGreet.setText(usrname.toString());
+    }
+    public void setToken(String token){
+        this.token = token;
     }
 
     /*@FXML
