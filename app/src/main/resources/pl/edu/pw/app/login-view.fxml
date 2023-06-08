@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
@@ -30,7 +31,6 @@
             <Font size="14.0" />
          </font>
       </Hyperlink>
-      <TextField fx:id="password" layoutX="200.0" layoutY="200.0" promptText="password" />
       <Button layoutX="264.0" layoutY="233.0" mnemonicParsing="false" onAction="#goToMainPage" text="Log-in" />
       <Text layoutX="304.0" layoutY="321.0" strokeType="OUTSIDE" strokeWidth="0.0" text="instead">
          <font>
@@ -38,5 +38,6 @@
          </font>
       </Text>
       <Text fx:id="failedLogin" fill="RED" layoutY="115.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="600.0" />
+      <PasswordField fx:id="password" layoutX="199.0" layoutY="200.0" promptText="password" />
    </children>
 </AnchorPane>

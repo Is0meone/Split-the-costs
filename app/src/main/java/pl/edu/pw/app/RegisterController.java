@@ -5,6 +5,7 @@ import com.google.gson.JsonParser;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
@@ -22,9 +23,9 @@ public class RegisterController {
     @FXML
     TextField username;
     @FXML
-    TextField password;
+    PasswordField password;
     @FXML
-    TextField confirmPassword;
+    PasswordField confirmPassword;
     @FXML
     Text failedRegister;
     @FXML
@@ -57,7 +58,11 @@ public class RegisterController {
         userPane.getChildren().setAll(mainPageView);
     }
     public boolean sendRegisterRequest() throws IOException {
-        if (!Objects.equals(password.getText(), confirmPassword.getText())) return false;
+        if (!Objects.equals(password.getText(), confirmPassword.getText())) {
+            failedRegister.setText("Passwords don't match! Please try again.");
+            password.setText("");
+            confirmPassword.setText("");
+        }
         String usrname = username.getText();
         String psswrd = password.getText();
         String url = "http://localhost:8090/auth/register";

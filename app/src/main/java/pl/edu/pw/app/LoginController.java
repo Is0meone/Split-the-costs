@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
@@ -26,7 +27,7 @@ public class LoginController {
     @FXML
     TextField username;
     @FXML
-    TextField password;
+    PasswordField password;
     @FXML
     Text failedLogin;
     @FXML
