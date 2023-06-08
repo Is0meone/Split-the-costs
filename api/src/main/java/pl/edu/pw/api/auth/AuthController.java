@@ -35,6 +35,7 @@ public class AuthController {
 		}else {
 			response.getWriter().print("This username already exists");
 		}
+		response.setStatus(401);
 		return null;
 	}
 

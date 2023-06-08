@@ -43,13 +43,13 @@ public class LoginController {
     }
 
     public void goToRegisterView(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("main-page.fxml"));
-        AnchorPane mainPageView = loader.load();
-        MainPageController mainPageController = loader.getController();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("register-view.fxml"));
+        AnchorPane registerView = loader.load();
+        RegisterController registerController = loader.getController();
 
-        mainPageController.setUserPane(userPane);
+        registerController.setUserPane(userPane);
 
-        userPane.getChildren().setAll(mainPageView);
+        userPane.getChildren().setAll(registerView);
     }
 
     public void goToMainPage(ActionEvent event) throws IOException {
