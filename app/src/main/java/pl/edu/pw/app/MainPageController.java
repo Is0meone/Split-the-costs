@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class MainPageController implements Initializable {
@@ -27,8 +29,11 @@ public class MainPageController implements Initializable {
     private Stage primaryStage;
     private AnchorPane userPane;
 
+
+    private String userId;
+
     @FXML
-    private Text userId;
+    private Text textUserId;
 
     @FXML
     private Text userBalance;
@@ -45,15 +50,61 @@ public class MainPageController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // TODO: initialize friendsListView, userGreet, userId
         try {
-            double balance = getUserBalance(userId.getText());
+            double balance = getUserBalance(userId);
             updateUserBalance(balance);
+            fetchAndDisplayFriends(userId);
         } catch (IOException e) {
             e.printStackTrace();
             // Handle the exception appropriately
         }
     }
+
+    private void fetchAndDisplayFriends(String userId) throws IOException {
+        String url = "http://localhost:8090/friends/user/" + userId + "/friends";
+        URL address = new URL(url);
+        HttpURLConnection con = (HttpURLConnection) address.openConnection();
+        con.setRequestMethod("GET");
+
+        con.setRequestProperty("Authorization", "Bearer " + token);
+
+        int responseCode = con.getResponseCode();
+        if (responseCode != 200) {
+            return;
+        }
+
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
+            String inputLine;
+            StringBuilder response = new StringBuilder();
+
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            String responseBody = response.toString();
+            // Parse the JSON response to get the friend data
+            List<String> friends = parseFriendsFromJson(responseBody);
+            displayFriends(friends);
+        }
+    }
+
+    private List<String> parseFriendsFromJson(String json) {
+        List<String> friends = new ArrayList<>();
+        JsonArray jsonArray = JsonParser.parseString(json).getAsJsonArray();
+        for (JsonElement element : jsonArray) {
+            JsonObject friendObject = element.getAsJsonObject();
+            String friendName = friendObject.get("username").getAsString();
+            String friendId = friendObject.get("id").getAsString();
+            friends.add(friendName + " (ID: " + friendId + ")");
+        }
+        return friends;
+    }
+
+
+    private void displayFriends(List<String> friends) {
+        friendsListView.getItems().clear();
+        friendsListView.getItems().addAll(friends);
+    }
+
 
     private double getUserBalance(String userId) throws IOException {
         return getUserLoans(userId) - getUserDebts(userId);
@@ -69,7 +120,7 @@ public class MainPageController implements Initializable {
         // Get response
         int responseCode = con.getResponseCode();
         if (responseCode != 200) {
-            // Handle the error response appropriately
+            // Handle the error response appropriately                                    //  TODO: response code is not 200 so it has to be handled
             return 0.0;
         }
 
@@ -179,11 +230,16 @@ public class MainPageController implements Initializable {
     }
 
 
-    public void setUserId(String usrId) {
+    public void setTextUserId(String usrId) {
         StringBuilder id = new StringBuilder();
-        id.append(userId.getText());
+        id.append(textUserId.getText());
         id.append(" " + usrId);
-        userId.setText(id.toString());
+        textUserId.setText(id.toString());
+
+    }
+
+    public void setUserId(String usrId) {
+        userId = usrId;
     }
 
     public void setUserGreet(String username) {
@@ -192,6 +248,8 @@ public class MainPageController implements Initializable {
         usrname.append(" " + username + "!");
         userGreet.setText(usrname.toString());
     }
+
+
 
     public void setToken(String token) {
         this.token = token;

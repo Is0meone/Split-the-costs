@@ -28,7 +28,7 @@
       </Button>
       <ParallelCamera />
       <PerspectiveCamera />
-      <Text fx:id="userId" layoutX="20.0" layoutY="30.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Your userId:" />
+      <Text fx:id="textUserId" layoutX="20.0" layoutY="30.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Your userId:" />
       <Text fx:id="userGreet" layoutX="180.0" layoutY="56.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Hi" textAlignment="CENTER" wrappingWidth="294.4000000000001">
          <font>
             <Font size="26.0" />

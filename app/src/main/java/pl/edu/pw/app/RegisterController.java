@@ -57,6 +57,7 @@ public class RegisterController {
         mainPageController.setToken(token);
         mainPageController.setUserGreet(name);
         mainPageController.setUserId(usrId);
+        mainPageController.setTextUserId(usrId);
 
         userPane.getChildren().setAll(mainPageView);
     }
