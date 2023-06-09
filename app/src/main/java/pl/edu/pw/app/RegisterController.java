@@ -9,10 +9,8 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -21,13 +19,13 @@ import java.util.Objects;
 public class RegisterController {
 
     @FXML
-    TextField username;
+    private TextField username;
     @FXML
-    PasswordField password;
+    private PasswordField password;
     @FXML
-    PasswordField confirmPassword;
+    private PasswordField confirmPassword;
     @FXML
-    Text failedRegister;
+    private Text failedRegister;
     @FXML
     private AnchorPane userPane;
     private String token;
@@ -57,41 +55,93 @@ public class RegisterController {
 
         userPane.getChildren().setAll(mainPageView);
     }
-    public boolean sendRegisterRequest() throws IOException {
-        if (!Objects.equals(password.getText(), confirmPassword.getText())) {
-            failedRegister.setText("Passwords don't match! Please try again.");
-            password.setText("");
-            confirmPassword.setText("");
-        }
-        String usrname = username.getText();
-        String psswrd = password.getText();
-        String url = "http://localhost:8090/auth/register";
-        String requestBody = "{\"username\": \"" + usrname + "\", \"password\": \"" + psswrd + "\"}";
 
-        URL address = new URL(url);
-        HttpURLConnection con = (HttpURLConnection) address.openConnection();
-        con.setRequestMethod("POST");
-        con.setRequestProperty("Content-Type", "application/json");
-        con.setDoOutput(true);
+    public void setUserPane(AnchorPane userPane) {
+        this.userPane = userPane;
+    }
+
+    public boolean sendRegisterRequest() throws IOException {
+        if (!validatePasswords()) {
+            return false;
+        }
+
+        String username = getUsername();
+        String password = getPassword();
+        String url = "http://localhost:8090/auth/register";
+        String requestBody = "{\"username\": \"" + username + "\", \"password\": \"" + password + "\"}";
+
+        HttpURLConnection con = createConnection(url, "POST");
+        if (con == null) {
+            return false;
+        }
+
         try (OutputStream outputStream = con.getOutputStream()) {
             byte[] input = requestBody.getBytes(StandardCharsets.UTF_8);
             outputStream.write(input, 0, input.length);
             outputStream.flush();
         }
 
-        // Get response
         int responseCode = con.getResponseCode();
         if (responseCode != 200) {
-            failedRegister.setText("This user already exists! Please try again.");
-            password.setText("");
-            con.disconnect();
+            handleFailedRegister("This user already exists! Please try again.");
             return false;
         }
-        name = usrname;
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
-            String inputLine;
-            StringBuilder response = new StringBuilder();
 
+        processResponse(con);
+        return true;
+    }
+
+    private boolean validatePasswords() {
+        String passwordText = password.getText();
+        String confirmPasswordText = confirmPassword.getText();
+
+        if (passwordText.isEmpty() || confirmPasswordText.isEmpty()) {
+            handleFailedRegister("Password fields cannot be empty! Please try again.");
+            return false;
+        }
+
+        if (!passwordText.equals(confirmPasswordText)) {
+            handleFailedRegister("Passwords don't match! Please try again.");
+            password.setText("");
+            confirmPassword.setText("");
+            return false;
+        }
+
+        return true;
+    }
+
+
+    private String getUsername() {
+        return username.getText();
+    }
+
+    private String getPassword() {
+        return password.getText();
+    }
+
+    private HttpURLConnection createConnection(String url, String requestMethod) {
+        try {
+            URL address = new URL(url);
+            HttpURLConnection con = (HttpURLConnection) address.openConnection();
+            con.setRequestMethod(requestMethod);
+            con.setRequestProperty("Content-Type", "application/json");
+            con.setDoOutput(true);
+            return con;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private void handleFailedRegister(String errorMessage) {
+        failedRegister.setText(errorMessage);
+        password.setText("");
+    }
+
+    private void processResponse(HttpURLConnection con) throws IOException {
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
+            StringBuilder response = new StringBuilder();
+            String inputLine;
             while ((inputLine = in.readLine()) != null) {
                 response.append(inputLine);
             }
@@ -99,12 +149,7 @@ public class RegisterController {
             JsonObject jsonObject = JsonParser.parseString(responseBody).getAsJsonObject();
             token = jsonObject.get("token").getAsString();
             usrId = jsonObject.get("userId").getAsString();
+            name = getUsername();
         }
-        con.disconnect();
-        return true;
-    }
-
-    public void setUserPane(AnchorPane userPane) {
-        this.userPane = userPane;
     }
 }
