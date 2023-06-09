@@ -5,16 +5,19 @@ import com.google.gson.JsonParser;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.Objects;
 
 public class RegisterController {
 
@@ -28,6 +31,8 @@ public class RegisterController {
     private Text failedRegister;
     @FXML
     private AnchorPane userPane;
+    @FXML
+    private Label listLabel;
     private String token;
     private String usrId;
     private String name;

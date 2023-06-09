@@ -1,10 +1,10 @@
 package pl.edu.pw.app;
 
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.PasswordField;
@@ -12,7 +12,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import com.google.gson.JsonParser;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,7 +20,6 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.Objects;
 
 public class LoginController {
     @FXML
@@ -32,8 +30,10 @@ public class LoginController {
     Text failedLogin;
     @FXML
     private AnchorPane userPane;
+
     private String token;
     private String usrId;
+
     private String name;
     private Stage stage;
     private Scene scene;
@@ -63,7 +63,6 @@ public class LoginController {
         mainPageController.setToken(token);
         mainPageController.setUserGreet(name);
         mainPageController.setUserId(usrId);
-
         userPane.getChildren().setAll(mainPageView);
     }
 
@@ -108,4 +107,6 @@ public class LoginController {
         con.disconnect();
         return true;
     }
+
+
 }
