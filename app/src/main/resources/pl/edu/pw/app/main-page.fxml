@@ -9,19 +9,19 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="472.0" prefWidth="900.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.edu.pw.app.MainPageController">
+<AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="551.0" prefWidth="900.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.edu.pw.app.MainPageController">
    <children>
-      <Button layoutX="50.0" layoutY="120.0" mnemonicParsing="false" prefHeight="73.0" prefWidth="294.0" text="Add expenses(?)">
+      <Button layoutX="50.0" layoutY="155.0" mnemonicParsing="false" prefHeight="73.0" prefWidth="294.0" text="Add expenses(?)">
          <font>
             <Font size="18.0" />
          </font>
       </Button>
-      <Button layoutX="50.0" layoutY="215.0" mnemonicParsing="false" onAction="#handleSearchUsersButtonAction" prefHeight="73.0" prefWidth="294.0" text="Add friend">
+      <Button layoutX="50.0" layoutY="280.0" mnemonicParsing="false" onAction="#handleSearchUsersButtonAction" prefHeight="73.0" prefWidth="294.0" text="Add friend">
          <font>
             <Font size="18.0" />
          </font>
       </Button>
-      <Button layoutX="50.0" layoutY="312.0" mnemonicParsing="false" onAction="#handleManageAction" prefHeight="73.0" prefWidth="294.0" text="Split expenses">
+      <Button layoutX="50.0" layoutY="404.0" mnemonicParsing="false" onAction="#handleManageAction" prefHeight="73.0" prefWidth="294.0" text="Split expenses">
          <font>
             <Font size="18.0" />
          </font>
@@ -34,9 +34,27 @@
             <Font size="26.0" />
          </font>
       </Text>
-      <Button layoutX="805.0" layoutY="409.0" mnemonicParsing="false" onAction="#handleLogOutButtonAction" text="Log out" />
-      <Text fx:id="balance" layoutX="648.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" text="account balance: " />
-      <ListView fx:id="friendsListView" layoutX="374.0" layoutY="120.0" prefHeight="267.0" prefWidth="516.0" />
-      <Label fx:id="listLabel" layoutX="561.0" layoutY="84.0" text="Your friends" />
+      <Button layoutX="805.0" layoutY="496.0" mnemonicParsing="false" onAction="#handleLogOutButtonAction" text="Log out" />
+      <Text fx:id="userBalance" layoutX="805.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="51.0">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Text>
+      <ListView fx:id="friendsListView" layoutX="374.0" layoutY="155.0" prefHeight="322.0" prefWidth="516.0" />
+      <Label fx:id="listLabel" alignment="TOP_CENTER" contentDisplay="CENTER" layoutX="373.0" layoutY="120.0" prefHeight="27.0" prefWidth="516.0" text="Your friends" textAlignment="CENTER">
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font>
+      </Label>
+      <Text fx:id="userId1" layoutX="632.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Your debts:" wrappingWidth="135.0">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Text>
+      <Text fx:id="userId11" layoutX="632.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Your borrowings:" wrappingWidth="165.0">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Text>
    </children>
 </AnchorPane>
