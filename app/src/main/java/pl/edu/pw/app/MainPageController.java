@@ -60,13 +60,13 @@ public class MainPageController implements Initializable {
         }
     }
 
-    private void fetchAndDisplayFriends(String userId) throws IOException {
+    private void fetchAndDisplayFriends(String userId) throws IOException {       // in progress (to be done after we handle the debt part)
         String url = "http://localhost:8090/friends/user/" + userId + "/friends";
         URL address = new URL(url);
         HttpURLConnection con = (HttpURLConnection) address.openConnection();
+        con.setRequestProperty("Authorization", "Bearer " + token);
         con.setRequestMethod("GET");
 
-        con.setRequestProperty("Authorization", "Bearer " + token);
 
         int responseCode = con.getResponseCode();
         if (responseCode != 200) {
@@ -111,17 +111,21 @@ public class MainPageController implements Initializable {
     }
 
     private double getUserDebts(String userId) throws IOException {
-        String url = "http://localhost:8090/obligations/user/" + userId + "/debts";
+        //  String url = "http://localhost:8090/obligations/user/" + userId + "/debts"; // returns 400 - bad request
+        String url = "http://localhost:8090/obligations/user/" + "10" + "/debts";  // works fine if you replace userId with a valid one but its for temporary purposes
 
         URL address = new URL(url);
         HttpURLConnection con = (HttpURLConnection) address.openConnection();
         con.setRequestMethod("GET");
+        con.setRequestProperty("Authorization", "Bearer " + token);
+
+        String requestBody = "{\"token\": \"" + token + "\", \"userId\": \"" + userId + "\"}";
 
         // Get response
         int responseCode = con.getResponseCode();
         if (responseCode != 200) {
-            // Handle the error response appropriately                                    //  TODO: response code is not 200 so it has to be handled
-            return 0.0;
+            //  TODO: response code is not 200 so it has to be handled (returning 401 - unauthorized)
+            return responseCode; // temporary
         }
 
         try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
@@ -138,13 +142,15 @@ public class MainPageController implements Initializable {
         }
     }
 
-    private double getUserLoans(String userId) throws IOException {
+    private double getUserLoans(String userId) throws IOException { // in progress (to be done after we handle the debt part)
         String url = "http://localhost:8090/obligations/user/" + userId + "/credits";
 
 
         URL address = new URL(url);
         HttpURLConnection con = (HttpURLConnection) address.openConnection();
         con.setRequestMethod("GET");
+        con.setRequestProperty("Authorization", "Bearer " + token);
+
 
         // Get response
         int responseCode = con.getResponseCode();
@@ -248,7 +254,6 @@ public class MainPageController implements Initializable {
         usrname.append(" " + username + "!");
         userGreet.setText(usrname.toString());
     }
-
 
 
     public void setToken(String token) {
