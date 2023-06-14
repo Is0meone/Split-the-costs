@@ -75,20 +75,11 @@ public class SplitExpenseController implements Initializable {
     }
 
     public void handleSplit(ActionEvent event) throws IOException {
-        StringBuilder sb = new StringBuilder("[");
-        for (int i = 0; i < friendlist.getSelectionModel().getSelectedItems().size(); i++) {
-            String temp = friendlist.getSelectionModel().getSelectedItems().get(i);
-            String[] set = temp.split(" ");
-            temp = set[2].substring(0,set[2].length()-1);
-            if (i == friendlist.getSelectionModel().getSelectedItems().size() - 1){
-                sb.append("\"" + temp + "\"]");
-                break;
-            }
-            sb.append("\"" + temp + "\", ");
-        }
+
+        String usersToSplitWithId = getUsersListToJsonBody();
 
         String requestBody = "{\"description\": \"" + expenseName.getText() + "\"," +
-                " \"users\": " + sb + ", \"amount\": \"" + amount.getText() +"\"}";
+                " \"users\": " + usersToSplitWithId + ", \"amount\": \"" + amount.getText() +"\"}";
         String url = "http://localhost:8090/obligations/user/" + userId + "/split";
 
         URL address = new URL(url);
@@ -108,14 +99,29 @@ public class SplitExpenseController implements Initializable {
         if (responseCode == 200) {
             message.setText("Expense splitted successfully!");
             message.setFill(Color.GREEN);
+            expenseName.setText("");
+            amount.setText("");
             con.disconnect();
         } else {
             message.setText("Something went wrong :(. Please try again.");
             message.setFill(Color.RED);
             con.disconnect();
         }
+    }
 
-
+    private String getUsersListToJsonBody(){
+        StringBuilder sb = new StringBuilder("[");
+        for (int i = 0; i < friendlist.getSelectionModel().getSelectedItems().size(); i++) {
+            String temp = friendlist.getSelectionModel().getSelectedItems().get(i);
+            String[] set = temp.split(" ");
+            temp = set[2].substring(0,set[2].length()-1);
+            if (i == friendlist.getSelectionModel().getSelectedItems().size() - 1){
+                sb.append("\"" + temp + "\"]");
+                break;
+            }
+            sb.append("\"" + temp + "\", ");
+        }
+        return sb.toString();
     }
 
     public void setFriendlist(List<String> friends) {
