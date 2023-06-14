@@ -28,8 +28,6 @@ public class MainPageController {
     private AnchorPane userPane;
     private String userId;
 
-    private List<String> friends;
-
     @FXML
     private Text textUserId;
 
@@ -44,6 +42,7 @@ public class MainPageController {
     @FXML
     private Label listLabel;
     private String token;
+
 
 
     private double getUserDebts(String userId) throws IOException {
@@ -160,7 +159,7 @@ public class MainPageController {
             }
             String responseBody = response.toString();
             // Parse the JSON response to get the friend data
-            friends = parseFriendsFromJson(responseBody);
+            List<String> friends = parseFriendsFromJson(responseBody);
             displayFriends(friends);
         }
     }
@@ -195,6 +194,18 @@ public class MainPageController {
         mainPane.getChildren().setAll(userSearchView);
     }
 
+    @FXML
+    private void handleManageAction(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("split-expense-view.fxml"));
+        AnchorPane splitExpenseView = loader.load();
+        SplitExpenseController splitExpenseController = loader.getController();
+
+        // Przekazanie informacji/parametrów do kontrolera sceny "split-expense-view" (opcjonalne)
+        // splitExpenseController.setSomeData(someData);
+
+        mainPane.getChildren().setAll(splitExpenseView);
+    }
+
 
     @FXML
     private void handleLogOutButtonAction(ActionEvent event) throws IOException {
@@ -205,21 +216,9 @@ public class MainPageController {
     }
 
     @FXML
-    private void handleSplitExpensesAction(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("split-expense-view.fxml"));
-        AnchorPane splitExpenseView = loader.load();
-        SplitExpenseController splitExpenseController = loader.getController();
-        initializeSplitExpensePage(splitExpenseController);
-        userPane.getChildren().setAll(splitExpenseView);
+    private void handleListElementClickAction(ActionEvent event) throws IOException {
+        //TODO
     }
-
-    public void initializeSplitExpensePage(SplitExpenseController splitExpenseController) throws IOException {
-        splitExpenseController.setUserPane(userPane);
-        splitExpenseController.setToken(token);
-        splitExpenseController.setUserId(userId);
-        splitExpenseController.setFriends(friends);
-    }
-
 
     protected void updateUserBalance(double balance) {
         userBalance.setText(String.valueOf(balance));

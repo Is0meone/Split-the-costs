@@ -7,8 +7,7 @@ module pl.edu.pw.app {
 	requires org.kordamp.ikonli.javafx;
 	requires org.kordamp.bootstrapfx.core;
 	requires com.google.gson;
-    requires org.json;
 
-    opens pl.edu.pw.app to javafx.fxml;
+	opens pl.edu.pw.app to javafx.fxml;
 	exports pl.edu.pw.app;
 }
