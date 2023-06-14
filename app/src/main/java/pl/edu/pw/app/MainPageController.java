@@ -191,6 +191,8 @@ public class MainPageController {
         UserSearchController userSearchController = loader.getController();
 
         userSearchController.setUserPane(mainPane);
+        userSearchController.setToken(token);
+        userSearchController.setUserId(userId);
 
         mainPane.getChildren().setAll(userSearchView);
     }

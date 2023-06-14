@@ -46,16 +46,17 @@ public class UserSearchController {
     private String token;
     private String friendId;
 
+
     @FXML
     private void addFriendAction(ActionEvent actionEvent) {
         String userName = searchField.getText();
-        String url = "http://localhost:8090/users/user/" + 8 + "/find/" + userName;
+        String url = "http://localhost:8090/users/user/" + userId + "/find/" + userName;
 
         try {
             URL address = new URL(url);
             HttpURLConnection con = (HttpURLConnection) address.openConnection();
             con.setRequestMethod("GET");
-            con.setRequestProperty("Authorization", "Bearer " + "MasterToken");
+            con.setRequestProperty("Authorization", "Bearer " + token);
             int responseCode = con.getResponseCode();
             if (responseCode != 200) {
                 throw new IOException("Request failed with response code: " + responseCode);
@@ -100,7 +101,7 @@ public class UserSearchController {
 
 
     private void sendAFriendRequest(int userId) {
-        String requestURL = "http://localhost:8090/friends/user/" + 8 + "/requestoracceptfriendship/" + userId;
+        String requestURL = "http://localhost:8090/friends/user/" + userId + "/requestoracceptfriendship/" + userId;
         try {
             HttpURLConnection con = (HttpURLConnection) new URL(requestURL).openConnection();
             con.setRequestMethod("GET");
@@ -171,5 +172,12 @@ public class UserSearchController {
         friendsList = FXCollections.observableArrayList();
         friendsListView.setItems(friendsList);
         friendsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+    }
+
+    public void setControllerUserId(String text) {
+        textUserId.setText(text);
+    }
+    public void setControllerToken(String token) {
+        this.token = token;
     }
 }
