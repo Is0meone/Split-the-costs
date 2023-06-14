@@ -216,8 +216,19 @@ public class MainPageController {
     }
 
     @FXML
-    private void handleListElementClickAction(ActionEvent event) throws IOException {
-        //TODO
+    private void handleSplitExpensesAction(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("split-expense-view.fxml"));
+        AnchorPane splitExpenseView = loader.load();
+        SplitExpenseController splitExpenseController = loader.getController();
+        initializeSplitExpensePage(splitExpenseController);
+        userPane.getChildren().setAll(splitExpenseView);
+    }
+
+    public void initializeSplitExpensePage(SplitExpenseController splitExpenseController) throws IOException {
+        splitExpenseController.setUserPane(userPane);
+        splitExpenseController.setToken(token);
+        splitExpenseController.setUserId(userId);
+        splitExpenseController.setFriendlist(friends);
     }
 
     protected void updateUserBalance(double balance) {

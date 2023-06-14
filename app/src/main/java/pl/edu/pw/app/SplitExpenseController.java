@@ -11,10 +11,17 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class SplitExpenseController implements Initializable {
@@ -23,13 +30,17 @@ public class SplitExpenseController implements Initializable {
     @FXML
     private TextField expenseName;
     @FXML
-    private TextField Amount;
+    private TextField amount;
     @FXML
     private Button split;
     @FXML
-    private Text selected;
-    private String[] friends = {"Bartek", "Tomek", "Pawel", "Kuba", "Wojciech"};
-    private ObservableList<String> observableList = FXCollections.observableArrayList(friends);
+    private Text message;
+
+    private AnchorPane userPane;
+    private String token;
+
+
+    private String userId;
 
     @FXML
     private AnchorPane splitPane;
@@ -46,15 +57,74 @@ public class SplitExpenseController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        friendlist.setItems(observableList);
         friendlist.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 
-    public void handleSplit(ActionEvent event){
-        StringBuilder sb = new StringBuilder();
-        for (Object o : friendlist.getSelectionModel().getSelectedItems()){
-            sb.append(o.toString());
+    public void handleSplit(ActionEvent event) throws IOException {
+        StringBuilder sb = new StringBuilder("[");
+        for (int i = 0; i < friendlist.getSelectionModel().getSelectedItems().size(); i++) {
+            String temp = friendlist.getSelectionModel().getSelectedItems().get(i);
+            String[] set = temp.split(" ");
+            temp = set[2].substring(0,set[2].length()-1);
+            if (i == friendlist.getSelectionModel().getSelectedItems().size() - 1){
+                sb.append("\"" + temp + "\"]");
+                break;
+            }
+            sb.append("\"" + temp + "\", ");
         }
-        selected.setText(sb.toString());
+
+        String requestBody = "{\"description\": \"" + expenseName.getText() + "\"," +
+                " \"users\": " + sb + ", \"amount\": \"" + amount.getText() +"\"}";
+        System.out.println(requestBody);
+        String url = "http://localhost:8090/obligations/user/" + userId + "/split";
+        System.out.println(url);
+        System.out.println(token);
+        URL address = new URL(url);
+        HttpURLConnection con = (HttpURLConnection) address.openConnection();
+        con.setRequestProperty("Content-Type", "application/json");
+        con.setRequestProperty("Authorization", "Bearer " + token);
+        con.setRequestMethod("POST");
+        con.setDoOutput(true);
+//        DataOutputStream outputStream = new DataOutputStream(con.getOutputStream());
+//        outputStream.writeBytes(requestBody);
+//        outputStream.flush();
+//        outputStream.close();
+        try (OutputStream outputStream = con.getOutputStream()) {
+            byte[] input = requestBody.getBytes(StandardCharsets.UTF_8);
+            outputStream.write(input, 0, input.length);
+            outputStream.flush();
+        }
+
+        int responseCode = con.getResponseCode();
+        if (responseCode == 200) {
+            message.setText("Expense splitted successfully!");
+            message.setFill(Color.GREEN);
+            con.disconnect();
+        } else {
+            message.setText("Something went wrong :(. Please try again.");
+            message.setFill(Color.RED);
+            con.disconnect();
+        }
+
+
     }
+
+    public void setFriendlist(List<String> friends) {
+        this.friendlist.setItems(FXCollections.observableArrayList(friends));
+    }
+
+
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public void setUserPane(AnchorPane userPane) {
+        this.userPane = userPane;
+    }
+
 }

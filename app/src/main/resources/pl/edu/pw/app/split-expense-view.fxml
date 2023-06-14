@@ -15,7 +15,7 @@
             </font>
         </Text>
         <TextField fx:id="expenseName" layoutX="294.0" layoutY="80.0" promptText="Expense Name" />
-        <TextField fx:id="Amount" layoutX="294.0" layoutY="115.0" promptText="Total Amount" />
+        <TextField fx:id="amount" layoutX="294.0" layoutY="115.0" promptText="Total Amount" />
         <Button fx:id="split" layoutX="329.0" layoutY="409.0" onAction="#handleSplit" styleClass="button" text="Split Expense" />
         <Button fx:id="returnButton" layoutX="640.0" layoutY="483.0" onAction="#returnAction" prefHeight="27.0" prefWidth="107.0" styleClass="button2" text="Return" />
       <ListView fx:id="friendlist" layoutX="295.0" layoutY="189.0" prefHeight="200.0" prefWidth="200.0" />
@@ -24,6 +24,10 @@
             <Font size="22.0" />
          </font>
       </Text>
-      <Text fx:id="selected" layoutX="131.0" layoutY="476.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="336.9378662109375" />
+      <Text fx:id="message" layoutY="476.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="787.9999999999999">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Text>
     </children>
 </AnchorPane>
