@@ -46,12 +46,7 @@
             <Font name="System Bold" size="20.0" />
          </font>
       </Label>
-      <Text fx:id="userId1" layoutX="632.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Your debts:" wrappingWidth="135.0">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Text>
-      <Text fx:id="userId11" layoutX="632.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Your borrowings:" wrappingWidth="165.0">
+      <Text layoutX="632.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Your balance:" wrappingWidth="135.0">
          <font>
             <Font size="18.0" />
          </font>

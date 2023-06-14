@@ -7,7 +7,6 @@ import com.google.gson.JsonParser;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.AnchorPane;
@@ -21,15 +20,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
 
-public class MainPageController implements Initializable {
+public class MainPageController {
     @FXML
     private AnchorPane mainPane;
     private Stage primaryStage;
     private AnchorPane userPane;
-
-
     private String userId;
 
     @FXML
@@ -47,18 +43,6 @@ public class MainPageController implements Initializable {
     private Label listLabel;
     private String token;
 
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        try {
-            double balance = getUserBalance(userId);
-            updateUserBalance(balance);
-            fetchAndDisplayFriends(userId);
-        } catch (IOException e) {
-            e.printStackTrace();
-            // Handle the exception appropriately
-        }
-    }
 
     private void fetchAndDisplayFriends(String userId) throws IOException {       // in progress (to be done after we handle the debt part)
         String url = "http://localhost:8090/friends/user/" + userId + "/friends";
@@ -106,13 +90,12 @@ public class MainPageController implements Initializable {
     }
 
 
-    private double getUserBalance(String userId) throws IOException {
+    protected double getUserBalance(String userId) throws IOException {
         return getUserLoans(userId) - getUserDebts(userId);
     }
 
     private double getUserDebts(String userId) throws IOException {
-        //  String url = "http://localhost:8090/obligations/user/" + userId + "/debts"; // returns 400 - bad request
-        String url = "http://localhost:8090/obligations/user/" + "10" + "/debts";  // works fine if you replace userId with a valid one but its for temporary purposes
+        String url = "http://localhost:8090/obligations/user/" + userId + "/debts";
 
         URL address = new URL(url);
         HttpURLConnection con = (HttpURLConnection) address.openConnection();
@@ -124,9 +107,9 @@ public class MainPageController implements Initializable {
         // Get response
         int responseCode = con.getResponseCode();
         if (responseCode != 200) {
-            //  TODO: response code is not 200 so it has to be handled (returning 401 - unauthorized)
             return responseCode; // temporary
         }
+
 
         try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
             String inputLine;
@@ -137,12 +120,14 @@ public class MainPageController implements Initializable {
             }
             String responseBody = response.toString();
             // Parse the JSON response to get the user balance
+            //double debt = parseUserBalanceFromJson(responseBody);
+            //double debt = responseCode;  // TODO temporary
             double debt = parseUserBalanceFromJson(responseBody);
             return debt;
         }
     }
 
-    private double getUserLoans(String userId) throws IOException { // in progress (to be done after we handle the debt part)
+    private double getUserLoans(String userId) throws IOException {
         String url = "http://localhost:8090/obligations/user/" + userId + "/credits";
 
 
@@ -152,10 +137,8 @@ public class MainPageController implements Initializable {
         con.setRequestProperty("Authorization", "Bearer " + token);
 
 
-        // Get response
         int responseCode = con.getResponseCode();
         if (responseCode != 200) {
-            // Handle the error response appropriately
             return 0.0;
         }
 
@@ -174,28 +157,39 @@ public class MainPageController implements Initializable {
     }
 
     private double parseUserBalanceFromJson(String json) {
-        JsonObject jsonObject = JsonParser.parseString(json).getAsJsonObject();
-        JsonArray debtsArray = jsonObject.getAsJsonArray("debts");
-        double balance = 0.0;
-        for (JsonElement element : debtsArray) {
-            JsonObject debtObject = element.getAsJsonObject();
-            double amount = debtObject.get("amount").getAsDouble();
-            String creditorId = debtObject.get("creditor").getAsJsonObject().get("id").getAsString();
-            String debtorId = debtObject.get("debtor").getAsJsonObject().get("id").getAsString();
+        try {
+            JsonObject jsonObject = JsonParser.parseString(json).getAsJsonObject();
+            JsonElement debtsElement = jsonObject.get("debts");
 
-            // Calculate the balance based on the creditor and debtor IDs
-            // Adjust the balance calculation logic according to your requirements
-            if (creditorId.equals(userId)) {
-                balance -= amount;
-            } else if (debtorId.equals(userId)) {
-                balance += amount;
+            if (debtsElement == null || debtsElement.isJsonNull() || debtsElement.isJsonArray() && debtsElement.getAsJsonArray().size() == 0) {
+                return 0.0;
             }
+
+            double balance = 0.0;
+            JsonArray debtsArray = debtsElement.getAsJsonArray();
+            for (JsonElement element : debtsArray) {
+                JsonObject debtObject = element.getAsJsonObject();
+                double amount = debtObject.get("amount").getAsDouble();
+                String creditorId = debtObject.get("creditor").getAsJsonObject().get("id").getAsString();
+                String debtorId = debtObject.get("debtor").getAsJsonObject().get("id").getAsString();
+
+                // Calculate the balance based on the creditor and debtor IDs
+                // Adjust the balance calculation logic according to your requirements
+                if (creditorId.equals(userId)) {
+                    balance -= amount;
+                } else if (debtorId.equals(userId)) {
+                    balance += amount;
+                }
+            }
+            return balance;
+        } catch (Exception e) {
+            //e.printStackTrace();
+            return 0.0;
         }
-        return balance;
     }
 
 
-    private void updateUserBalance(double balance) {
+    protected void updateUserBalance(double balance) {
         userBalance.setText(String.valueOf(balance));
     }
 

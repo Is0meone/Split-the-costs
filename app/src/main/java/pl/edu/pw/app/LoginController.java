@@ -55,18 +55,24 @@ public class LoginController {
 
     public void goToMainPage(ActionEvent event) throws IOException {
         if (!sendLoginRequest()) return;
+
         FXMLLoader loader = new FXMLLoader(getClass().getResource("main-page.fxml"));
         AnchorPane mainPageView = loader.load();
         MainPageController mainPageController = loader.getController();
+        initializeMainPage(mainPageController);
+        userPane.getChildren().setAll(mainPageView);
+    }
 
+    public void initializeMainPage(MainPageController mainPageController) throws IOException {
         mainPageController.setUserPane(userPane);
-        mainPageController.setToken(token);
+        mainPageController.setToken(token); // Set the token before initializing the main page controller
         mainPageController.setUserGreet(name);
         mainPageController.setUserId(usrId);
         mainPageController.setTextUserId(usrId);
+        mainPageController.updateUserBalance(mainPageController.getUserBalance(usrId));
 
-        userPane.getChildren().setAll(mainPageView);
     }
+
 
     public boolean sendLoginRequest() throws IOException {
         String usrname = username.getText();
