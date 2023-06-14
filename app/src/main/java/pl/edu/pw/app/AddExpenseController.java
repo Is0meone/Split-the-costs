@@ -1,5 +1,4 @@
-//imo add i split powinno być w jednej klasie
-/*package pl.edu.pw.app;
+package pl.edu.pw.app;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -26,4 +25,3 @@ public class AddExpenseController {
 
 
 }
-*/
