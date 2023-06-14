@@ -9,7 +9,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="551.0" prefWidth="900.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.edu.pw.app.MainPageController">
+<AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="551.0" prefWidth="788.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.edu.pw.app.MainPageController">
    <children>
       <Button layoutX="50.0" layoutY="155.0" mnemonicParsing="false" prefHeight="73.0" prefWidth="294.0" text="Add expenses(?)">
          <font>
@@ -28,25 +28,25 @@
       </Button>
       <ParallelCamera />
       <PerspectiveCamera />
-      <Text fx:id="textUserId" layoutX="20.0" layoutY="30.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Your userId:" />
-      <Text fx:id="userGreet" layoutX="180.0" layoutY="56.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Hi" textAlignment="CENTER" wrappingWidth="294.4000000000001">
+      <Text fx:id="textUserId" layoutX="14.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Your userId:" />
+      <Text fx:id="userGreet" layoutX="247.0" layoutY="91.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Hi" textAlignment="CENTER" wrappingWidth="294.4000000000001">
          <font>
             <Font size="26.0" />
          </font>
       </Text>
-      <Button layoutX="805.0" layoutY="496.0" mnemonicParsing="false" onAction="#handleLogOutButtonAction" text="Log out" />
-      <Text fx:id="userBalance" layoutX="805.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="51.0">
+      <Button layoutX="686.0" layoutY="496.0" mnemonicParsing="false" onAction="#handleLogOutButtonAction" text="Log out" />
+      <Text fx:id="userBalance" layoutX="716.0" layoutY="38.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="51.0">
          <font>
             <Font size="18.0" />
          </font>
       </Text>
-      <ListView fx:id="friendsListView" layoutX="374.0" layoutY="155.0" prefHeight="322.0" prefWidth="516.0" />
-      <Label fx:id="listLabel" alignment="TOP_CENTER" contentDisplay="CENTER" layoutX="373.0" layoutY="120.0" prefHeight="27.0" prefWidth="516.0" text="Your friends" textAlignment="CENTER">
+      <ListView fx:id="friendsListView" layoutX="374.0" layoutY="155.0" prefHeight="322.0" prefWidth="403.0" />
+      <Label fx:id="listLabel" alignment="TOP_CENTER" contentDisplay="CENTER" layoutX="373.0" layoutY="120.0" prefHeight="27.0" prefWidth="403.0" text="Your friends" textAlignment="CENTER">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>
       </Label>
-      <Text layoutX="632.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Your balance:" wrappingWidth="135.0">
+      <Text layoutX="565.0" layoutY="38.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Your balance:" wrappingWidth="135.0">
          <font>
             <Font size="18.0" />
          </font>

@@ -53,14 +53,20 @@ public class RegisterController {
         AnchorPane mainPageView = loader.load();
         MainPageController mainPageController = loader.getController();
 
+        initializeMainPage(mainPageController);
+
+        userPane.getChildren().setAll(mainPageView);
+    }
+    public void initializeMainPage(MainPageController mainPageController) throws IOException {
         mainPageController.setUserPane(userPane);
         mainPageController.setToken(token);
         mainPageController.setUserGreet(name);
         mainPageController.setUserId(usrId);
         mainPageController.setTextUserId(usrId);
-
-        userPane.getChildren().setAll(mainPageView);
+        mainPageController.updateUserBalance(mainPageController.getUserBalance(usrId));
+        mainPageController.initializeFriendsList(usrId);
     }
+
 
     public void setUserPane(AnchorPane userPane) {
         this.userPane = userPane;

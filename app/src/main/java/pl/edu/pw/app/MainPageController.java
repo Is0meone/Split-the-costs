@@ -215,6 +215,11 @@ public class MainPageController {
         userPane.getChildren().setAll(loginView);
     }
 
+    @FXML
+    private void handleListElementClickAction(ActionEvent event) throws IOException {
+        //TODO
+    }
+
     protected void updateUserBalance(double balance) {
         userBalance.setText(String.valueOf(balance));
     }
