@@ -190,7 +190,6 @@ public class MainPageController {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("user-search-view.fxml"));
         AnchorPane userSearchView = loader.load();
         UserSearchController userSearchController = loader.getController();
-
         userSearchController.setUserPane(mainPane);
         userSearchController.setToken(token);
         userSearchController.setUserId(userId);
@@ -219,6 +218,7 @@ public class MainPageController {
     public void initializeSplitExpensePage(SplitExpenseController splitExpenseController) throws IOException {
         splitExpenseController.setUserPane(userPane);
         splitExpenseController.setToken(token);
+        splitExpenseController.setName(name);
         splitExpenseController.setUserId(userId);
         splitExpenseController.setFriendlist(friends);
     }

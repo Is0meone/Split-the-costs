@@ -40,20 +40,33 @@ public class SplitExpenseController implements Initializable {
     private String token;
 
 
+    private String name;
+
+
     private String userId;
 
     @FXML
     private AnchorPane splitPane;
 
     @FXML
-    private void returnAction(ActionEvent event) throws IOException {
+    public void returnAction(ActionEvent event) throws IOException {
+
         FXMLLoader loader = new FXMLLoader(getClass().getResource("main-page.fxml"));
         AnchorPane mainPageView = loader.load();
         MainPageController mainPageController = loader.getController();
+        initializeMainPage(mainPageController);
+        userPane.getChildren().setAll(mainPageView);
+    }
 
-        mainPageController.setUserPane(splitPane);
-
-        splitPane.getChildren().setAll(mainPageView);
+    public void initializeMainPage(MainPageController mainPageController) throws IOException {
+        mainPageController.setUserPane(userPane);
+        mainPageController.setToken(token);
+        mainPageController.setUserGreet(name);
+        mainPageController.setName(name);
+        mainPageController.setUserId(userId);
+        mainPageController.setTextUserId(userId);
+        mainPageController.updateUserBalance(mainPageController.getUserBalance(userId));
+        mainPageController.initializeFriendsList(userId);
     }
 
     @Override
@@ -121,6 +134,10 @@ public class SplitExpenseController implements Initializable {
 
     public void setUserPane(AnchorPane userPane) {
         this.userPane = userPane;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
 }
