@@ -2,14 +2,19 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="splitPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.edu.pw.app.SplitExpenseController">
+<AnchorPane fx:id="splitPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="551.0" prefWidth="788.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.edu.pw.app.SplitExpenseController">
     <children>
-        <Label fx:id="titleLabel" layoutX="14.0" layoutY="14.0" text="Split Expense" />
-        <TextField fx:id="expenseNameField" layoutX="14.0" layoutY="48.0" promptText="Expense Name" />
-        <TextField fx:id="totalAmountField" layoutX="14.0" layoutY="83.0" promptText="Total Amount" />
-        <TextField fx:id="splitBetweenField" layoutX="14.0" layoutY="118.0" promptText="Split Between" />
-        <Button fx:id="splitExpenseButton" layoutX="14.0" layoutY="153.0" styleClass="button" text="Split Expense" />
-        <Button fx:id="returnButton" layoutX="453.0" layoutY="282.0" prefHeight="42.0" prefWidth="78.0" styleClass="button2" text="Return" onAction="#returnAction"/>
+        <Text layoutX="269.0" layoutY="194.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Split expense with:">
+            <font>
+                <Font name="Arial" size="30.0" />
+            </font>
+        </Text>
+        <TextField fx:id="expenseNameField" layoutX="294.0" layoutY="212.0" promptText="Expense Name" />
+        <TextField fx:id="totalAmountField" layoutX="294.0" layoutY="247.0" promptText="Total Amount" />
+        <TextField fx:id="splitBetweenField" layoutX="294.0" layoutY="282.0" promptText="Split Between" />
+        <Button fx:id="splitExpenseButton" layoutX="316.0" layoutY="322.0" styleClass="button" text="Split Expense" />
+        <Button fx:id="returnButton" layoutX="640.0" layoutY="483.0" onAction="#returnAction" prefHeight="27.0" prefWidth="107.0" styleClass="button2" text="Return" />
     </children>
 </AnchorPane>

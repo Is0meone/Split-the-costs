@@ -15,7 +15,7 @@ public class ExpenseSplitterApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(ExpenseSplitterApplication.class.getResource("login-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load());
+        Scene scene = new Scene(fxmlLoader.load(),788,551);
         stage.setScene(scene);
         stage.sizeToScene();
         stage.show();

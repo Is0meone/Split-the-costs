@@ -1,43 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Hyperlink?>
-<?import javafx.scene.control.PasswordField?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="userPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.edu.pw.app.LoginController">
+<AnchorPane fx:id="userPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="551.0" prefWidth="788.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.edu.pw.app.LoginController">
    <children>
-      <TextField fx:id="username" layoutX="200.0" layoutY="163.0" promptText="username" />
-      <Text layoutX="107.0" layoutY="89.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome to ExpenseSplitter!">
+      <TextField fx:id="username" layoutX="294.0" layoutY="245.0" promptText="username" />
+      <Text layoutX="201.0" layoutY="169.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome to ExpenseSplitter!">
          <font>
             <Font name="Arial" size="30.0" />
          </font>
       </Text>
-      <Text layoutX="221.0" layoutY="145.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Login to your account:">
+      <Text layoutX="315.0" layoutY="225.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Login to your account:">
          <font>
             <Font name="Arial" size="16.0" />
          </font>
       </Text>
-      <Text layoutX="205.0" layoutY="300.0" strokeType="OUTSIDE" strokeWidth="0.0" text="don't have an account yet?">
+      <Text layoutX="299.0" layoutY="380.0" strokeType="OUTSIDE" strokeWidth="0.0" text="don't have an account yet?">
          <font>
             <Font size="16.0" />
          </font>
       </Text>
-      <Hyperlink layoutX="245.0" layoutY="303.0" onAction="#goToRegisterView" text="register">
+      <Hyperlink layoutX="339.0" layoutY="383.0" onAction="#goToRegisterView" text="register">
          <font>
             <Font size="14.0" />
          </font>
       </Hyperlink>
-      <Button layoutX="264.0" layoutY="233.0" mnemonicParsing="false" onAction="#goToMainPage" text="Log-in" />
-      <Text layoutX="304.0" layoutY="321.0" strokeType="OUTSIDE" strokeWidth="0.0" text="instead">
+      <Button layoutX="358.0" layoutY="313.0" mnemonicParsing="false" onAction="#goToMainPage" text="Log-in" />
+      <Text layoutX="398.0" layoutY="401.0" strokeType="OUTSIDE" strokeWidth="0.0" text="instead">
          <font>
             <Font size="14.0" />
          </font>
       </Text>
-      <Text fx:id="failedLogin" fill="RED" layoutY="115.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="600.0" />
-      <PasswordField fx:id="password" layoutX="199.0" layoutY="200.0" promptText="password" />
+      <Text fx:id="failedLogin" fill="RED" layoutX="94.0" layoutY="195.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="600.0" />
+      <PasswordField fx:id="password" layoutX="294.0" layoutY="276.0" promptText="password" />
    </children>
 </AnchorPane>
