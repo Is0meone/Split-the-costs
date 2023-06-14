@@ -44,55 +44,6 @@ public class MainPageController {
     private String token;
 
 
-    private void fetchAndDisplayFriends(String userId) throws IOException {       // in progress (to be done after we handle the debt part)
-        String url = "http://localhost:8090/friends/user/" + userId + "/friends";
-        URL address = new URL(url);
-        HttpURLConnection con = (HttpURLConnection) address.openConnection();
-        con.setRequestProperty("Authorization", "Bearer " + token);
-        con.setRequestMethod("GET");
-
-
-        int responseCode = con.getResponseCode();
-        if (responseCode != 200) {
-            return;
-        }
-
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
-            String inputLine;
-            StringBuilder response = new StringBuilder();
-
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-            String responseBody = response.toString();
-            // Parse the JSON response to get the friend data
-            List<String> friends = parseFriendsFromJson(responseBody);
-            displayFriends(friends);
-        }
-    }
-
-    private List<String> parseFriendsFromJson(String json) {
-        List<String> friends = new ArrayList<>();
-        JsonArray jsonArray = JsonParser.parseString(json).getAsJsonArray();
-        for (JsonElement element : jsonArray) {
-            JsonObject friendObject = element.getAsJsonObject();
-            String friendName = friendObject.get("username").getAsString();
-            String friendId = friendObject.get("id").getAsString();
-            friends.add(friendName + " (ID: " + friendId + ")");
-        }
-        return friends;
-    }
-
-
-    private void displayFriends(List<String> friends) {
-        friendsListView.getItems().clear();
-        friendsListView.getItems().addAll(friends);
-    }
-
-
-    protected double getUserBalance(String userId) throws IOException {
-        return getUserLoans(userId) - getUserDebts(userId);
-    }
 
     private double getUserDebts(String userId) throws IOException {
         String url = "http://localhost:8090/obligations/user/" + userId + "/debts";
@@ -119,9 +70,7 @@ public class MainPageController {
                 response.append(inputLine);
             }
             String responseBody = response.toString();
-            // Parse the JSON response to get the user balance
-            //double debt = parseUserBalanceFromJson(responseBody);
-            //double debt = responseCode;  // TODO temporary
+
             double debt = parseUserBalanceFromJson(responseBody);
             return debt;
         }
@@ -129,7 +78,6 @@ public class MainPageController {
 
     private double getUserLoans(String userId) throws IOException {
         String url = "http://localhost:8090/obligations/user/" + userId + "/credits";
-
 
         URL address = new URL(url);
         HttpURLConnection con = (HttpURLConnection) address.openConnection();
@@ -189,13 +137,51 @@ public class MainPageController {
     }
 
 
-    protected void updateUserBalance(double balance) {
-        userBalance.setText(String.valueOf(balance));
+    protected void initializeFriendsList(String userId) throws IOException {
+        String url = "http://localhost:8090/friends/user/" + userId + "/friends";
+        URL address = new URL(url);
+        HttpURLConnection con = (HttpURLConnection) address.openConnection();
+        con.setRequestProperty("Authorization", "Bearer " + token);
+        con.setRequestMethod("GET");
+
+
+        int responseCode = con.getResponseCode();
+        if (responseCode != 200) {
+            return;
+        }
+
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
+            String inputLine;
+            StringBuilder response = new StringBuilder();
+
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            String responseBody = response.toString();
+            // Parse the JSON response to get the friend data
+            List<String> friends = parseFriendsFromJson(responseBody);
+            displayFriends(friends);
+        }
     }
 
-    public void setUserPane(AnchorPane userPane) {
-        this.userPane = userPane;
+    private List<String> parseFriendsFromJson(String json) {
+        List<String> friends = new ArrayList<>();
+        JsonArray jsonArray = JsonParser.parseString(json).getAsJsonArray();
+        for (JsonElement element : jsonArray) {
+            JsonObject friendObject = element.getAsJsonObject();
+            String friendName = friendObject.get("username").getAsString();
+            String friendId = friendObject.get("id").getAsString();
+            friends.add(friendName + " (ID: " + friendId + ")");
+        }
+        return friends;
     }
+
+
+    private void displayFriends(List<String> friends) {
+        friendsListView.getItems().clear();
+        friendsListView.getItems().addAll(friends);
+    }
+
 
     @FXML
     private void handleSearchUsersButtonAction(ActionEvent event) throws IOException {
@@ -227,6 +213,18 @@ public class MainPageController {
         AnchorPane loginView = loader.load();
         LoginController loginController = loader.getController();
         userPane.getChildren().setAll(loginView);
+    }
+
+    protected void updateUserBalance(double balance) {
+        userBalance.setText(String.valueOf(balance));
+    }
+
+    protected double getUserBalance(String userId) throws IOException {
+        return getUserLoans(userId) - getUserDebts(userId);
+    }
+
+    public void setUserPane(AnchorPane userPane) {
+        this.userPane = userPane;
     }
 
 

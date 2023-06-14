@@ -65,12 +65,12 @@ public class LoginController {
 
     public void initializeMainPage(MainPageController mainPageController) throws IOException {
         mainPageController.setUserPane(userPane);
-        mainPageController.setToken(token); // Set the token before initializing the main page controller
+        mainPageController.setToken(token);
         mainPageController.setUserGreet(name);
         mainPageController.setUserId(usrId);
         mainPageController.setTextUserId(usrId);
         mainPageController.updateUserBalance(mainPageController.getUserBalance(usrId));
-
+        mainPageController.initializeFriendsList(usrId);
     }
 
 
