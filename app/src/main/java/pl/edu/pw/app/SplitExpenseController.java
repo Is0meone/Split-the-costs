@@ -11,11 +11,15 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -65,22 +69,45 @@ public class SplitExpenseController implements Initializable {
             temp = set[2].substring(0,set[2].length()-1);
             if (i == friendlist.getSelectionModel().getSelectedItems().size() - 1){
                 sb.append("\"" + temp + "\"]");
+                break;
             }
             sb.append("\"" + temp + "\", ");
         }
+
         String requestBody = "{\"description\": \"" + expenseName.getText() + "\"," +
                 " \"users\": " + sb + ", \"amount\": \"" + amount.getText() +"\"}";
+        System.out.println(requestBody);
         String url = "http://localhost:8090/obligations/user/" + userId + "/split";
+        System.out.println(url);
+        System.out.println(token);
         URL address = new URL(url);
         HttpURLConnection con = (HttpURLConnection) address.openConnection();
+        con.setRequestProperty("Content-Type", "application/json");
         con.setRequestProperty("Authorization", "Bearer " + token);
         con.setRequestMethod("POST");
-
+        con.setDoOutput(true);
+//        DataOutputStream outputStream = new DataOutputStream(con.getOutputStream());
+//        outputStream.writeBytes(requestBody);
+//        outputStream.flush();
+//        outputStream.close();
+        try (OutputStream outputStream = con.getOutputStream()) {
+            byte[] input = requestBody.getBytes(StandardCharsets.UTF_8);
+            outputStream.write(input, 0, input.length);
+            outputStream.flush();
+        }
 
         int responseCode = con.getResponseCode();
-        if (responseCode != 200) {
-            return;
+        if (responseCode == 200) {
+            message.setText("Expense splitted successfully!");
+            message.setFill(Color.GREEN);
+            con.disconnect();
+        } else {
+            message.setText("Something went wrong :(. Please try again.");
+            message.setFill(Color.RED);
+            con.disconnect();
         }
+
+
     }
 
     public void setFriendlist(List<String> friends) {
