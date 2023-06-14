@@ -217,7 +217,7 @@ public class MainPageController {
         splitExpenseController.setUserPane(userPane);
         splitExpenseController.setToken(token);
         splitExpenseController.setUserId(userId);
-        splitExpenseController.setFriends(friends);
+        splitExpenseController.setFriendlist(friends);
     }
 
 

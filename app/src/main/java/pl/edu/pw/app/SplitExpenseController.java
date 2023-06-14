@@ -14,7 +14,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -24,20 +26,17 @@ public class SplitExpenseController implements Initializable {
     @FXML
     private TextField expenseName;
     @FXML
-    private TextField Amount;
+    private TextField amount;
     @FXML
     private Button split;
     @FXML
-    private Text selected;
+    private Text message;
 
     private AnchorPane userPane;
     private String token;
 
 
     private String userId;
-
-    private List<String> friends;
-    private ObservableList<String> observableList = FXCollections.observableArrayList(friends);
 
     @FXML
     private AnchorPane splitPane;
@@ -55,22 +54,40 @@ public class SplitExpenseController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        friendlist.setItems(observableList);
         friendlist.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 
-    public void handleSplit(ActionEvent event) {
-        StringBuilder sb = new StringBuilder();
-        for (Object o : friendlist.getSelectionModel().getSelectedItems()) {
-            sb.append(o.toString());
+    public void handleSplit(ActionEvent event) throws IOException {
+        StringBuilder sb = new StringBuilder("[");
+        for (int i = 0; i < friendlist.getSelectionModel().getSelectedItems().size(); i++) {
+            String temp = friendlist.getSelectionModel().getSelectedItems().get(i);
+            String[] set = temp.split(" ");
+            temp = set[2].substring(0,set[2].length()-1);
+            if (i == friendlist.getSelectionModel().getSelectedItems().size() - 1){
+                sb.append("\"" + temp + "\"]");
+            }
+            sb.append("\"" + temp + "\", ");
         }
-        selected.setText(sb.toString());
+        String requestBody = "{\"description\": \"" + expenseName.getText() + "\"," +
+                " \"users\": " + sb + ", \"amount\": \"" + amount.getText() +"\"}";
+        String url = "http://localhost:8090/obligations/user/" + userId + "/split";
+        URL address = new URL(url);
+        HttpURLConnection con = (HttpURLConnection) address.openConnection();
+        con.setRequestProperty("Authorization", "Bearer " + token);
+        con.setRequestMethod("POST");
+
+
+        int responseCode = con.getResponseCode();
+        if (responseCode != 200) {
+            return;
+        }
+    }
+
+    public void setFriendlist(List<String> friends) {
+        this.friendlist.setItems(FXCollections.observableArrayList(friends));
     }
 
 
-    public void setFriends(List<String> friends) {
-        this.friends = friends;
-    }
 
     public void setUserId(String userId) {
         this.userId = userId;
