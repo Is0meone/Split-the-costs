@@ -6,14 +6,17 @@
 
 <AnchorPane fx:id="userPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="551.0" prefWidth="788.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.edu.pw.app.UserSearchController">
     <children>
-        <Text layoutX="301.0" layoutY="229.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Search users:">
-        <font>
-            <Font name="Arial" size="30.0" />
-        </font>
+        <Text layoutX="301.0" layoutY="133.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Search users:">
+            <font>
+                <Font name="Arial" size="30.0" />
+            </font>
         </Text>
-        <TextField fx:id="searchField" layoutX="301.0" layoutY="252.0" promptText="Search Users" />
-        <Button fx:id="searchButton" layoutX="355.0" layoutY="290.0" text="Search" />
+        <TextField fx:id="searchField" layoutX="301.0" layoutY="156.0" promptText="Search Users" />
+        <Button fx:id="addFriendButton" layoutX="355.0" layoutY="194.0" onAction="#addFriendAction" text="Send a request to friendsList" />
         <Button fx:id="returnButton" layoutX="640.0" layoutY="483.0" onAction="#returnAction" prefHeight="27.0" prefWidth="107.0" styleClass="button2" text="Return" />
+        <Text fx:id="textUserId" layoutX="301.0" layoutY="259.0" strokeType="OUTSIDE" strokeWidth="0.0" text="User ID:" />
+        <Text fx:id="userGreet" layoutX="301.0" layoutY="289.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Hello, User!" />
 
+        <ListView fx:id="friendsListView" layoutX="301.0" layoutY="332.0" prefHeight="200.0" prefWidth="200.0" />
     </children>
 </AnchorPane>
