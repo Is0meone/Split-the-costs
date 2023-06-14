@@ -67,6 +67,7 @@ public class LoginController {
         mainPageController.setUserPane(userPane);
         mainPageController.setToken(token);
         mainPageController.setUserGreet(name);
+        mainPageController.setName(name);
         mainPageController.setUserId(usrId);
         mainPageController.setTextUserId(usrId);
         mainPageController.updateUserBalance(mainPageController.getUserBalance(usrId));

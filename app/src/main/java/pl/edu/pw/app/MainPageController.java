@@ -27,6 +27,7 @@ public class MainPageController {
     private Stage primaryStage;
     private AnchorPane userPane;
     private String userId;
+    private String name;
 
     private List<String> friends;
 
@@ -193,7 +194,7 @@ public class MainPageController {
         userSearchController.setUserPane(mainPane);
         userSearchController.setToken(token);
         userSearchController.setUserId(userId);
-
+        userSearchController.setName(name);
         mainPane.getChildren().setAll(userSearchView);
     }
 
@@ -260,4 +261,7 @@ public class MainPageController {
         this.token = token;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
 }

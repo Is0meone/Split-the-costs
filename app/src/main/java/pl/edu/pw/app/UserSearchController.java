@@ -26,6 +26,7 @@ public class UserSearchController {
     private ObservableList<String> friendsList;
 
     private String userId;
+    private String name;
     private Stage primaryStage;
 
     @FXML
@@ -117,21 +118,28 @@ public class UserSearchController {
         }
     }
 
-    @FXML
-    private void returnAction(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("main-page.fxml"));
-            AnchorPane mainPageView = loader.load();
-            MainPageController mainPageController = loader.getController();
 
-            mainPageController.setUserPane(userPane);
 
-            userPane.getChildren().setAll(mainPageView);
-        } catch (IOException e) {
-            e.printStackTrace();
-            showErrorAlert("Error", "An error occurred while returning to the main page.");
-        }
+    public void returnAction(ActionEvent event) throws IOException {
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("main-page.fxml"));
+        AnchorPane mainPageView = loader.load();
+        MainPageController mainPageController = loader.getController();
+        initializeMainPage(mainPageController);
+        userPane.getChildren().setAll(mainPageView);
     }
+
+    public void initializeMainPage(MainPageController mainPageController) throws IOException {
+        mainPageController.setUserPane(userPane);
+        mainPageController.setToken(token);
+        mainPageController.setUserGreet(name);
+        mainPageController.setName(name);
+        mainPageController.setUserId(userId);
+        mainPageController.setTextUserId(userId);
+        mainPageController.updateUserBalance(mainPageController.getUserBalance(userId));
+        mainPageController.initializeFriendsList(userId);
+    }
+
 
     public void setUserId(String userId) {
         this.userId = userId;
@@ -177,7 +185,9 @@ public class UserSearchController {
     public void setControllerUserId(String text) {
         textUserId.setText(text);
     }
-    public void setControllerToken(String token) {
-        this.token = token;
+
+    public void setName(String name) {
+        this.name = name;
     }
+
 }
