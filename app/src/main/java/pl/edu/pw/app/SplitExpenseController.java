@@ -15,6 +15,7 @@ import javafx.scene.text.Text;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class SplitExpenseController implements Initializable {
@@ -28,11 +29,19 @@ public class SplitExpenseController implements Initializable {
     private Button split;
     @FXML
     private Text selected;
-    private String[] friends = {"Bartek", "Tomek", "Pawel", "Kuba", "Wojciech"};
+
+    private AnchorPane userPane;
+    private String token;
+
+
+    private String userId;
+
+    private List<String> friends;
     private ObservableList<String> observableList = FXCollections.observableArrayList(friends);
 
     @FXML
     private AnchorPane splitPane;
+
     @FXML
     private void returnAction(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("main-page.fxml"));
@@ -50,11 +59,29 @@ public class SplitExpenseController implements Initializable {
         friendlist.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 
-    public void handleSplit(ActionEvent event){
+    public void handleSplit(ActionEvent event) {
         StringBuilder sb = new StringBuilder();
-        for (Object o : friendlist.getSelectionModel().getSelectedItems()){
+        for (Object o : friendlist.getSelectionModel().getSelectedItems()) {
             sb.append(o.toString());
         }
         selected.setText(sb.toString());
     }
+
+
+    public void setFriends(List<String> friends) {
+        this.friends = friends;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public void setUserPane(AnchorPane userPane) {
+        this.userPane = userPane;
+    }
+
 }
