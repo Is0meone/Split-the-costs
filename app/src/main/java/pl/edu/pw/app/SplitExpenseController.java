@@ -44,7 +44,6 @@ public class SplitExpenseController implements Initializable {
 
     @FXML
     private AnchorPane splitPane;
-
     @FXML
     private void returnAction(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("main-page.fxml"));
