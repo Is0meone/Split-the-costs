@@ -76,20 +76,15 @@ public class SplitExpenseController implements Initializable {
 
         String requestBody = "{\"description\": \"" + expenseName.getText() + "\"," +
                 " \"users\": " + sb + ", \"amount\": \"" + amount.getText() +"\"}";
-        System.out.println(requestBody);
         String url = "http://localhost:8090/obligations/user/" + userId + "/split";
-        System.out.println(url);
-        System.out.println(token);
+
         URL address = new URL(url);
         HttpURLConnection con = (HttpURLConnection) address.openConnection();
         con.setRequestProperty("Content-Type", "application/json");
         con.setRequestProperty("Authorization", "Bearer " + token);
         con.setRequestMethod("POST");
         con.setDoOutput(true);
-//        DataOutputStream outputStream = new DataOutputStream(con.getOutputStream());
-//        outputStream.writeBytes(requestBody);
-//        outputStream.flush();
-//        outputStream.close();
+
         try (OutputStream outputStream = con.getOutputStream()) {
             byte[] input = requestBody.getBytes(StandardCharsets.UTF_8);
             outputStream.write(input, 0, input.length);
