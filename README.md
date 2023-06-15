@@ -378,11 +378,14 @@ We did our testing in "Postman" when it comes to request sending methods and we 
 
 # Stage 3
 ## critical analysis of stage 2:
-- project structure at a professional level
-- unreadable readme with errors
 - no possibility of continuation in some places
 - functions and logic work
 - in some places, code from the backend made it difficult to create the frontend
+- exemplary project structure
+- satisfactory backend (except for the lack of a few useful functionalities listed below)
+- Errors in README, misleading, significantly prolonging the work.
+- Lack of ability to pay off all debt
+- Lack of ability to download unpaid debts
 
 ## app package(responsible for GUI):
 We used Java FX that allowed us to create .fxml files responsible for scenes. Here's classes we need to use GUI.
