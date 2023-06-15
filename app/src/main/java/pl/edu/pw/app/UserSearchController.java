@@ -58,6 +58,9 @@ public class UserSearchController {
     @FXML
     private Button acceptButton;
 
+    @FXML
+    private Button rejectButton;
+
 
     private String token;
     private String friendId;
@@ -66,6 +69,49 @@ public class UserSearchController {
     public void initialize() {
         acceptButton.setOnAction(this::acceptButtonClicked);
     }
+
+
+    @FXML
+    private void rejectButtonAction(ActionEvent actionEvent) {
+        String selectedInvitation = invitationsListView.getSelectionModel().getSelectedItem();
+
+        if (selectedInvitation != null) {
+            String friendIdString = extractFriendId(selectedInvitation);
+            if (friendIdString != null) {
+                int friendId = Integer.parseInt(friendIdString);
+                rejectAction(friendId);
+                showAlert("Request Rejected", "You have rejected the friend request.");
+                // Refresh the invitations list
+                try {
+                    initializeInvitationsList(userId);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    showErrorAlert("Error", "An error occurred while loading the invitations list.");
+                }
+            } else {
+                showErrorAlert("Invalid Invitation", "The selected invitation is invalid.");
+            }
+        } else {
+            showErrorAlert("No Invitation Selected", "Please select an invitation from the list.");
+        }
+    }
+    private void rejectAction(int friendId) {
+        String requestURL = "http://localhost:8090/friends/user/" + userId + "/rejectfriendship/" + friendId;
+        try {
+            HttpURLConnection con = (HttpURLConnection) new URL(requestURL).openConnection();
+            con.setRequestMethod("GET");
+            con.setRequestProperty("Authorization", "Bearer " + token);
+
+            int responseCode = con.getResponseCode();
+            if (responseCode != 200) {
+                throw new IOException("Request failed with response code: " + responseCode);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            showErrorAlert("Error", "An error occurred while rejecting the friend request.");
+        }
+    }
+
 
 
     @FXML

@@ -16,7 +16,7 @@
         </Text>
         <TextField fx:id="searchField" alignment="CENTER" layoutX="494.0" layoutY="249.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="27.0" prefWidth="200.0" promptText="Search Users" />
         <Button fx:id="addFriendButton" layoutX="494.0" layoutY="291.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#addFriendAction" prefHeight="43.0" prefWidth="200.0" text="Add friend" />
-        <Button fx:id="returnButton" layoutX="640.0" layoutY="483.0" onAction="#returnAction" prefHeight="27.0" prefWidth="107.0" styleClass="button2" text="Return" />
+        <Button fx:id="returnButton" layoutX="633.0" layoutY="483.0" onAction="#returnAction" prefHeight="27.0" prefWidth="107.0" styleClass="button2" text="Return" />
 
         <ListView fx:id="invitationsListView" layoutX="44.0" layoutY="234.0" prefHeight="158.0" prefWidth="288.0" />
       <Text layoutX="145.0" layoutY="218.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Invitations ">
@@ -35,7 +35,7 @@
          </font>
       </Button>
       <ListView fx:id="friendsListView" layoutX="336.0" layoutY="233.0" prefHeight="158.0" prefWidth="107.0" />
-      <Button fx:id="acceptButton1" layoutX="201.0" layoutY="411.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="43.0" prefWidth="107.0" styleClass="buttonred" text="DECLINE" textFill="WHITE">
+      <Button fx:id="rejectButton" layoutX="201.0" layoutY="411.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#rejectButtonAction" prefHeight="43.0" prefWidth="107.0" styleClass="buttonred" text="REJECT" textFill="WHITE">
          <font>
             <Font size="6.0" />
          </font>
