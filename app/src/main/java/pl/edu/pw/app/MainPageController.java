@@ -1,12 +1,14 @@
 package pl.edu.pw.app;
 
 import com.google.gson.*;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -17,6 +19,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MainPageController {
     @FXML
@@ -42,6 +45,8 @@ public class MainPageController {
     @FXML
     private Label listLabel;
     private String token;
+    private double totalDebt;
+    private double totalOwedToYou;
 
 
 
@@ -69,6 +74,7 @@ public class MainPageController {
             }
             String responseBody = response.toString();
             double amount = parseAmount(responseBody);
+            totalDebt = amount;
             return amount;
         }
     }
@@ -95,8 +101,10 @@ public class MainPageController {
                 response.append(inputLine);
             }
             String responseBody = response.toString();
-            JsonObject jsonObject = JsonParser.parseString(responseBody).getAsJsonObject();
-            double amount = jsonObject.get("total").getAsDouble();
+//            JsonObject jsonObject = JsonParser.parseString(responseBody).getAsJsonObject();
+//            double amount = jsonObject.get("total").getAsDouble();
+            double amount = parseAmountCredit(responseBody);
+            totalOwedToYou = amount;
             return amount;
         }
     }
@@ -111,6 +119,26 @@ public class MainPageController {
             Gson gson = new Gson();
             for (JsonElement element : jsonArray) {
                 JsonObject jsonObject = element.getAsJsonObject();
+                String status = jsonObject.get("status").getAsString();
+                if (!Objects.equals(status, "PENDING")) continue;
+                double amount = jsonObject.get("amount").getAsDouble();
+                totalAmount += amount;
+            }
+            return totalAmount;
+        } else {
+            return 0.0;
+        }
+    }
+
+    private double parseAmountCredit(String response) {
+        JsonArray jsonArray = JsonParser.parseString(response).getAsJsonObject().getAsJsonArray("obligations");
+        if (jsonArray.size() > 0) {
+            Gson gson = new Gson();
+            double totalAmount = 0.0;
+            for (JsonElement element : jsonArray) {
+                JsonObject jsonObject = element.getAsJsonObject();
+                String status = jsonObject.get("status").getAsString();
+                if (!Objects.equals(status, "PENDING")) continue;
                 double amount = jsonObject.get("amount").getAsDouble();
                 totalAmount += amount;
             }
@@ -239,9 +267,35 @@ public class MainPageController {
         splitExpenseController.setFriendlist(friends);
     }
 
+    @FXML
+    private void handleManageDebtsAction(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("manage-debts.fxml"));
+        AnchorPane manageDebtsView = loader.load();
+        ManageDebtsController manageDebtsController = loader.getController();
+        initializeManageDebtsPage(manageDebtsController);
+        userPane.getChildren().setAll(manageDebtsView);
+    }
+    public void initializeManageDebtsPage(ManageDebtsController manageDebtsController) throws IOException {
+        manageDebtsController.setUserPane(userPane);
+        manageDebtsController.setToken(token);
+        manageDebtsController.setName(name);
+        manageDebtsController.setUserId(userId);
+        manageDebtsController.getYourDebts(userId);
+        manageDebtsController.getOthersDebtsToYou(userId);
+        manageDebtsController.setTotalDebt(totalDebt);
+        manageDebtsController.setTotalOwedToYou(totalOwedToYou);
+    }
+
 
     protected void updateUserBalance(double balance) {
         userBalance.setText(String.valueOf(balance));
+        if (balance > 0){
+            userBalance.setFill(Color.GREEN);
+        } else if (balance < 0){
+            userBalance.setFill(Color.RED);
+        } else {
+            userBalance.setFill(Color.GRAY);
+        }
     }
 
     protected double getUserBalance(String userId) throws IOException {

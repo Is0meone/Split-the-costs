@@ -11,7 +11,7 @@
 
 <AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="551.0" prefWidth="788.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.edu.pw.app.MainPageController">
    <children>
-      <Button layoutX="50.0" layoutY="155.0" mnemonicParsing="false" prefHeight="73.0" prefWidth="294.0" text="Add expenses(?)">
+      <Button layoutX="50.0" layoutY="155.0" mnemonicParsing="false" onAction="#handleManageDebtsAction" prefHeight="73.0" prefWidth="294.0" text="Manage Debts">
          <font>
             <Font size="18.0" />
          </font>
