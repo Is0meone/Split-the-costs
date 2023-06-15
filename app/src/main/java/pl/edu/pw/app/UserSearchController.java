@@ -100,8 +100,8 @@ public class UserSearchController {
     }
 
 
-    private void sendAFriendRequest(int userId) {
-        String requestURL = "http://localhost:8090/friends/user/" + userId + "/requestoracceptfriendship/" + userId;
+    private void sendAFriendRequest(int friendId) {
+        String requestURL = "http://localhost:8090/friends/user/" + userId + "/requestoracceptfriendship/" + friendId;
         try {
             HttpURLConnection con = (HttpURLConnection) new URL(requestURL).openConnection();
             con.setRequestMethod("GET");
