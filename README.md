@@ -398,7 +398,7 @@ We used Java FX that allowed us to create .fxml files responsible for scenes. He
  ### ManageDebtsController
  ManageDebtsController manages the handling of debts in the application. It allows you to view, add, edit and delete debts. In addition, it allows debts to be settled between users by calculating ratios and generating reports.
  ### RegisterController
- RegisterController odpowiada za rejestrację nowych użytkowników w systemie. Zarządza procesem tworzenia konta, weryfikuje poprawność danych rejestracyjnych i umożliwia zarejestrowanym użytkownikom dostęp do aplikacji.
+ RegisterController is responsible for registering new users in the system. It manages the account creation process, verifies the correctness of the registration data and allows registered users to access the application.
  ### SplitExpenseController
 SplitExpenseController takes care of splitting expenses in the application. It allows users to enter expense information, define participants and distribute costs among them. Using appropriate algorithms, it calculates shares and generates billing reports for participants.
 ### UserSearchController
