@@ -22,7 +22,7 @@ import java.net.URL;
 public class UserSearchController {
 
     @FXML
-    private ListView<String> friendsListView;
+    private ListView<String> pendingListView;
     private ObservableList<String> friendsList;
 
     private String userId;
@@ -72,7 +72,6 @@ public class UserSearchController {
                 }
                 if (userName.length() > 0) {
                     String userIdString = parseUserId(response.toString());
-                    System.out.println(userIdString);
                     if (userIdString != null) {
                         int id = Integer.parseInt(userIdString);
                         sendAFriendRequest(id);
@@ -106,7 +105,7 @@ public class UserSearchController {
         try {
             HttpURLConnection con = (HttpURLConnection) new URL(requestURL).openConnection();
             con.setRequestMethod("GET");
-            con.setRequestProperty("Authorization", "Bearer " + "MasterToken");
+            con.setRequestProperty("Authorization", "Bearer " + token);
 
             int responseCode = con.getResponseCode();
             if (responseCode != 200) {
@@ -178,8 +177,8 @@ public class UserSearchController {
 
     public void initialize() {
         friendsList = FXCollections.observableArrayList();
-        friendsListView.setItems(friendsList);
-        friendsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        pendingListView.setItems(friendsList);
+        pendingListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
     }
 
     public void setControllerUserId(String text) {

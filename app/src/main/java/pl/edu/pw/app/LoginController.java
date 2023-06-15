@@ -1,5 +1,6 @@
 package pl.edu.pw.app;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import javafx.event.ActionEvent;
@@ -73,6 +74,8 @@ public class LoginController {
         mainPageController.updateUserBalance(mainPageController.getUserBalance(usrId));
         mainPageController.initializeFriendsList(usrId);
     }
+
+
 
 
     public boolean sendLoginRequest() throws IOException {

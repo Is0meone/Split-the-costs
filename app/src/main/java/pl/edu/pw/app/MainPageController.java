@@ -1,9 +1,6 @@
 package pl.edu.pw.app;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -47,39 +44,10 @@ public class MainPageController {
     private String token;
 
 
+
+
     private double getUserDebts(String userId) throws IOException {
         String url = "http://localhost:8090/obligations/user/" + userId + "/debts";
-
-        URL address = new URL(url);
-        HttpURLConnection con = (HttpURLConnection) address.openConnection();
-        con.setRequestMethod("GET");
-        con.setRequestProperty("Authorization", "Bearer " + token);
-
-        String requestBody = "{\"token\": \"" + token + "\", \"userId\": \"" + userId + "\"}";
-
-        // Get response
-        int responseCode = con.getResponseCode();
-        if (responseCode != 200) {
-            return responseCode; // temporary
-        }
-
-
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
-            String inputLine;
-            StringBuilder response = new StringBuilder();
-
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-            String responseBody = response.toString();
-
-            double debt = parseUserBalanceFromJson(responseBody);
-            return debt;
-        }
-    }
-
-    private double getUserLoans(String userId) throws IOException {
-        String url = "http://localhost:8090/obligations/user/" + userId + "/credits";
 
         URL address = new URL(url);
         HttpURLConnection con = (HttpURLConnection) address.openConnection();
@@ -100,11 +68,59 @@ public class MainPageController {
                 response.append(inputLine);
             }
             String responseBody = response.toString();
-            // Parse the JSON response to get the user balance
-            double loan = parseUserBalanceFromJson(responseBody);
-            return loan;
+            double amount = parseAmount(responseBody);
+            return amount;
         }
     }
+    private double getUserLoans(String userId) throws IOException {
+        String url = "http://localhost:8090/obligations/user/" + userId + "/credits";
+
+        URL address = new URL(url);
+        HttpURLConnection con = (HttpURLConnection) address.openConnection();
+        con.setRequestMethod("GET");
+        con.setRequestProperty("Authorization", "Bearer " + token);
+
+
+        int responseCode = con.getResponseCode();
+        if (responseCode != 200) {
+            System.out.println("Response code: " + responseCode);
+            return 0.0;
+        }
+
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
+            String inputLine;
+            StringBuilder response = new StringBuilder();
+
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            String responseBody = response.toString();
+            JsonObject jsonObject = JsonParser.parseString(responseBody).getAsJsonObject();
+            double amount = jsonObject.get("total").getAsDouble();
+            return amount;
+        }
+    }
+
+    private double parseAmount(String response) {
+        JsonArray jsonArray = JsonParser.parseString(response).getAsJsonArray();
+        if (jsonArray.size() > 0) {
+
+
+            // Calculate sum of "amount" values
+            double totalAmount = 0.0;
+            Gson gson = new Gson();
+            for (JsonElement element : jsonArray) {
+                JsonObject jsonObject = element.getAsJsonObject();
+                double amount = jsonObject.get("amount").getAsDouble();
+                totalAmount += amount;
+            }
+            return totalAmount;
+        } else {
+            return 0.0;
+        }
+    }
+
+
 
     private double parseUserBalanceFromJson(String json) {
         try {
@@ -229,7 +245,7 @@ public class MainPageController {
     }
 
     protected double getUserBalance(String userId) throws IOException {
-        return getUserLoans(userId) - getUserDebts(userId);
+        return  getUserLoans(userId) - getUserDebts(userId);
     }
 
     public void setUserPane(AnchorPane userPane) {
