@@ -14,11 +14,11 @@
                 <Font name="Arial" size="30.0" />
             </font>
         </Text>
-        <TextField fx:id="expenseName" layoutX="294.0" layoutY="80.0" promptText="Expense Name" />
-        <TextField fx:id="amount" layoutX="294.0" layoutY="115.0" promptText="Total Amount" />
+        <TextField fx:id="expenseName" alignment="CENTER" layoutX="294.0" layoutY="80.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="23.0" prefWidth="200.0" promptText="Expense Name" />
+        <TextField fx:id="amount" alignment="CENTER" layoutX="294.0" layoutY="115.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="23.0" prefWidth="200.0" promptText="Total Amount" />
         <Button fx:id="split" layoutX="329.0" layoutY="409.0" onAction="#handleSplit" styleClass="button" text="Split Expense" />
         <Button fx:id="returnButton" layoutX="640.0" layoutY="483.0" onAction="#returnAction" prefHeight="27.0" prefWidth="107.0" styleClass="button2" text="Return" />
-      <ListView fx:id="friendlist" layoutX="295.0" layoutY="189.0" prefHeight="200.0" prefWidth="200.0" />
+      <ListView fx:id="friendlist" layoutX="295.0" layoutY="189.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0" />
       <Text layoutX="327.0" layoutY="169.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select friends:">
          <font>
             <Font size="22.0" />
