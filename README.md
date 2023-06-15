@@ -376,5 +376,28 @@ Finds user by their name
 ### /testing:
 We did our testing in "Postman" when it comes to request sending methods and we advise to at least try it out. Currently defined host port is "8090", but you can change it in api->src->main->resources->application.properties in IntelliJ app or in other compiler.
 
+# Stage 3
+## critical analysis of stage 2:
+- project structure at a professional level
+- unreadable readme with errors
+- no possibility of continuation in some places
+- functions and logic work
+- in some places, code from the backend made it difficult to create the frontend
+
+## app package(responsible for GUI):
+We used Java FX that allowed us to create .fxml files responsible for scenes. Here's classes we need to use GUI.
+### ExpenseSplitterApplication
+ The ExpenseSplitterApplication class is the main entry point to the expense accounting application. It is responsible for initializing and launching the application, managing the configuration and creating the context. It also coordinates the operation of other application components.
+ ### LoginController
+ LoginController handles the login process for users. It validates login data, authenticates users and provides access to the application after successful authorization. It also manages user sessions and access security.
+ ### MainPageController
+ MainPageController is responsible for displaying the main page of the application. It provides user interaction such as viewing features, displaying notifications and redirecting to the appropriate controllers handling specific actions.
+ ### ManageDebtsController
+ ManageDebtsController manages the handling of debts in the application. It allows you to view, add, edit and delete debts. In addition, it allows debts to be settled between users by calculating ratios and generating reports.
+ ### RegisterController
+ RegisterController odpowiada za rejestrację nowych użytkowników w systemie. Zarządza procesem tworzenia konta, weryfikuje poprawność danych rejestracyjnych i umożliwia zarejestrowanym użytkownikom dostęp do aplikacji.
+ ### SplitExpenseController
+SplitExpenseController takes care of splitting expenses in the application. It allows users to enter expense information, define participants and distribute costs among them. Using appropriate algorithms, it calculates shares and generates billing reports for participants.
+### UserSearchController
 
 ###
