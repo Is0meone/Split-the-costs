@@ -33,6 +33,13 @@
     /* inne właściwości stylu dla stylu 2 */
 }
 
+.buttonred {
+    -fx-background-color: red;
+    -fx-text-fill: white;
+    -fx-padding: 10;
+    -fx-font-size: 18;
+}
+
 
 .root > .text-field {
     -fx-pref-width: 200;

@@ -207,6 +207,7 @@ public class MainPageController {
             // Parse the JSON response to get the friend data
             friends = parseFriendsFromJson(responseBody);
             displayFriends(friends);
+
         }
     }
 
@@ -238,6 +239,8 @@ public class MainPageController {
         userSearchController.setToken(token);
         userSearchController.setUserId(userId);
         userSearchController.setName(name);
+        userSearchController.initializeFriendsList(userId);
+        userSearchController.initializeInvitationsList(userId);
         mainPane.getChildren().setAll(userSearchView);
     }
 

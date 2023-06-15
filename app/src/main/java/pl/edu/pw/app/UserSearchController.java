@@ -1,14 +1,16 @@
 package pl.edu.pw.app;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -18,14 +20,23 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserSearchController {
 
     @FXML
-    private ListView<String> pendingListView;
-    private ObservableList<String> friendsList;
+    private ListView<String> invitationsListView;
+
+    @FXML
+    private ListView<String> friendsListView;
+
 
     private String userId;
+    private List<String> friends;
+
+    private List<String> invitations;
+
     private String name;
     private Stage primaryStage;
 
@@ -44,8 +55,17 @@ public class UserSearchController {
     @FXML
     private Button addFriendButton;
 
+    @FXML
+    private Button acceptButton;
+
+
     private String token;
     private String friendId;
+
+    @FXML
+    public void initialize() {
+        acceptButton.setOnAction(this::acceptButtonClicked);
+    }
 
 
     @FXML
@@ -75,8 +95,8 @@ public class UserSearchController {
                     if (userIdString != null) {
                         int id = Integer.parseInt(userIdString);
                         sendAFriendRequest(id);
-                        friendsList.add(userName);
                         showAlert("Request sent", "A request has been sent to " + userName);
+                        displayFriends(friends);
                     } else {
                         showErrorAlert("User not found", "User with the name " + userName + " does not exist.");
                     }
@@ -117,6 +137,58 @@ public class UserSearchController {
         }
     }
 
+    private void acceptFriendInvitation(int friendId) {
+        String requestURL = "http://localhost:8090/friends/user/" + userId + "/requestoracceptfriendship/" + friendId;
+        try {
+            HttpURLConnection con = (HttpURLConnection) new URL(requestURL).openConnection();
+            con.setRequestMethod("GET");
+            con.setRequestProperty("Authorization", "Bearer " + token);
+
+            int responseCode = con.getResponseCode();
+            if (responseCode != 200) {
+                throw new IOException("Request failed with response code: " + responseCode);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            showErrorAlert("Error", "An error occurred while sending the friend request.");
+        }
+    }
+
+    private void acceptButtonClicked(ActionEvent event) {
+        // Get the selected item from the invitationsListView
+        String selectedInvitation = invitationsListView.getSelectionModel().getSelectedItem();
+
+        if (selectedInvitation != null) {
+            // Extract the friend ID from the selected invitation
+            String friendIdString = extractFriendId(selectedInvitation);
+            if (friendIdString != null) {
+                int friendId = Integer.parseInt(friendIdString);
+                acceptFriendInvitation(friendId);
+                showAlert("Request Accepted", "You have accepted the friend request.");
+                try {
+                    initializeInvitationsList(userId);
+                    initializeFriendsList(userId);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    showErrorAlert("Error", "An error occurred while loading the invitations list.");
+                }
+            } else {
+                showErrorAlert("Invalid Invitation", "The selected invitation is invalid.");
+            }
+        } else {
+            showErrorAlert("No Invitation Selected", "Please select an invitation from the list.");
+        }
+    }
+
+    private String extractFriendId(String invitation) {
+        // Extract the friend ID from the invitation text
+        int startIndex = invitation.indexOf("(ID: ");
+        int endIndex = invitation.lastIndexOf(")");
+        if (startIndex != -1 && endIndex != -1 && startIndex < endIndex) {
+            return invitation.substring(startIndex + 5, endIndex);
+        }
+        return null;
+    }
 
 
     public void returnAction(ActionEvent event) throws IOException {
@@ -143,6 +215,7 @@ public class UserSearchController {
     public void setUserId(String userId) {
         this.userId = userId;
     }
+
     public void setFriendId(String friendId) {
         this.friendId = friendId;
     }
@@ -175,10 +248,99 @@ public class UserSearchController {
         alert.showAndWait();
     }
 
-    public void initialize() {
-        friendsList = FXCollections.observableArrayList();
-        pendingListView.setItems(friendsList);
-        pendingListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+
+    protected void initializeFriendsList(String userId) throws IOException {
+        String url = "http://localhost:8090/friends/user/" + userId + "/friends";
+        URL address = new URL(url);
+        HttpURLConnection con = (HttpURLConnection) address.openConnection();
+        con.setRequestProperty("Authorization", "Bearer " + token);
+        con.setRequestMethod("GET");
+
+
+        int responseCode = con.getResponseCode();
+        if (responseCode != 200) {
+            return;
+        }
+
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
+            String inputLine;
+            StringBuilder response = new StringBuilder();
+
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            String responseBody = response.toString();
+            // Parse the JSON response to get the friend data
+            friends = parseFriendsFromJson(responseBody);
+            displayFriends(friends);
+        }
+    }
+
+    protected void initializeInvitationsList(String userId) throws IOException {
+        String url = "http://localhost:8090/friends/user/" + userId + "/requests";
+        URL address = new URL(url);
+        HttpURLConnection con = (HttpURLConnection) address.openConnection();
+        con.setRequestProperty("Authorization", "Bearer " + token);
+        con.setRequestMethod("GET");
+
+
+        int responseCode = con.getResponseCode();
+        if (responseCode != 200) {
+            return;
+        }
+
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
+            String inputLine;
+            StringBuilder response = new StringBuilder();
+
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            String responseBody = response.toString();
+            // Parse the JSON response to get the friend data
+            invitations = parseInvitationsFromJson(responseBody);
+            displayInvitations(invitations);
+        }
+    }
+
+    private void displayFriends(List<String> friends) {
+
+        if (friends != null) {
+            friendsListView.getItems().clear();
+            friendsListView.getItems().addAll(friends);
+        }
+
+    }
+
+    private void displayInvitations(List<String> invitations) {
+        if (invitationsListView != null) {
+            invitationsListView.getItems().clear();
+            invitationsListView.getItems().addAll(invitations);
+        }
+    }
+
+    private List<String> parseFriendsFromJson(String json) {
+        List<String> friends = new ArrayList<>();
+        JsonArray jsonArray = JsonParser.parseString(json).getAsJsonArray();
+        for (JsonElement element : jsonArray) {
+            JsonObject friendObject = element.getAsJsonObject();
+            String friendName = friendObject.get("username").getAsString();
+            String friendId = friendObject.get("id").getAsString();
+            friends.add(friendName + " (ID: " + friendId + ")");
+        }
+        return friends;
+    }
+
+    private List<String> parseInvitationsFromJson(String json) {
+        List<String> friends = new ArrayList<>();
+        JsonArray jsonArray = JsonParser.parseString(json).getAsJsonArray();
+        for (JsonElement element : jsonArray) {
+            JsonObject friendObject = element.getAsJsonObject();
+            String friendName = friendObject.get("username").getAsString();
+            String friendId = friendObject.get("id").getAsString();
+            friends.add(friendName + " (ID: " + friendId + ")      has invited you to be friends.");
+        }
+        return friends;
     }
 
     public void setControllerUserId(String text) {
