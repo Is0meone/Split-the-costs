@@ -60,6 +60,7 @@ public class RegisterController {
     public void initializeMainPage(MainPageController mainPageController) throws IOException {
         mainPageController.setUserPane(userPane);
         mainPageController.setToken(token);
+        mainPageController.setName(name);
         mainPageController.setUserGreet(name);
         mainPageController.setUserId(usrId);
         mainPageController.setTextUserId(usrId);

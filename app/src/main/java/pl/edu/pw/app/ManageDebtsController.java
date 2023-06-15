@@ -182,8 +182,8 @@ public class ManageDebtsController implements Initializable {
                 if (!Objects.equals(status, "PENDING")) continue;
                 double amount = jsonObject.get("amount").getAsDouble();
                 String obligId = jsonObject.get("id").getAsString();
-                String creditorId = jsonObject.get("creditorId").getAsString();
-                sb.append("User " + creditorId + " owes you: " + amount + " (ObligId: "+ obligId + ")");
+                String debtorId = jsonObject.get("debtorId").getAsString();
+                sb.append("User " + debtorId + " owes you: " + amount + " (ObligId: "+ obligId + ")");
                 tempList.add(sb.toString());
                 total += amount;
             }
