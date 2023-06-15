@@ -399,5 +399,7 @@ We used Java FX that allowed us to create .fxml files responsible for scenes. He
  ### SplitExpenseController
 SplitExpenseController takes care of splitting expenses in the application. It allows users to enter expense information, define participants and distribute costs among them. Using appropriate algorithms, it calculates shares and generates billing reports for participants.
 ### UserSearchController
-
+UserSearchController is a controller class responsible for managing user search and friend requests. It handles actions such as searching for users, sending friend requests, accepting friend invitations, and displaying lists of friends and pending invitations.
+## Conclusions after stage 3
+The implementation of Stage 3 proved to be a valuable lesson that helped us develop our skills to create application GUIs, familiarize us with Java FX and collaborate with other project groups. In conclusion, although Stage 3 proved to be a tough challenge, we are grateful as we finish it with the knowledge gained and the satisfaction of completing the exercise.
 ###
